@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbfbfb;
+  --foreground: #262626;
+  --card-bg: #ffffff;
+
+  /* Brand colors */
+  --dot-red: #f9454d;
+  --dot-green: #0ed76e;
+  --dot-blue: #4c4ec7;
+  --dot-cyan: #71d7ff;
+  --dot-yellow: #fff204;
+  --dot-pink: #ff52b9;
+  --dot-charcoal: #262626;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-card: var(--card-bg);
+  --font-mono: var(--font-ibm-plex-mono);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Dot colors */
+  --color-dot-red: var(--dot-red);
+  --color-dot-green: var(--dot-green);
+  --color-dot-blue: var(--dot-blue);
+  --color-dot-cyan: var(--dot-cyan);
+  --color-dot-yellow: var(--dot-yellow);
+  --color-dot-pink: var(--dot-pink);
+  --color-dot-charcoal: var(--dot-charcoal);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;
+}
+
+/* Remove default link styles for nav */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
 }
