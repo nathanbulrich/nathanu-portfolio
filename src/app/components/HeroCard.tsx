@@ -1,12 +1,12 @@
 export default function HeroCard() {
   return (
-    <div className="bg-white rounded-2xl p-8 md:p-12 mx-4 md:mx-12 lg:mx-16 my-8">
-      <div className="max-w-2xl mx-auto space-y-6 text-[#262626] opacity-90">
-        <p className="text-lg leading-relaxed">
+    <div className="bg-transparent border border-[rgba(37,42,73,0.13)] rounded-lg px-8 md:px-12 pt-[64px] pb-[80px] mx-4 md:mx-12 lg:mx-16 my-8">
+      <div className="max-w-[624px] mx-auto space-y-6">
+        <p className="leading-relaxed">
           I&apos;m a semi-technical designer in NY who builds apps.
           Currently I&apos;m a Senior Product Designer at Patreon.
         </p>
-        <p className="text-lg leading-relaxed">
+        <p className="leading-relaxed">
           I believe great social software starts with focused
           personal utility. Tools create the strongest networks.
         </p>

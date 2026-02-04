@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 
 interface ProjectCardProps {
   images: string[];
@@ -11,26 +11,21 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ images, description, link }: ProjectCardProps) {
   return (
-    <div className="bg-white rounded-2xl p-6 md:p-8 mx-4 md:mx-12 lg:mx-16 mb-6">
+    <div className="bg-transparent border border-[rgba(37,42,73,0.13)] rounded-lg px-6 md:px-8 pt-[80px] pb-[48px] mx-4 md:mx-12 lg:mx-16 mb-6">
       {/* iPhone mockups */}
       <div className="flex justify-center items-end gap-4 md:gap-6 mb-8">
         {images.map((src, index) => (
-          <div
+          <img
             key={index}
-            className="relative w-[100px] md:w-[140px] lg:w-[180px] aspect-[300/651]"
-          >
-            <Image
-              src={src}
-              alt={`Project screenshot ${index + 1}`}
-              fill
-              className="object-contain rounded-[20px] md:rounded-[28px] shadow-lg"
-            />
-          </div>
+            src={src}
+            alt={`Project screenshot ${index + 1}`}
+            className="w-[300px] h-auto block"
+          />
         ))}
       </div>
 
       {/* Description */}
-      <p className="text-center text-[#262626] opacity-80 text-base md:text-lg">
+      <p className="text-center">
         {description}
         {link && (
           <>
@@ -41,9 +36,8 @@ export default function ProjectCard({ images, description, link }: ProjectCardPr
               rel="noopener noreferrer"
               className="underline hover:opacity-70"
             >
-              {link.text}
+              {link.text} →
             </a>
-            .
           </>
         )}
       </p>

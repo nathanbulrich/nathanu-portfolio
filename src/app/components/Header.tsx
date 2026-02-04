@@ -10,24 +10,24 @@ export default function Header() {
   ];
 
   return (
-    <header className="flex items-center justify-between px-6 py-6 md:px-12 lg:px-16">
+    <header className="relative flex items-center justify-between px-6 py-6 md:px-12 lg:px-16">
       {/* Logo */}
-      <div className="text-lg font-medium text-[#262626]">
+      <div className="font-medium">
         // Nathan Ulrich
       </div>
 
       {/* Colored dots */}
-      <div className="hidden md:flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-[16px] absolute left-1/2 -translate-x-1/2">
         {dotColors.map((color, index) => (
           <div
             key={index}
-            className={`w-3 h-3 rounded-full ${color}`}
+            className={`w-[16px] h-[16px] rounded-full ${color}`}
           />
         ))}
       </div>
 
       {/* Navigation */}
-      <nav className="flex items-center gap-2 text-[#262626]">
+      <nav className="flex items-center gap-[16px]">
         <a
           href="mailto:nathan@nathanu.com"
           target="_blank"
@@ -36,18 +36,18 @@ export default function Header() {
         >
           Email
         </a>
-        <span className="text-gray-400">/</span>
+        <span>/</span>
         <a
-          href="https://twitter.com/nathanulrich"
+          href="https://x.com/nbulrich"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:underline"
         >
           Twitter
         </a>
-        <span className="text-gray-400">/</span>
+        <span>/</span>
         <a
-          href="https://cosmos.so/nathanulrich"
+          href="https://www.cosmos.so/nathanu"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:underline"

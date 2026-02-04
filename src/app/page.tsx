@@ -6,9 +6,9 @@ import Footer from "./components/Footer";
 const projects = [
   {
     images: [
-      "/images/joon-1.svg",
-      "/images/joon-2.svg",
-      "/images/joon-3.svg",
+      "/images/joon-1.png",
+      "/images/joon-2.png",
+      "/images/joon-3.png",
     ],
     description: "Currently tinkering on Joon.",
     link: {
@@ -18,25 +18,25 @@ const projects = [
   },
   {
     images: [
-      "/images/saturn-1.svg",
-      "/images/saturn-2.svg",
-      "/images/saturn-3.svg",
+      "/images/saturn-1.png",
+      "/images/saturn-2.png",
+      "/images/saturn-3.png",
     ],
     description: "Led design at Saturn through an acquisition to Snap Inc.",
   },
   {
     images: [
-      "/images/resy-1.svg",
-      "/images/resy-2.svg",
-      "/images/resy-3.svg",
+      "/images/resy-1.png",
+      "/images/resy-2.png",
+      "/images/resy-3.png",
     ],
     description: "Redesigned Resy iOS to drive all-time high mobile usage.",
   },
   {
     images: [
-      "/images/rambler-1.svg",
-      "/images/rambler-2.svg",
-      "/images/rambler-3.svg",
+      "/images/rambler-1.png",
+      "/images/rambler-2.png",
+      "/images/rambler-3.png",
     ],
     description: "Solo built Rambler as a personal project to learn SwiftUI",
   },
@@ -45,14 +45,13 @@ const projects = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#fbfbfb]">
-      <Header />
-
       <div className="max-w-[1200px] mx-auto">
+        <Header />
         <HeroCard />
 
         {/* Recent work section */}
         <section className="mt-16">
-          <h2 className="text-[#262626] opacity-80 text-base px-4 md:px-12 lg:px-16 mb-6">
+          <h2 className="px-4 md:px-12 lg:px-16 mb-6">
             Recent work
           </h2>
 
