@@ -10,7 +10,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-transparent border border-[rgba(37,42,73,0.13)] rounded-lg p-8 md:p-12 mx-4 md:mx-12 lg:mx-16 my-8">
+    <footer className="bg-transparent border border-[rgba(37,42,73,0.13)] rounded-lg p-8 md:p-12 mx-4 md:mx-12 lg:mx-16 mt-6 mb-8">
       <div className="flex justify-center items-center gap-4 md:gap-6">
         {dotColors.map((color, index) => (
           <div
