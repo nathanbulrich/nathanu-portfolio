@@ -1,7 +1,6 @@
 import Header from "./components/Header";
 import HeroCard from "./components/HeroCard";
 import ProjectCard from "./components/ProjectCard";
-import Footer from "./components/Footer";
 
 const projects = [
   {
@@ -44,7 +43,7 @@ const projects = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#fbfbfb]">
+    <main className="min-h-screen">
       <div className="max-w-[1200px] mx-auto">
         <Header />
         <HeroCard />
@@ -64,8 +63,6 @@ export default function Home() {
             />
           ))}
         </section>
-
-        <Footer />
       </div>
     </main>
   );

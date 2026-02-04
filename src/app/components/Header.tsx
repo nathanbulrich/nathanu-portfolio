@@ -1,14 +1,6 @@
-export default function Header() {
-  const dotColors = [
-    "bg-[#f9454d]", // red
-    "bg-[#0ed76e]", // green
-    "bg-[#4c4ec7]", // blue
-    "bg-[#71d7ff]", // cyan
-    "bg-[#fff204]", // yellow
-    "bg-[#ff52b9]", // pink
-    "bg-[#262626]", // charcoal
-  ];
+import DotRow from "./DotRow";
 
+export default function Header() {
   return (
     <header className="relative flex items-center justify-between px-6 py-6 md:px-12 lg:px-16">
       {/* Logo */}
@@ -17,13 +9,11 @@ export default function Header() {
       </div>
 
       {/* Colored dots */}
-      <div className="hidden md:flex items-center gap-[16px] absolute left-1/2 -translate-x-1/2">
-        {dotColors.map((color, index) => (
-          <div
-            key={index}
-            className={`w-[16px] h-[16px] rounded-full ${color}`}
-          />
-        ))}
+      <div className="hidden md:flex absolute left-1/2 -translate-x-1/2">
+        <DotRow
+          dotSize="w-[16px] h-[16px]"
+          gap="gap-[16px]"
+        />
       </div>
 
       {/* Navigation */}

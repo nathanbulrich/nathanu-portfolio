@@ -11,7 +11,10 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ images, description, link }: ProjectCardProps) {
   return (
-    <div className="bg-transparent border border-[rgba(37,42,73,0.13)] rounded-lg px-6 md:px-8 pt-[80px] pb-[48px] mx-4 md:mx-12 lg:mx-16 mb-6">
+    <div
+      className="bg-transparent rounded-lg px-6 md:px-8 pt-[80px] pb-[48px] mx-4 md:mx-12 lg:mx-16 mb-6 transition-[border-color] duration-300"
+      style={{ border: "1px solid var(--theme-border)" }}
+    >
       {/* iPhone mockups */}
       <div className="flex justify-center items-end gap-4 md:gap-6 mb-8">
         {images.map((src, index) => (
