@@ -4,6 +4,7 @@ import ProjectCard from "./components/ProjectCard";
 
 const projects = [
   {
+    title: "Joon",
     images: [
       "/images/joon-1.png",
       "/images/joon-2.png",
@@ -16,6 +17,7 @@ const projects = [
     },
   },
   {
+    title: "Saturn",
     images: [
       "/images/saturn-1.png",
       "/images/saturn-2.png",
@@ -24,6 +26,7 @@ const projects = [
     description: "Led design at Saturn through an acquisition to Snap Inc.",
   },
   {
+    title: "Resy",
     images: [
       "/images/resy-1.png",
       "/images/resy-2.png",
@@ -32,6 +35,7 @@ const projects = [
     description: "Redesigned Resy iOS to drive all-time high mobile usage.",
   },
   {
+    title: "Rambler",
     images: [
       "/images/rambler-1.png",
       "/images/rambler-2.png",
@@ -50,13 +54,14 @@ export default function Home() {
 
         {/* Recent work section */}
         <section className="mt-16">
-          <h2 className="px-4 md:px-12 lg:px-16 mb-6">
+          <h2 className="px-6 md:px-12 lg:px-16 mb-6">
             Recent work
           </h2>
 
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
+              title={project.title}
               images={project.images}
               description={project.description}
               link={project.link}
