@@ -12,7 +12,7 @@ export default function CopyEmailButton() {
   };
 
   return (
-    <button onClick={handleClick} className="hover:underline cursor-pointer">
+    <button onClick={handleClick} className="hover:underline cursor-pointer text-left">
       {copied ? "Copied!" : "Email"}
     </button>
   );

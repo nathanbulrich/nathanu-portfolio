@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 interface ProjectCardProps {
+  title: string;
   images: string[];
   description: string;
   link?: {
@@ -9,26 +10,28 @@ interface ProjectCardProps {
   };
 }
 
-export default function ProjectCard({ images, description, link }: ProjectCardProps) {
+export default function ProjectCard({ title, images, description, link }: ProjectCardProps) {
   return (
-    <div
-      className="bg-transparent rounded-lg px-6 md:px-8 pt-[80px] pb-[48px] mx-4 md:mx-12 lg:mx-16 mb-6 transition-[border-color] duration-300"
-      style={{ border: "1px solid var(--theme-border)" }}
-    >
-      {/* iPhone mockups */}
-      <div className="flex justify-center items-end gap-4 md:gap-6 mb-8">
+    <div className="card-border bg-transparent md:rounded-lg md:px-8 pt-6 pb-4 md:pt-[80px] md:pb-[48px] mx-0 md:mx-12 lg:mx-16 mb-6">
+      {/* iPhone mockups — edge-to-edge on mobile */}
+      <div className="flex justify-center items-end gap-4 md:gap-6 mb-2 md:mb-8">
         {images.map((src, index) => (
           <img
             key={index}
             src={src}
-            alt={`Project screenshot ${index + 1}`}
-            className="w-[300px] h-auto block"
+            alt={`${title} screenshot ${index + 1}`}
+            className={`h-auto block ${
+              index === 0 ? "w-full md:w-[300px]" : "hidden md:block md:w-[300px]"
+            }`}
           />
         ))}
       </div>
 
-      {/* Description */}
-      <p className="text-center">
+      {/* Mobile: just the title */}
+      <p className="text-center px-6 md:px-0 md:hidden">{title}</p>
+
+      {/* Desktop: full description */}
+      <p className="text-center hidden md:block">
         {description}
         {link && (
           <>
