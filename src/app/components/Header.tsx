@@ -1,4 +1,5 @@
 import DotRow from "./DotRow";
+import CopyEmailButton from "./CopyEmailButton";
 
 export default function Header() {
   return (
@@ -18,14 +19,7 @@ export default function Header() {
 
       {/* Navigation */}
       <nav className="flex items-center gap-[16px]">
-        <a
-          href="mailto:nathan@nathanu.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          Email
-        </a>
+        <CopyEmailButton />
         <span>/</span>
         <a
           href="https://x.com/nbulrich"
