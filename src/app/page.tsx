@@ -10,7 +10,7 @@ const projects = [
       "/images/solitaire-2.png",
       "/images/solitaire-3.png",
     ],
-    description: "Built a classic Solitaire game for iOS.",
+    description: "Built a delightfully simple Solitaire app on iOS.",
   },
   {
     title: "Joon",
