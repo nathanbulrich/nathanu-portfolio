@@ -4,15 +4,6 @@ import ProjectCard from "./components/ProjectCard";
 
 const projects = [
   {
-    title: "Solitaire",
-    images: [
-      "/images/solitaire-1.png",
-      "/images/solitaire-2.png",
-      "/images/solitaire-3.png",
-    ],
-    description: "Built a delightfully simple Solitaire app on iOS.",
-  },
-  {
     title: "Joon",
     images: [
       "/images/joon-1.png",
@@ -24,6 +15,15 @@ const projects = [
       text: "Try it here",
       href: "https://testflight.apple.com/join/cBy2uYxk",
     },
+  },
+  {
+    title: "Solitaire",
+    images: [
+      "/images/solitaire-1.png",
+      "/images/solitaire-2.png",
+      "/images/solitaire-3.png",
+    ],
+    description: "Built a delightfully simple Solitaire app on iOS.",
   },
   {
     title: "Saturn",
