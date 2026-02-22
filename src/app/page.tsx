@@ -4,6 +4,15 @@ import ProjectCard from "./components/ProjectCard";
 
 const projects = [
   {
+    title: "Solitaire",
+    images: [
+      "/images/solitaire-1.png",
+      "/images/solitaire-2.png",
+      "/images/solitaire-3.png",
+    ],
+    description: "Built a classic Solitaire game for iOS.",
+  },
+  {
     title: "Joon",
     images: [
       "/images/joon-1.png",
@@ -48,6 +57,14 @@ const projects = [
 export default function Home() {
   return (
     <main className="min-h-screen">
+      {/* SVG defs for iOS-style continuous corner clip path */}
+      <svg width="0" height="0" className="absolute" aria-hidden="true">
+        <defs>
+          <clipPath id="squircle" clipPathUnits="objectBoundingBox">
+            <path d="M 0.14,0 L 0.86,0 C 0.954,0 1,0.023 1,0.065 L 1,0.935 C 1,0.977 0.954,1 0.86,1 L 0.14,1 C 0.046,1 0,0.977 0,0.935 L 0,0.065 C 0,0.023 0.046,0 0.14,0 Z" />
+          </clipPath>
+        </defs>
+      </svg>
       <div className="max-w-[1200px] mx-auto">
         <Header />
         <HeroCard />
