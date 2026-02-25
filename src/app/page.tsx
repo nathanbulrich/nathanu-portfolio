@@ -1,4 +1,3 @@
-import Header from "./components/Header";
 import HeroCard from "./components/HeroCard";
 import ProjectCard from "./components/ProjectCard";
 
@@ -66,11 +65,10 @@ export default function Home() {
         </defs>
       </svg>
       <div className="max-w-[1200px] mx-auto">
-        <Header />
         <HeroCard />
 
         {/* Recent work section */}
-        <section className="mt-16">
+        <section className="mt-[120px]">
           <h2 className="px-6 md:px-12 lg:px-16 mb-6">
             Recent work
           </h2>
