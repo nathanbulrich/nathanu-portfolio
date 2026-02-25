@@ -12,8 +12,7 @@ export default function SideNav() {
   const links = [
     { label: "Work", href: "/" },
     { label: "About", href: "/about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Sites", href: "/sites" },
+{ label: "Sites", href: "/sites" },
   ];
 
   return (

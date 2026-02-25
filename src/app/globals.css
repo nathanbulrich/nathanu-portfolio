@@ -92,3 +92,10 @@ a:hover {
     transition: border-color 300ms ease;
   }
 }
+
+/* Sites table — match centered content left edge, extend toward right */
+@media (min-width: 1440px) {
+  .sites-layout {
+    padding-left: calc((100vw - 1200px) / 2 + 64px);
+  }
+}
