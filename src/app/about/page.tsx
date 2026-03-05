@@ -19,16 +19,13 @@ export default function About() {
             </p>
           </div>
 
-          <h2 className="font-medium mb-8">Experience</h2>
-
           <div className="space-y-10">
             <div>
-              <div className="flex items-baseline justify-between mb-1">
+              <div className="flex items-baseline gap-3 mb-[20px]">
                 <span className="font-medium">Patreon</span>
-                <span className="text-[14px] opacity-40">2023 &ndash; Present</span>
+                <span className="opacity-40">2023 &ndash; Present</span>
               </div>
-              <div className="text-[15px] opacity-60 mb-2">Senior Product Designer</div>
-              <p className="text-[15px] leading-relaxed opacity-70">
+              <p className="leading-relaxed opacity-70">
                 Leading design for creator tools and membership
                 experiences. Focused on helping creators build
                 sustainable businesses.
@@ -36,12 +33,11 @@ export default function About() {
             </div>
 
             <div>
-              <div className="flex items-baseline justify-between mb-1">
+              <div className="flex items-baseline gap-3 mb-[20px]">
                 <span className="font-medium">Snap Inc.</span>
-                <span className="text-[14px] opacity-40">2021 &ndash; 2023</span>
+                <span className="opacity-40">2021 &ndash; 2023</span>
               </div>
-              <div className="text-[15px] opacity-60 mb-2">Product Designer</div>
-              <p className="text-[15px] leading-relaxed opacity-70">
+              <p className="leading-relaxed opacity-70">
                 Joined via the Saturn acquisition. Designed social
                 features for Snapchat&apos;s younger audience, working
                 across scheduling, profiles, and groups.
@@ -49,12 +45,11 @@ export default function About() {
             </div>
 
             <div>
-              <div className="flex items-baseline justify-between mb-1">
+              <div className="flex items-baseline gap-3 mb-[20px]">
                 <span className="font-medium">Saturn</span>
-                <span className="text-[14px] opacity-40">2019 &ndash; 2021</span>
+                <span className="opacity-40">2019 &ndash; 2021</span>
               </div>
-              <div className="text-[15px] opacity-60 mb-2">Lead Designer</div>
-              <p className="text-[15px] leading-relaxed opacity-70">
+              <p className="leading-relaxed opacity-70">
                 Led product design through rapid growth and an
                 acquisition by Snap Inc. Owned the full design system,
                 core scheduling experience, and social features.
@@ -62,12 +57,11 @@ export default function About() {
             </div>
 
             <div>
-              <div className="flex items-baseline justify-between mb-1">
+              <div className="flex items-baseline gap-3 mb-[20px]">
                 <span className="font-medium">Resy</span>
-                <span className="text-[14px] opacity-40">2017 &ndash; 2019</span>
+                <span className="opacity-40">2017 &ndash; 2019</span>
               </div>
-              <div className="text-[15px] opacity-60 mb-2">Product Designer</div>
-              <p className="text-[15px] leading-relaxed opacity-70">
+              <p className="leading-relaxed opacity-70">
                 Redesigned the iOS app from the ground up, driving
                 all-time high mobile usage. Worked across consumer
                 and restaurant-facing products.
