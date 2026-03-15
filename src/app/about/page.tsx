@@ -3,19 +3,26 @@ export default function About() {
     <main className="min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-16 pt-8 md:pt-[88px] pb-24">
         <div className="max-w-[640px]">
-          {/* Photo placeholder */}
-          <div className="w-[160px] h-[160px] rounded-lg bg-[var(--theme-border)] mb-10" />
+          <img
+            src="/images/site-pic.png"
+            alt="Nathan Ulrich"
+            className="w-[160px] h-[160px] rounded-lg object-cover mb-10"
+            draggable={false}
+          />
 
           <div className="space-y-6 mb-16 leading-relaxed">
             <p>
-              I&apos;m Nathan Ulrich, a product designer and builder based
-              in New York City. I design and ship software that people
-              actually want to use.
+              Hi I&apos;m Nathan. I&apos;m a designer in New York City who
+              ships code. My focus is on mobile, growing consumer products,
+              and interactive prototyping. I&apos;ve lead the design of apps
+              that are used by millions everyday including Resy, Saturn, and
+              now Patreon.
             </p>
             <p>
-              My work sits at the intersection of product design and
-              engineering. I prototype in code, think in systems, and care
-              deeply about craft at every level of the stack.
+              My focus in my career right now is to level up my engineering
+              skills, and help empower other designers to become more
+              technical with AI tooling. I like to tinker on iOS for fun on
+              the side.
             </p>
           </div>
 
