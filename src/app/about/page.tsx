@@ -32,7 +32,7 @@ export default function About() {
                 <span className="font-medium">Patreon</span>
                 <span className="opacity-40">2023 &ndash; Present</span>
               </div>
-              <p className="leading-relaxed opacity-70">
+              <p className="leading-relaxed">
                 Leading design for creator tools and membership
                 experiences. Focused on helping creators build
                 sustainable businesses.
@@ -44,7 +44,7 @@ export default function About() {
                 <span className="font-medium">Snap Inc.</span>
                 <span className="opacity-40">2021 &ndash; 2023</span>
               </div>
-              <p className="leading-relaxed opacity-70">
+              <p className="leading-relaxed">
                 Joined via the Saturn acquisition. Designed social
                 features for Snapchat&apos;s younger audience, working
                 across scheduling, profiles, and groups.
@@ -56,7 +56,7 @@ export default function About() {
                 <span className="font-medium">Saturn</span>
                 <span className="opacity-40">2019 &ndash; 2021</span>
               </div>
-              <p className="leading-relaxed opacity-70">
+              <p className="leading-relaxed">
                 Led product design through rapid growth and an
                 acquisition by Snap Inc. Owned the full design system,
                 core scheduling experience, and social features.
@@ -68,7 +68,7 @@ export default function About() {
                 <span className="font-medium">Resy</span>
                 <span className="opacity-40">2017 &ndash; 2019</span>
               </div>
-              <p className="leading-relaxed opacity-70">
+              <p className="leading-relaxed">
                 Redesigned the iOS app from the ground up, driving
                 all-time high mobile usage. Worked across consumer
                 and restaurant-facing products.
