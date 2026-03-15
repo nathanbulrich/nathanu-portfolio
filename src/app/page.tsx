@@ -24,6 +24,10 @@ const projects = [
       "/images/solitaire-3.png",
     ],
     description: "Built a delightfully simple Solitaire app on iOS.",
+    link: {
+      text: "Try it here",
+      href: "https://apps.apple.com/us/app/solitaire-minimal/id6759523921",
+    },
   },
   {
     title: "Saturn",
