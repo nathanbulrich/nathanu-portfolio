@@ -12,7 +12,7 @@ export default function SideNav() {
   const links = [
     { label: "Work", href: "/" },
     { label: "About", href: "/about" },
-{ label: "Sites", href: "/sites" },
+    { label: "Sites", href: "/sites" },
   ];
 
   return (
@@ -44,9 +44,8 @@ export default function SideNav() {
       </nav>
 
       {/* Mobile/tablet top nav */}
-      <header className="lg:hidden px-6 py-5 md:px-12 lg:px-16">
-        <div className="font-medium mb-3">Nathan Ulrich</div>
-        <nav className="flex items-center gap-4">
+      <header className="lg:hidden px-6 pt-11 pb-5 md:px-12 lg:px-16">
+        <nav className="flex items-center gap-6">
           {links.map(({ label, href }) => {
             const isActive = pathname === href;
             return (
