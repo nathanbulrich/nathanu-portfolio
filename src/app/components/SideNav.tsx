@@ -38,7 +38,7 @@ export default function SideNav() {
         })}
         <button
           onClick={() => setContactOpen(true)}
-          className="pt-2 pb-1.5 text-left cursor-pointer opacity-40 hover:opacity-70 hover:underline transition-opacity duration-[30ms]"
+          className="py-1.5 text-left cursor-pointer opacity-40 hover:opacity-70 hover:underline transition-opacity duration-[30ms]"
         >
           Contact
         </button>
