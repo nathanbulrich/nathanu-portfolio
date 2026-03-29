@@ -34,7 +34,7 @@ export default function Sites() {
             <thead>
               <tr className="border-b border-[var(--theme-border)]">
                 <th className="py-5 pl-6 md:pl-8 pr-8 text-left font-normal text-[var(--theme-text)]">Name</th>
-                <th className="py-5 pr-8 text-left font-normal text-[var(--theme-text)]">Site</th>
+                <th className="py-5 pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell">Site</th>
                 <th className="py-5 pr-6 md:pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell">Note</th>
               </tr>
             </thead>
@@ -73,7 +73,7 @@ export default function Sites() {
                       {name}
                     </span>
                   </td>
-                  <td className="py-5 pr-8 opacity-40">
+                  <td className="py-5 pr-8 opacity-40 hidden md:table-cell">
                     {url}
                   </td>
                   <td className="py-5 pr-6 md:pr-8 opacity-40 hidden md:table-cell">{note}</td>
