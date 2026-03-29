@@ -19,8 +19,9 @@ export default function About() {
             </p>
             <p>
               Right now I&apos;m focusing on leveling up my engineering
-              skillset to help empower product orgs with AI tooling. I
-              also like to tinker on iOS apps for fun.
+              skillset to help empower product orgs with AI tooling.{' '}
+              <span className="inline-block">I also</span> like to tinker on
+              iOS apps for fun.
             </p>
           </div>
 
