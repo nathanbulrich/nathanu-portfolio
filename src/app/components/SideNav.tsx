@@ -19,13 +19,14 @@ export default function SideNav() {
     <>
       {/* Desktop side nav — fixed in left gutter */}
       <nav className="hidden lg:flex fixed left-0 top-[86px] bottom-0 w-[228px] pl-[44px] flex-col gap-4 z-50">
-        {links.map(({ label, href }) => {
+        {links.map(({ label, href }, i) => {
           const isActive = pathname === href;
+          const padding = i === 0 ? "pb-1.5 pt-1" : "pt-2 pb-1.5";
           return (
             <Link
               key={href}
               href={href}
-              className={`py-1 no-underline hover:no-underline transition-opacity duration-[30ms] ${
+              className={`${padding} no-underline hover:no-underline transition-opacity duration-[30ms] ${
                 isActive
                   ? "opacity-100"
                   : "opacity-40 hover:opacity-70"
@@ -37,7 +38,7 @@ export default function SideNav() {
         })}
         <button
           onClick={() => setContactOpen(true)}
-          className="py-1 text-left cursor-pointer opacity-40 hover:opacity-70 hover:underline transition-opacity duration-[30ms]"
+          className="pt-2 pb-1.5 text-left cursor-pointer opacity-40 hover:opacity-70 hover:underline transition-opacity duration-[30ms]"
         >
           Contact
         </button>
