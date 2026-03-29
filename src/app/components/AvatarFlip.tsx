@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useShouldDisableTilt } from '../lib/useTilt';
 
 export default function AvatarFlip() {
+  const tiltDisabled = useShouldDisableTilt();
   const [hasAnimated, setHasAnimated] = useState(false);
 
   // Tilt state
@@ -18,24 +20,25 @@ export default function AvatarFlip() {
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!cardRef.current || !hasAnimated) return;
+      if (!cardRef.current || !hasAnimated || tiltDisabled) return;
       const rect = cardRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
       setTiltStyle({ rotateX: -y * 10, rotateY: x * 10 });
       setGlarePos({ x: (x + 0.5) * 100, y: (y + 0.5) * 100 });
     },
-    [hasAnimated]
+    [hasAnimated, tiltDisabled]
   );
 
   const handleMouseEnter = useCallback(() => {
-    if (hasAnimated) setIsHovering(true);
-  }, [hasAnimated]);
+    if (hasAnimated && !tiltDisabled) setIsHovering(true);
+  }, [hasAnimated, tiltDisabled]);
 
   const handleMouseLeave = useCallback(() => {
+    if (tiltDisabled) return;
     setIsHovering(false);
     setTiltStyle({ rotateX: 0, rotateY: 0 });
-  }, []);
+  }, [tiltDisabled]);
 
   const fromTransform = 'perspective(1350px) rotateX(0deg) rotateY(60deg) rotateZ(-5deg) translateZ(-10px) scale(0.6)';
   const toTransform = 'perspective(800px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateZ(0px) scale(1)';
