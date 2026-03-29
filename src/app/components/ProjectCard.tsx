@@ -1,4 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+'use client';
+
+import { useTilt } from '../lib/useTilt';
 
 interface ProjectCardProps {
   title: string;
@@ -8,6 +11,51 @@ interface ProjectCardProps {
     text: string;
     href: string;
   };
+}
+
+function TiltImage({ src, alt }: { src: string; alt: string }) {
+  const { ref, handlers, style, glareBackground, isHovering } = useTilt({
+    maxTilt: 10,
+    perspective: 800,
+    returnSpeed: 1000,
+    glare: true,
+    glareOpacity: 0.1,
+  });
+
+  return (
+    <div
+      ref={ref}
+      {...handlers}
+      className="relative"
+      style={{ cursor: 'default' }}
+    >
+      <div
+        style={{
+          transform: style.transform,
+          transition: style.transition,
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        <img
+          src={src}
+          alt={alt}
+          className="h-auto w-full block"
+          style={{ clipPath: "url(#squircle)" }}
+        />
+        {glareBackground !== 'none' && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: glareBackground,
+              clipPath: "url(#squircle)",
+              opacity: isHovering ? 1 : 0,
+              transition: 'opacity 300ms ease',
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function ProjectCard({ title, images, description, link }: ProjectCardProps) {
@@ -23,11 +71,9 @@ export default function ProjectCard({ title, images, description, link }: Projec
                 index === 0 ? "w-full md:w-[300px]" : "hidden md:block md:w-[300px]"
               }`}
             >
-              <img
+              <TiltImage
                 src={src}
                 alt={`${title} screenshot ${index + 1}`}
-                className="h-auto w-full block"
-                style={{ clipPath: "url(#squircle)" }}
               />
             </div>
           ))}
