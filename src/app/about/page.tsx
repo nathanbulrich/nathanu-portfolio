@@ -6,7 +6,7 @@ export default function About() {
           <img
             src="/images/site-pic.png"
             alt="Nathan Ulrich"
-            className="w-[160px] h-[160px] rounded-lg object-cover mb-10"
+            className="w-[160px] h-[160px] rounded-lg object-cover mb-16"
             draggable={false}
           />
 
