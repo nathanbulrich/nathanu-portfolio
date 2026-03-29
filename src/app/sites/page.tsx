@@ -18,7 +18,7 @@ const sites = [
 export default function Sites() {
   return (
     <main className="min-h-screen">
-      <div className="sites-layout pt-8 md:pt-[88px] pb-24 pl-0 md:pl-12 lg:pl-16 pr-0 md:pr-[44px]">
+      <div className="sites-layout pt-8 md:pt-[88px] lg:pt-[92px] pb-24 pl-0 md:pl-12 lg:pl-12 pr-0 md:pr-[44px]">
         <div className="card-border md:rounded-lg w-full">
           <table className="w-full">
             <thead>

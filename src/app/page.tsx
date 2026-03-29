@@ -69,7 +69,7 @@ export default function Home() {
 
         {/* Recent work section */}
         <section className="mt-[120px]">
-          <h2 className="px-6 md:px-12 lg:px-16 mb-6">
+          <h2 className="px-6 md:px-12 lg:px-12 mb-6">
             Recent work
           </h2>
 

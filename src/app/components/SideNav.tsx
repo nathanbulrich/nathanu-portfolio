@@ -18,7 +18,7 @@ export default function SideNav() {
   return (
     <>
       {/* Desktop side nav — fixed in left gutter */}
-      <nav className="hidden min-[1440px]:flex fixed left-[44px] top-[86px] flex-col gap-4 z-50">
+      <nav className="hidden lg:flex fixed left-0 top-[86px] w-[180px] pl-[44px] flex-col gap-4 z-50">
         {links.map(({ label, href }) => {
           const isActive = pathname === href;
           return (
@@ -44,9 +44,9 @@ export default function SideNav() {
       </nav>
 
       {/* Mobile/tablet top nav */}
-      <header className="min-[1440px]:hidden px-6 py-5 md:px-12 lg:px-16">
+      <header className="lg:hidden px-6 py-5 md:px-12 lg:px-16">
         <div className="font-medium mb-3">Nathan Ulrich</div>
-        <nav className="flex items-center gap-4 text-[15px]">
+        <nav className="flex items-center gap-4">
           {links.map(({ label, href }) => {
             const isActive = pathname === href;
             return (

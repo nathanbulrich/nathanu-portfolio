@@ -1,7 +1,7 @@
 export default function About() {
   return (
     <main className="min-h-screen">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-16 pt-8 md:pt-[88px] pb-24">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-12 pt-8 md:pt-[88px] lg:pt-[92px] pb-24">
         <div className="max-w-[640px]">
           <img
             src="/images/site-pic.png"

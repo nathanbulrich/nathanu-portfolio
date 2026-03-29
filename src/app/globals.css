@@ -94,8 +94,8 @@ a:hover {
 }
 
 /* Sites table — match centered content left edge, extend toward right */
-@media (min-width: 1440px) {
+@media (min-width: 1024px) {
   .sites-layout {
-    padding-left: calc((100vw - 1200px) / 2 + 64px);
+    padding-left: calc((100vw - 140px - 1200px) / 2 + 48px);
   }
 }

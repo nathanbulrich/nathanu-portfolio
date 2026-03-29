@@ -12,7 +12,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ title, images, description, link }: ProjectCardProps) {
   return (
-    <div className="card-border bg-transparent md:rounded-lg md:px-8 pt-6 pb-4 md:pt-[80px] md:pb-[48px] mx-0 md:mx-12 lg:mx-16 mb-6">
+    <div className="card-border bg-transparent md:rounded-lg md:px-8 pt-6 pb-4 md:pt-[80px] md:pb-[48px] mx-0 md:mx-12 lg:mx-12 mb-6">
       {/* iPhone mockups — edge-to-edge on mobile */}
       <div className="flex justify-center items-end gap-4 md:gap-6 mb-2 md:mb-8 px-6 md:px-0">
         {images.map((src, index) => (
