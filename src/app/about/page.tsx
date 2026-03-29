@@ -10,68 +10,65 @@ export default function About() {
             draggable={false}
           />
 
-          <div className="space-y-6 mb-16 leading-relaxed">
+          <div className="space-y-6 leading-relaxed">
             <p>
               Hi I&apos;m Nathan. I&apos;m a designer in New York City who
-              ships code. My focus is on mobile, growing consumer products,
-              and interactive prototyping. I&apos;ve lead the design of apps
-              that are used by millions everyday including Resy, Saturn, and
-              now Patreon.
+              ships. My focus is on mobile, growing consumer products,
+              and interactive prototyping. I&apos;ve lead the design for
+              apps that are used by millions everyday including Resy,
+              Saturn, and now Patreon.
             </p>
             <p>
-              My focus in my career right now is to level up my engineering
-              skills, and help empower other designers to become more
-              technical with AI tooling. I like to tinker on iOS for fun on
-              the side.
+              Right now I&apos;m focusing on leveling up my engineering
+              skillset to help empower product orgs with AI tooling. I
+              also like to tinker on iOS apps for fun.
             </p>
           </div>
 
-          <div className="space-y-10">
+          <hr className="border-t my-16 max-w-[160px]" style={{ borderColor: 'rgba(37, 42, 73, 0.15)' }} />
+
+          <div className="space-y-16">
             <div>
-              <div className="flex items-baseline gap-3 mb-[20px]">
+              <div className="flex items-baseline gap-3 mb-[12px]">
                 <span className="font-medium">Patreon</span>
-                <span className="opacity-40">2023 &ndash; Present</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>2025 &ndash; Present</span>
               </div>
-              <p className="leading-relaxed">
-                Leading design for creator tools and membership
-                experiences. Focused on helping creators build
-                sustainable businesses.
+              <p className="leading-relaxed" style={{ color: 'var(--theme-text-secondary)' }}>
+                Working on Discovery, Community, and AI design
+                infra.
               </p>
             </div>
 
             <div>
-              <div className="flex items-baseline gap-3 mb-[20px]">
-                <span className="font-medium">Snap Inc.</span>
-                <span className="opacity-40">2021 &ndash; 2023</span>
+              <div className="flex items-baseline gap-3 mb-[12px]">
+                <span className="font-medium">Saturn (Acq. Snapchat)</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>2024 &ndash; 2025</span>
               </div>
-              <p className="leading-relaxed">
-                Joined via the Saturn acquisition. Designed social
-                features for Snapchat&apos;s younger audience, working
-                across scheduling, profiles, and groups.
+              <p className="leading-relaxed" style={{ color: 'var(--theme-text-secondary)' }}>
+                Lead design of the most popular calendar for Gen-Z
+                through an acquisition to Snap Inc.
               </p>
             </div>
 
             <div>
-              <div className="flex items-baseline gap-3 mb-[20px]">
-                <span className="font-medium">Saturn</span>
-                <span className="opacity-40">2019 &ndash; 2021</span>
-              </div>
-              <p className="leading-relaxed">
-                Led product design through rapid growth and an
-                acquisition by Snap Inc. Owned the full design system,
-                core scheduling experience, and social features.
-              </p>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-3 mb-[20px]">
+              <div className="flex items-baseline gap-3 mb-[12px]">
                 <span className="font-medium">Resy</span>
-                <span className="opacity-40">2017 &ndash; 2019</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>2022 &ndash; 2024</span>
               </div>
-              <p className="leading-relaxed">
-                Redesigned the iOS app from the ground up, driving
-                all-time high mobile usage. Worked across consumer
-                and restaurant-facing products.
+              <p className="leading-relaxed" style={{ color: 'var(--theme-text-secondary)' }}>
+                Lead the re-design of the core mobile apps, driving
+                all-time high mobile adoption.
+              </p>
+            </div>
+
+            <div>
+              <div className="flex items-baseline gap-3 mb-[12px]">
+                <span className="font-medium">NeuroFlow</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>2020 &ndash; 2022</span>
+              </div>
+              <p className="leading-relaxed" style={{ color: 'var(--theme-text-secondary)' }}>
+                Designed the mobile app connecting behavioral health
+                patients to care providers.
               </p>
             </div>
           </div>
