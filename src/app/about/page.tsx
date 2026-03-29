@@ -1,14 +1,13 @@
+import AvatarFlip from '../components/AvatarFlip';
+
 export default function About() {
   return (
     <main className="min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-12 pt-8 md:pt-[88px] lg:pt-[92px] pb-24">
         <div className="max-w-[640px]">
-          <img
-            src="/images/site-pic.png"
-            alt="Nathan Ulrich"
-            className="w-[160px] h-[160px] rounded-lg object-cover mb-16"
-            draggable={false}
-          />
+          <div className="mb-16">
+            <AvatarFlip />
+          </div>
 
           <div className="space-y-6 leading-relaxed">
             <p>
