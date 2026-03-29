@@ -118,7 +118,7 @@ export default function AvatarFlip() {
         <img
           src="/images/site-pic.png"
           alt="Nathan Ulrich"
-          className="w-[160px] h-[160px] rounded-lg object-cover"
+          className="w-[160px] h-[160px] rounded-[12px] object-cover"
           draggable={false}
           style={{
             transform: hasAnimated ? toTransform : fromTransform,
