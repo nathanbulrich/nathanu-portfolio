@@ -3,18 +3,26 @@
 /* eslint-disable @next/next/no-img-element */
 
 const sites = [
-  { name: "Linear", url: "linear.app", note: "Best-in-class project tracking" },
-  { name: "Vercel", url: "vercel.com", note: "Deploy preview perfection" },
-  { name: "Stripe", url: "stripe.com", note: "Gold standard developer docs" },
-  { name: "Cosmos", url: "cosmos.so", note: "Beautiful mood boarding" },
-  { name: "Arc", url: "arc.net", note: "Rethinking the browser" },
-  { name: "Readwise", url: "readwise.io", note: "Reading that sticks" },
-  { name: "Amie", url: "amie.so", note: "Joyful calendar design" },
-  { name: "Figma", url: "figma.com", note: "Multiplayer design toolkit" },
-  { name: "Raycast", url: "raycast.com", note: "Launcher done right" },
-  { name: "Clerk", url: "clerk.com", note: "Auth with great DX" },
-  { name: "Campsite", url: "campsite.co", note: "Async team updates" },
-  { name: "Family", url: "family.co", note: "Wallet with taste" },
+  { name: "Adam Whitcroft", url: "adamwhitcroft.com", note: "Pristine app icon craft" },
+  { name: "Daniel Destefanis", url: "danield.design", note: "Inventive product design explorations" },
+  { name: "Yitong Zhang", url: "zhayitong.com", note: "Thoughtful product design leadership" },
+  { name: "Marco Cornacchia", url: "marco.fyi", note: "Intentional, interactive portfolio" },
+  { name: "Rasmus Andersson", url: "rsms.me", note: "Prolific type and tools" },
+  { name: "David McGillivray", url: "dmcg.co", note: "Refined startup brand identity" },
+  { name: "Philip Davis", url: "philipcdavis.com", note: "Polished interface experiments" },
+  { name: "Atilla Taskiran", url: "atillataskiran.com", note: "Purposeful freelance software design" },
+  { name: "Gabriel Valdivia", url: "gabrielvaldivia.com", note: "Early-stage startup design partner" },
+  { name: "Carl Hauser", url: "carlhauser.com", note: "Daily creative process journal" },
+  { name: "U.S. Graphics", url: "usgraphics.com", note: "Engineering-driven graphics philosophy" },
+  { name: "Spotted in Prod", url: "spottedinprod.com", note: "Curated standout iOS interactions" },
+  { name: "History of Software", url: "historyofsoftware.org", note: "Preserving landmark software interfaces" },
+  { name: "Steve Jobs Archive", url: "stevejobsarchive.com", note: "Legacy, fellowship, and inspiration" },
+  { name: "Bhavik Singh", url: "softnet.works", note: "Intimate social software futures" },
+  { name: "Making Software", url: "makingsoftware.com", note: "Illustrated technical reference book" },
+  { name: "Area Technology", url: "area.tech", note: "Advanced visual technology studio" },
+  { name: "Untitled", url: "untitled.stream", note: "Work-in-progress music platform" },
+  { name: "Software Inc.", url: "software.inc", note: "Retro Mac OS emulator site" },
+  { name: "Paul Macgregor", url: "works.pm", note: "Minimal portfolio, maximal craft" },
 ];
 
 export default function Sites() {
@@ -45,6 +53,22 @@ export default function Sites() {
                         width={24}
                         height={24}
                         className="shrink-0"
+                        onLoad={(e) => {
+                          const el = e.currentTarget;
+                          if (el.naturalWidth < 24) {
+                            el.style.display = 'none';
+                            const circle = document.createElement('span');
+                            Object.assign(circle.style, { width: '24px', height: '24px', borderRadius: '50%', border: '1px solid var(--theme-border)', display: 'inline-block', flexShrink: '0' });
+                            el.parentElement?.insertBefore(circle, el);
+                          }
+                        }}
+                        onError={(e) => {
+                          const el = e.currentTarget;
+                          el.style.display = 'none';
+                          const circle = document.createElement('span');
+                          Object.assign(circle.style, { width: '24px', height: '24px', borderRadius: '50%', border: '1px solid var(--theme-border)', display: 'inline-block', flexShrink: '0' });
+                          el.parentElement?.insertBefore(circle, el);
+                        }}
                       />
                       {name}
                     </span>
