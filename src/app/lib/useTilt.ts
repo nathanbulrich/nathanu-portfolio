@@ -1,6 +1,17 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
+
+export function useShouldDisableTilt() {
+  const [disabled, setDisabled] = useState(false);
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(ua) || window.matchMedia('(pointer: coarse)').matches;
+    setDisabled(isSafari || isMobile);
+  }, []);
+  return disabled;
+}
 
 interface TiltConfig {
   maxTilt?: number;
@@ -18,16 +29,19 @@ const DEFAULTS: Required<TiltConfig> = {
   glareOpacity: 0.1,
 };
 
+const noopHandler = () => {};
+
 export function useTilt(config: TiltConfig = {}) {
   const opts = { ...DEFAULTS, ...config };
   const ref = useRef<HTMLDivElement>(null);
+  const disabled = useShouldDisableTilt();
   const [tiltStyle, setTiltStyle] = useState({ rotateX: 0, rotateY: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [glarePos, setGlarePos] = useState({ x: 50, y: 50 });
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!ref.current) return;
+      if (!ref.current || disabled) return;
       const rect = ref.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -40,15 +54,18 @@ export function useTilt(config: TiltConfig = {}) {
         y: (y + 0.5) * 100,
       });
     },
-    [opts.maxTilt]
+    [opts.maxTilt, disabled]
   );
 
-  const onMouseEnter = useCallback(() => setIsHovering(true), []);
+  const onMouseEnter = useCallback(() => {
+    if (!disabled) setIsHovering(true);
+  }, [disabled]);
 
   const onMouseLeave = useCallback(() => {
+    if (disabled) return;
     setIsHovering(false);
     setTiltStyle({ rotateX: 0, rotateY: 0 });
-  }, []);
+  }, [disabled]);
 
   const transform = isHovering
     ? `perspective(${opts.perspective}px) rotateX(${tiltStyle.rotateX}deg) rotateY(${tiltStyle.rotateY}deg)`
