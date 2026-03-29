@@ -25,7 +25,7 @@ export default function About() {
             </p>
           </div>
 
-          <hr className="border-t my-16 max-w-[160px]" style={{ borderColor: 'rgba(37, 42, 73, 0.15)' }} />
+          <hr className="border-t my-16 max-w-[160px] border-[var(--theme-border)]" />
 
           <div className="space-y-16">
             <div>

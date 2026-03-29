@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 
 const sites = [
@@ -23,40 +25,34 @@ export default function Sites() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--theme-border)]">
-                <th className="py-3 pl-6 md:pl-8 pr-8 text-left font-normal opacity-40">Name</th>
-                <th className="py-3 pr-8 text-left font-normal opacity-40">Site</th>
-                <th className="py-3 pr-6 md:pr-8 text-left font-normal opacity-40 hidden md:table-cell">Note</th>
+                <th className="py-4 pl-6 md:pl-8 pr-8 text-left font-normal text-[var(--theme-text)]">Name</th>
+                <th className="py-4 pr-8 text-left font-normal text-[var(--theme-text)]">Site</th>
+                <th className="py-4 pr-6 md:pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell">Note</th>
               </tr>
             </thead>
             <tbody>
               {sites.map(({ name, url, note }) => (
                 <tr
                   key={url}
-                  className="border-b border-[var(--theme-border)]"
+                  className="border-b border-[var(--theme-border)] last:border-b-0 cursor-pointer hover:bg-[color-mix(in_srgb,var(--theme-text)_5%,transparent)] transition-colors"
+                  onClick={() => window.open(`https://${url}`, '_blank', 'noopener,noreferrer')}
                 >
-                  <td className="py-3 pl-6 md:pl-8 pr-8">
-                    <span className="flex items-center gap-3">
+                  <td className="py-4 pl-6 md:pl-8 pr-8">
+                    <span className="flex items-center gap-5">
                       <img
-                        src={`https://www.google.com/s2/favicons?domain=${url}&sz=32`}
+                        src={`https://www.google.com/s2/favicons?domain=${url}&sz=48`}
                         alt=""
-                        width={16}
-                        height={16}
-                        className="rounded-sm shrink-0"
+                        width={24}
+                        height={24}
+                        className="shrink-0"
                       />
                       {name}
                     </span>
                   </td>
-                  <td className="py-3 pr-8 opacity-40">
-                    <a
-                      href={`https://${url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:opacity-100 transition-opacity"
-                    >
-                      {url}
-                    </a>
+                  <td className="py-4 pr-8 opacity-40">
+                    {url}
                   </td>
-                  <td className="py-3 pr-6 md:pr-8 opacity-40 hidden md:table-cell">{note}</td>
+                  <td className="py-4 pr-6 md:pr-8 opacity-40 hidden md:table-cell">{note}</td>
                 </tr>
               ))}
             </tbody>
