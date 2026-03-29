@@ -14,6 +14,7 @@ export interface ThemePalette {
   border: string;
   text: string;
   textSecondary: string;
+  selection: string;
 }
 
 export const DOT_COLORS: { name: ThemeColorName; hex: string }[] = [
@@ -32,6 +33,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(37, 42, 73, 0.13)",
     text: "rgba(37, 42, 73, 0.9)",
     textSecondary: "rgba(37, 42, 73, 0.55)",
+    selection: "#fde68a",
   },
   red: {
     dot: "#f9454d",
@@ -39,6 +41,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(249, 69, 77, 0.18)",
     text: "#d32f2f",
     textSecondary: "rgba(211, 47, 47, 0.7)",
+    selection: "#fca5a5",
   },
   green: {
     dot: "#0ed76e",
@@ -46,6 +49,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(14, 215, 110, 0.18)",
     text: "#0a8f4a",
     textSecondary: "rgba(10, 143, 74, 0.7)",
+    selection: "#86efac",
   },
   blue: {
     dot: "#4c4ec7",
@@ -53,6 +57,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(76, 78, 199, 0.18)",
     text: "#3a3bb0",
     textSecondary: "rgba(58, 59, 176, 0.7)",
+    selection: "#a5b4fc",
   },
   cyan: {
     dot: "#71d7ff",
@@ -60,6 +65,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(113, 215, 255, 0.22)",
     text: "#0c7fb5",
     textSecondary: "rgba(12, 127, 181, 0.7)",
+    selection: "#a5f3fc",
   },
   yellow: {
     dot: "#fff204",
@@ -67,6 +73,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(200, 180, 0, 0.18)",
     text: "#8a7d00",
     textSecondary: "rgba(138, 125, 0, 0.7)",
+    selection: "#fde68a",
   },
   pink: {
     dot: "#ff52b9",
@@ -74,6 +81,7 @@ export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
     border: "rgba(255, 82, 185, 0.18)",
     text: "#c4148a",
     textSecondary: "rgba(196, 20, 138, 0.7)",
+    selection: "#f9a8d4",
   },
 };
 
@@ -82,4 +90,5 @@ export const CSS_VAR_MAP = {
   border: "--theme-border",
   text: "--theme-text",
   textSecondary: "--theme-text-secondary",
+  selection: "--theme-selection",
 } as const;

@@ -38,6 +38,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.style.setProperty(CSS_VAR_MAP.border, p.border);
     root.style.setProperty(CSS_VAR_MAP.text, p.text);
     root.style.setProperty(CSS_VAR_MAP.textSecondary, p.textSecondary);
+    root.style.setProperty(CSS_VAR_MAP.selection, p.selection);
     root.dataset.theme = activeTheme;
   }, [activeTheme]);
 
