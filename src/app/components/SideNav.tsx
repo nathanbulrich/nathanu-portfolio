@@ -43,8 +43,8 @@ export default function SideNav() {
         </button>
 
         <div className="mt-auto pb-8 flex flex-col gap-4">
-          <p className="py-1 opacity-40">© Copyright 2026</p>
-          <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="py-1 opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Berkeley Mono <br />by U.S. Graphics</a>
+          <p className="py-1 opacity-40 text-[14px]">© Copyright 2026</p>
+          <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="py-1 opacity-40 hover:opacity-70 transition-opacity duration-[30ms] text-[14px]">Berkeley Mono <br />by U.S. Graphics</a>
         </div>
       </nav>
 
