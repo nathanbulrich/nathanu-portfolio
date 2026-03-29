@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@utility text-md {
+  font-size: 16px;
+}
+
 /* Berkeley Mono Font */
 @font-face {
   font-family: 'Berkeley Mono';
@@ -68,8 +72,14 @@ body {
   background: var(--theme-bg);
   color: var(--theme-text);
   font-family: 'Berkeley Mono', ui-monospace, monospace;
-  font-size: 18px;
+  font-size: 16px;
   transition: background-color 300ms ease, color 300ms ease;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 18px;
+  }
 }
 
 /* Remove default link styles for nav */
