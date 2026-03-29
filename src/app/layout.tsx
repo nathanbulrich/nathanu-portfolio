@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
+import SideNav from "./components/SideNav";
 
 export const metadata: Metadata = {
   title: "Nathan Ulrich - NYC Software Designer",
@@ -16,7 +17,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-mono antialiased">
         <ThemeProvider>
-          {children}
+          <SideNav />
+          <div className="lg:ml-[180px]">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
