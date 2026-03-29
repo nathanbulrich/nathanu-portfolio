@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className="font-mono antialiased">
         <ThemeProvider>
           <SideNav />
-          <div className="lg:ml-[180px]">
+          <div className="lg:ml-[228px]">
             {children}
           </div>
         </ThemeProvider>
