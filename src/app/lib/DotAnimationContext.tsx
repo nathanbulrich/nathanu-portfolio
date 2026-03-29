@@ -7,57 +7,95 @@ interface AnimationPhase {
   name: DotAnimationStyle;
   duration: number;
   reverseStagger?: boolean;
-  /** Gap before next phase (overrides the user delay). Omit to use user delay. */
   gapAfter?: number;
 }
 
 const SEQUENCE: AnimationPhase[] = [
   { name: "bounce", duration: 2000 },
-  { name: "spin", duration: 2000 },
-  { name: "pop", duration: 2000 },
   { name: "flip", duration: 1200, gapAfter: 400 },
   { name: "flip-back", duration: 1200, reverseStagger: true },
+  { name: "spin", duration: 2000 },
+  { name: "pop", duration: 2000 },
 ];
+
+const CYCLE_DELAY = 4000; // ms pause between animations
+const RESUME_DELAY = 4000; // ms after hover before resuming
 
 interface DotAnimationContextValue {
   animation: DotAnimationStyle;
   cycle: number;
   reverseStagger: boolean;
-  delay: number;
-  setDelay: (ms: number) => void;
+  paused: boolean;
+  setHovering: (hovering: boolean) => void;
 }
 
 const DotAnimationContext = createContext<DotAnimationContextValue>({
   animation: "bounce",
   cycle: 0,
   reverseStagger: false,
-  delay: 4000,
-  setDelay: () => {},
+  paused: false,
+  setHovering: () => {},
 });
 
 export function DotAnimationProvider({ children }: { children: ReactNode }) {
   const [index, setIndex] = useState(0);
   const [cycle, setCycle] = useState(0);
-  const [delay, setDelay] = useState(4000);
+  const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverCountRef = useRef(0);
+
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const advance = useCallback(() => {
+    setIndex((i) => (i + 1) % SEQUENCE.length);
+    setCycle((c) => c + 1);
+  }, []);
 
   const scheduleNext = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    clearTimer();
+    if (paused) return;
     const current = SEQUENCE[index];
-    const gap = current.gapAfter ?? delay;
-    const totalWait = current.duration + gap;
-    timerRef.current = setTimeout(() => {
-      setIndex((i) => (i + 1) % SEQUENCE.length);
-      setCycle((c) => c + 1);
-    }, totalWait);
-  }, [index, delay]);
+    const wait = current.duration + (current.gapAfter ?? CYCLE_DELAY);
+    timerRef.current = setTimeout(advance, wait);
+  }, [index, paused, clearTimer, advance]);
 
   useEffect(() => {
     scheduleNext();
+    return clearTimer;
+  }, [scheduleNext, clearTimer]);
+
+  const setHovering = useCallback((hovering: boolean) => {
+    if (hovering) {
+      hoverCountRef.current++;
+      setPaused(true);
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = null;
+      }
+    } else {
+      hoverCountRef.current = Math.max(0, hoverCountRef.current - 1);
+      if (hoverCountRef.current === 0) {
+        if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = setTimeout(() => {
+          resumeTimerRef.current = null;
+          advance();
+          setPaused(false);
+        }, RESUME_DELAY);
+      }
+    }
+  }, [advance]);
+
+  useEffect(() => {
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     };
-  }, [scheduleNext]);
+  }, []);
 
   const phase = SEQUENCE[index];
 
@@ -66,8 +104,8 @@ export function DotAnimationProvider({ children }: { children: ReactNode }) {
       animation: phase.name,
       cycle,
       reverseStagger: phase.reverseStagger ?? false,
-      delay,
-      setDelay,
+      paused,
+      setHovering,
     }}>
       {children}
     </DotAnimationContext.Provider>

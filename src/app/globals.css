@@ -160,8 +160,6 @@ a:hover {
   animation: dot-flip-back 0.6s ease-in-out 1 forwards;
 }
 
-/* Stagger delays are applied via inline styles in DotRow */
-
 /* Sites table — match centered content left edge, extend toward right */
 @media (min-width: 1024px) {
   .sites-layout {
