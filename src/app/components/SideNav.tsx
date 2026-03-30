@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
+import { useTypeStyle } from "../lib/TypeStyleContext";
 
 export default function SideNav() {
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
+  const { typeStyle } = useTypeStyle();
 
   const links = [
     { label: "Work", href: "/" },
@@ -44,10 +46,18 @@ export default function SideNav() {
           Contact
         </button>
 
-        <div className="mt-auto pb-8 flex flex-col gap-4">
+        <div className="mt-auto pb-8 flex flex-col gap-3">
+          <p className="text-[14px]">
+            {typeStyle === "mono" ? (
+              <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Berkeley Mono</a>
+            ) : typeStyle === "serif" ? (
+              <a href="https://en.wikipedia.org/wiki/Georgia_(typeface)" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Georgia</a>
+            ) : (
+              <a href="https://rsms.me/inter/" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Inter</a>
+            )}
+          </p>
           <TypeSwitcher />
-          <p className="py-1 opacity-40 text-[14px]">© Copyright 2026</p>
-          <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="py-1 opacity-40 hover:opacity-70 transition-opacity duration-[30ms] text-[14px]">Berkeley Mono <br />by U.S. Graphics</a>
+          <p className="opacity-40 text-[14px] mt-3">© Copyright 2026</p>
         </div>
       </nav>
 
