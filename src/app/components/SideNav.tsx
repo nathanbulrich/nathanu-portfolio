@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ContactModal from "./ContactModal";
+import TypeSwitcher from "./TypeSwitcher";
 
 export default function SideNav() {
   const pathname = usePathname();
@@ -44,6 +45,7 @@ export default function SideNav() {
         </button>
 
         <div className="mt-auto pb-8 flex flex-col gap-4">
+          <TypeSwitcher />
           <p className="py-1 opacity-40 text-[14px]">© Copyright 2026</p>
           <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="py-1 opacity-40 hover:opacity-70 transition-opacity duration-[30ms] text-[14px]">Berkeley Mono <br />by U.S. Graphics</a>
         </div>

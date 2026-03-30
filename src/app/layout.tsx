@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { DotAnimationProvider } from "./lib/DotAnimationContext";
+import { TypeStyleProvider } from "./lib/TypeStyleContext";
 import SideNav from "./components/SideNav";
 
 export const metadata: Metadata = {
@@ -29,12 +30,14 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-mono antialiased">
         <ThemeProvider>
-          <DotAnimationProvider>
-            <SideNav />
-            <div className="lg:ml-[228px]">
-              {children}
-            </div>
-          </DotAnimationProvider>
+          <TypeStyleProvider>
+            <DotAnimationProvider>
+              <SideNav />
+              <div className="lg:ml-[228px]">
+                {children}
+              </div>
+            </DotAnimationProvider>
+          </TypeStyleProvider>
         </ThemeProvider>
       </body>
     </html>
