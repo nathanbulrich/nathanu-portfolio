@@ -12,12 +12,12 @@ export default function TypeSwitcher() {
   const { typeStyle, setTypeStyle } = useTypeStyle();
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-[6px]">
       {styles.map(({ key, font }) => (
         <button
           key={key}
           onClick={() => setTypeStyle(key)}
-          className={`w-[34px] h-[34px] flex items-center justify-center cursor-pointer rounded transition-all duration-[30ms] text-[19px] ${
+          className={`w-[38px] h-[38px] flex items-center justify-center cursor-pointer rounded transition-all duration-[30ms] text-[19px] ${
             typeStyle !== key ? "hover:opacity-60 hover:bg-[color-mix(in_srgb,var(--theme-text)_3%,transparent)]" : ""
           }`}
           style={{
