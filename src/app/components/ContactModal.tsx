@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
+import { useTilt } from "../lib/useTilt";
 
 interface ContactModalProps {
   open: boolean;
@@ -10,6 +11,11 @@ interface ContactModalProps {
 export default function ContactModal({ open, onClose }: ContactModalProps) {
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { ref: tiltRef, handlers: tiltHandlers, style: tiltStyle, glareBackground } = useTilt({
+    maxTilt: 10,
+    perspective: 800,
+    glareOpacity: 0.08,
+  });
 
   const handleClose = useCallback(() => {
     setVisible(false);
@@ -70,13 +76,30 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
 
       {/* Modal */}
       <div
-        className={`relative bg-[var(--theme-bg)] border border-[var(--theme-border)] rounded-lg px-10 py-10 max-w-[400px] w-full mx-6 transition-all duration-200 ${
-          visible
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95"
+        ref={tiltRef}
+        className={`relative bg-[var(--theme-bg)] border border-[var(--theme-border)] rounded-[16px] px-10 py-10 max-w-[400px] w-full mx-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${
+          visible ? "opacity-100" : "opacity-0"
         }`}
+        style={{
+          transform: visible
+            ? `${tiltStyle.transform} scale(1)`
+            : `perspective(800px) rotateX(0deg) rotateY(0deg) scale(0.95)`,
+          transition: visible
+            ? `opacity 200ms ease, ${tiltStyle.transition}`
+            : 'opacity 200ms ease, transform 200ms ease',
+        }}
         onClick={(e) => e.stopPropagation()}
+        onMouseMove={tiltHandlers.onMouseMove}
+        onMouseEnter={tiltHandlers.onMouseEnter}
+        onMouseLeave={tiltHandlers.onMouseLeave}
       >
+        {/* Glare overlay */}
+        {glareBackground !== 'none' && (
+          <div
+            className="absolute inset-0 rounded-[16px] pointer-events-none"
+            style={{ background: glareBackground }}
+          />
+        )}
         <h2 className="text-lg font-medium mb-8">Contact</h2>
 
         <div className="space-y-6">
