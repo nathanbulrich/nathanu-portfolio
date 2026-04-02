@@ -27,7 +27,7 @@ export default function Sites() {
     <main className="min-h-screen">
       <div className="sites-layout pt-8 md:pt-[88px] lg:pt-[92px] pb-24 pl-0 md:pl-12 lg:pl-12 pr-0 md:pr-[44px]">
         <p className="max-w-[640px] leading-relaxed mb-12 px-6 md:px-0">
-          A collection of really wonderful websites that inspire. Click around and enjoy what the talented craftspeople of the World Wide Web have to offer.
+          A collection of wonderful websites that inspire. Click around and enjoy what the talented craftspeople of the World Wide Web have to offer.
         </p>
         <div className="card-border md:rounded-lg w-full">
           <table className="w-full">
