@@ -33,22 +33,22 @@ export default function Sites() {
           A collection of wonderful websites that inspire.{typeStyle === "mono" && <br className="hidden md:block" />} Click around and enjoy what the talented craftspeople of the World Wide Web have to offer.
         </p>
         <div className="card-border md:rounded-lg w-full">
-          <table className="w-full">
+          <table className="w-full border-separate border-spacing-0">
             <thead>
-              <tr className="border-b border-[var(--theme-border)]">
-                <th className="py-5 pl-6 md:pl-8 pr-8 text-left font-normal text-[var(--theme-text)]">Name</th>
-                <th className="py-5 pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell">Site</th>
-                <th className="py-5 pr-6 md:pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell">Note</th>
+              <tr>
+                <th className="py-5 pl-6 md:pl-8 pr-8 text-left font-normal text-[var(--theme-text)] border-b border-b-[var(--theme-border)]">Name</th>
+                <th className="py-5 pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell border-b border-b-[var(--theme-border)]">Site</th>
+                <th className="py-5 pr-6 md:pr-8 text-left font-normal text-[var(--theme-text)] hidden md:table-cell border-b border-b-[var(--theme-border)]">Note</th>
               </tr>
             </thead>
             <tbody>
               {sites.map(({ name, url, note }) => (
                 <tr
                   key={url}
-                  className="border-b border-[var(--theme-border)] last:border-b-0 cursor-pointer hover:bg-[color-mix(in_srgb,var(--theme-text)_5%,transparent)] transition-colors"
+                  className="group cursor-pointer hover:bg-[color-mix(in_srgb,var(--theme-text)_5%,transparent)] transition-colors"
                   onClick={() => window.open(`https://${url}`, '_blank', 'noopener,noreferrer')}
                 >
-                  <td className="py-5 pl-6 md:pl-8 pr-8">
+                  <td className="py-5 pl-6 md:pl-8 pr-8 border-b border-b-[var(--theme-border)] group-last:border-b-0">
                     <span className="flex items-center gap-5">
                       <img
                         src={`https://www.google.com/s2/favicons?domain=${url}&sz=48`}
@@ -76,10 +76,10 @@ export default function Sites() {
                       {name}
                     </span>
                   </td>
-                  <td className="py-5 pr-8 opacity-40 hidden md:table-cell">
-                    {url}
+                  <td className="py-5 pr-8 hidden md:table-cell border-b border-b-[var(--theme-border)] group-last:border-b-0">
+                    <span className="opacity-40">{url}</span>
                   </td>
-                  <td className="py-5 pr-6 md:pr-8 opacity-40 hidden md:table-cell">{note}</td>
+                  <td className="py-5 pr-6 md:pr-8 hidden md:table-cell border-b border-b-[var(--theme-border)] group-last:border-b-0"><span className="opacity-40">{note}</span></td>
                 </tr>
               ))}
             </tbody>
