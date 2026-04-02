@@ -2,6 +2,8 @@
 
 /* eslint-disable @next/next/no-img-element */
 
+import { useTypeStyle } from "../lib/TypeStyleContext";
+
 const sites = [
   { name: "Making Software", url: "makingsoftware.com", note: "Technical illustrations on software" },
   { name: "Daniel Destefanis", url: "danield.design", note: "Thoughtful shaders and motion" },
@@ -23,11 +25,12 @@ const sites = [
 ];
 
 export default function Sites() {
+  const { typeStyle } = useTypeStyle();
   return (
     <main className="min-h-screen">
       <div className="sites-layout pt-8 md:pt-[88px] lg:pt-[92px] pb-24 pl-0 md:pl-12 lg:pl-12 pr-0 md:pr-[44px]">
-        <p className="max-w-[640px] leading-relaxed mb-12 px-6 md:px-0">
-          A collection of really wonderful websites that inspire. Click around and enjoy what the talented craftspeople of the World Wide Web have to offer.
+        <p className="max-w-[632px] leading-relaxed mb-12 px-6 md:px-0">
+          A collection of wonderful websites that inspire.{typeStyle === "mono" && <br className="hidden md:block" />} Click around and enjoy what the talented craftspeople of the World Wide Web have to offer.
         </p>
         <div className="card-border md:rounded-lg w-full">
           <table className="w-full">
