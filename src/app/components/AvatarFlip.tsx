@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { useShouldDisableTilt } from '../lib/useTilt';
 
 export default function AvatarFlip() {
@@ -81,10 +82,13 @@ export default function AvatarFlip() {
           borderRadius: 12,
         }}
       >
-        <img
+        <Image
           src="/images/site-pic.png"
           alt="Nathan Ulrich"
-          className="w-[160px] h-[160px] rounded-[12px] object-cover"
+          width={160}
+          height={160}
+          priority
+          className="rounded-[12px] object-cover"
           draggable={false}
         />
         <div
