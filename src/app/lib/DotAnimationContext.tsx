@@ -11,14 +11,14 @@ interface AnimationPhase {
 }
 
 const SEQUENCE: AnimationPhase[] = [
-  { name: "bounce", duration: 2000 },
-  { name: "flip", duration: 1200, gapAfter: 400 },
+  { name: "flip", duration: 1200, gapAfter: 200 },
   { name: "flip-back", duration: 1200, reverseStagger: true },
+  { name: "bounce", duration: 2000 },
   { name: "spin", duration: 2000 },
   { name: "pop", duration: 2000 },
 ];
 
-const CYCLE_DELAY = 4000; // ms pause between animations
+const CYCLE_DELAY = 2000; // ms pause between animations
 const RESUME_DELAY = 4000; // ms after hover before resuming
 
 interface DotAnimationContextValue {
