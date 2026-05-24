@@ -10,10 +10,6 @@ const projects = [
       "/images/joon-3.png",
     ],
     description: "Currently tinkering on Joon.",
-    link: {
-      text: "Try it here",
-      href: "https://testflight.apple.com/join/cBy2uYxk",
-    },
   },
   {
     title: "Solitaire",
