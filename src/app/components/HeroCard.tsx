@@ -6,7 +6,14 @@ export default function HeroCard() {
       <div className="space-y-6 max-w-[664px]">
         <p className="leading-relaxed">
           Hi, I&apos;m Nathan Ulrich. I&apos;m a semi-technical designer in NYC who builds apps.
-          Currently I&apos;m working on Discovery and Community at Patreon.
+          I&apos;m designing the space to dream at{" "}
+          <a
+            href="https://www.cosmos.so/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Cosmos
+          </a>.
         </p>
         <p className="leading-relaxed">
           I believe in the benefits of a social internet and want to help build it.

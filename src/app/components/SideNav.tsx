@@ -39,6 +39,14 @@ export default function SideNav() {
             </Link>
           );
         })}
+        <a
+          href="https://www.cosmos.so/nathanu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pt-2 pb-1.5 no-underline hover:no-underline opacity-40 hover:opacity-70 transition-opacity duration-[30ms]"
+        >
+          Cosmos
+        </a>
         <button
           onClick={() => setContactOpen(true)}
           className="py-1.5 text-left cursor-pointer opacity-40 hover:opacity-70 hover:underline transition-opacity duration-[30ms]"
@@ -80,6 +88,14 @@ export default function SideNav() {
               </Link>
             );
           })}
+          <a
+            href="https://www.cosmos.so/nathanu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="no-underline hover:no-underline opacity-40 hover:opacity-70 transition-opacity duration-[30ms]"
+          >
+            Cosmos
+          </a>
           <button
             onClick={() => setContactOpen(true)}
             className="cursor-pointer opacity-40 hover:opacity-70 hover:underline transition-opacity duration-[30ms]"
