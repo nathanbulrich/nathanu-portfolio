@@ -14,8 +14,7 @@ export default function About() {
               Hi I&apos;m Nathan. I&apos;m a designer in New York City who
               ships. My focus is on mobile, growing consumer products,
               and interactive prototyping. I&apos;ve lead the design for
-              apps that are used by millions everyday including Resy,
-              Saturn, and now Patreon.
+              apps that are used by millions everyday.
             </p>
             <p>
               Right now I&apos;m focusing on leveling up my engineering
@@ -30,11 +29,21 @@ export default function About() {
           <div className="space-y-16">
             <div>
               <div className="flex items-baseline gap-3 mb-[12px]">
-                <span className="font-medium">Patreon</span>
-                <span style={{ color: 'var(--theme-text-secondary)' }}>2025 &ndash; Present</span>
+                <span className="font-medium">Cosmos</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>2026 &ndash; Present</span>
               </div>
               <p className="leading-relaxed" style={{ color: 'var(--theme-text-secondary)' }}>
-                Working on Discovery, Community, and AI design
+                Creating the best space for inspiration on the web.
+              </p>
+            </div>
+
+            <div>
+              <div className="flex items-baseline gap-3 mb-[12px]">
+                <span className="font-medium">Patreon</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>2025 &ndash; 2026</span>
+              </div>
+              <p className="leading-relaxed" style={{ color: 'var(--theme-text-secondary)' }}>
+                Worked on Discovery, Community, and AI design
                 infra.
               </p>
             </div>
