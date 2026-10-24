@@ -1,4 +1,4 @@
-/** Typesetter transition with real height interpolation so downstream content flows smoothly. */
+/** Soft-focus transition with real height interpolation so downstream content flows smoothly. */
 export function transitionText(root: HTMLElement, applyFont: () => void, duration: number, layoutDuration: number) {
   const candidates = Array.from(root.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, h5, h6, a, button, label, li, span'))
     .filter(el => el.textContent?.trim() && !el.closest('[data-text-transition-ignore]') && !el.querySelector('img, video, canvas') && el.getClientRects().length);
@@ -16,8 +16,8 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
   const run = async () => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || duration === 0) { applyFont(); return; }
     const outgoing = visible.map(el => animate(el, [
-      { opacity: 1, transform: 'translateY(0)' },
-      { opacity: 0, transform: 'translateY(-5px)' },
+      { opacity: 1, filter: 'blur(0px)' },
+      { opacity: 0, filter: 'blur(3px)' },
     ], duration * .4));
     await finished(outgoing);
     if (cancelled) return;
@@ -34,9 +34,8 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
     });
     outgoing.forEach(animation => animation.cancel());
     const incoming = visible.map(el => animate(el, [
-      { opacity: 0, transform: 'translateY(5px)' },
-      { opacity: 1, transform: 'translateY(-1px)', offset: .75 },
-      { opacity: 1, transform: 'translateY(0)' },
+      { opacity: 0, filter: 'blur(3px)' },
+      { opacity: 1, filter: 'blur(0px)' },
     ], duration * .6));
     await finished([...incoming, ...layout]);
     if (!cancelled) clear();
