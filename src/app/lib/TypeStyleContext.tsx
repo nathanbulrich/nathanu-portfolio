@@ -30,6 +30,8 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const replay = useRef<() => void>(() => {});
   const request = useRef(0);
   const settings = useDialKit("Text transitions", {
+    textAnimation: true,
+    layoutAnimation: true,
     duration: [430, 0, 1000, 10],
     layoutDuration: [1000, 0, 1000, 10],
     replay: { type: "action" },
@@ -46,7 +48,7 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
     if (!root.current) return;
     cancel.current = transitionText(root.current, () => {
       document.body.style.fontFamily = fontMap[style];
-    }, settings.duration, settings.layoutDuration);
+    }, settings.duration, settings.layoutDuration, settings.textAnimation, settings.layoutAnimation);
   };
   const setTypeStyle = (style: TypeStyle) => {
     if (style === typeStyle) return;
