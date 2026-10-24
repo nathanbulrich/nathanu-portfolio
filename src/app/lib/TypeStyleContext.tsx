@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 
 import { useDialKit } from "dialkit";
-import { transitionText, type TextTransition } from "./text-transition";
+import { transitionText } from "./text-transition";
 
 type TypeStyle = "mono" | "serif" | "sans";
 
@@ -28,18 +28,25 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const cancel = useRef<(() => void) | null>(null);
   const replay = useRef<() => void>(() => {});
+  const request = useRef(0);
   const settings = useDialKit("Text transitions", {
-    direction: { type: "select", options: ["Soft focus", "Typesetter shift", "Ink impression", "Directional wipe", "Layout glide"], default: "Soft focus" },
-    duration: [300, 0, 1000, 10],
+    duration: [750, 0, 1000, 10],
+    layoutDuration: [450, 0, 1000, 10],
     replay: { type: "action" },
   }, { id: "site-text-transitions", persist: true, onAction: () => replay.current() });
 
-  const animateFont = (style: TypeStyle) => {
+  const animateFont = async (style: TypeStyle) => {
+    const id = ++request.current;
+    // Load the destination face before measuring, avoiding a second reflow
+    // when a fallback font is replaced by the downloaded font.
+    await document.fonts.ready;
+    await document.fonts.load(`16px ${fontMap[style]}`).catch(() => {});
+    if (id !== request.current) return;
     cancel.current?.();
     if (!root.current) return;
     cancel.current = transitionText(root.current, () => {
       document.body.style.fontFamily = fontMap[style];
-    }, settings.direction as TextTransition, settings.duration);
+    }, settings.duration, settings.layoutDuration);
   };
   const setTypeStyle = (style: TypeStyle) => {
     if (style === typeStyle) return;
@@ -47,7 +54,7 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
     animateFont(style);
   };
   useEffect(() => { replay.current = () => animateFont(typeStyle); });
-  useEffect(() => () => cancel.current?.(), []);
+  useEffect(() => () => { request.current++; cancel.current?.(); }, []);
 
   useEffect(() => {
     // Load Inter from Google Fonts if not already loaded
