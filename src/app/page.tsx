@@ -42,15 +42,6 @@ const projects = [
     ],
     description: "Redesigned Resy iOS to drive all-time high mobile usage.",
   },
-  {
-    title: "Rambler",
-    images: [
-      "/images/rambler-1.png",
-      "/images/rambler-2.png",
-      "/images/rambler-3.png",
-    ],
-    description: "Solo built Rambler as a personal project to learn SwiftUI",
-  },
 ];
 
 export default function Home() {
