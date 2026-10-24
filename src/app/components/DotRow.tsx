@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
@@ -260,21 +260,28 @@ export default function DotRow({ className = "" }: DotRowProps) {
               color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
             }}
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 16 16"
-              style={{ width: editing ? "50%" : "100%", height: editing ? "50%" : "100%" }}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-            >
-              <motion.path
-                initial={false}
-                animate={{ d: editing ? "M2 8L6 12M6 12L14 4" : "M8 2L8 14M2 8L14 8" }}
-                transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
-              />
-            </svg>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.svg
+                key={editing ? "check" : "plus"}
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+                style={{
+                  width: editing ? selectionBarHeight / 2 : defaultDotSize,
+                  height: editing ? selectionBarHeight / 2 : defaultDotSize,
+                }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.12, ease: "easeInOut" }}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.7}
+                strokeLinecap="butt"
+                strokeLinejoin="miter"
+              >
+                <path d={editing ? "M2 8L6 12L14 4" : "M8 2L8 14M2 8L14 8"} />
+              </motion.svg>
+            </AnimatePresence>
           </motion.button>
         </div>
       </div>
