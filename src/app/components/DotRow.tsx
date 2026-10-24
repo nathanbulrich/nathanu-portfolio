@@ -128,14 +128,14 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
               previewHue(hue);
             }
           }}
-          className={`${dotSize} flex shrink-0 items-center justify-center rounded-full border border-current p-0 cursor-pointer transition-[color,background-color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
+          className={`${dotSize} flex shrink-0 items-center justify-center ${editing ? "rounded-full border border-current" : "border-0"} p-0 cursor-pointer transition-[color,background-color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
           style={{
             color: editing ? "var(--theme-bg)" : "var(--theme-text-secondary)",
             backgroundColor: editing ? paletteFromHue(hue).text : "transparent",
           }}
         >
-          <svg aria-hidden="true" viewBox="0 0 16 16" className="h-[70%] w-[70%]" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d={editing ? "M3 8l3 3 7-7" : "M8 3v10M3 8h10"} />
+          <svg aria-hidden="true" viewBox="0 0 16 16" className={editing ? "h-[70%] w-[70%]" : "h-full w-full"} fill="none" stroke="currentColor" strokeWidth={editing ? 1.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
+            <path d={editing ? "M3 8l3 3 7-7" : "M8 2v12M2 8h12"} />
           </svg>
         </button>
         {editing && (
