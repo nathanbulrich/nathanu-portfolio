@@ -1,30 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
-import { useDialKit } from "dialkit";
 import { useEffect, useRef, useState } from "react";
-import { sites, slugForUrl, type Site } from "./sites-data";
+import { slugForUrl, type Site } from "./sites-data";
 import { useIsCoarsePointer } from "../lib/useIsCoarsePointer";
 
 const WIDTH = 320;
-const HEIGHT = 282;
+const HEIGHT = 200;
 const OFFSET = 24;
 const EDGE_PAD = 16;
 
 interface Props {
   site: Site | null;
-  origin: { x: number; y: number };
 }
 
-export function SitePreview({ site, origin }: Props) {
+export function SitePreview({ site }: Props) {
   const coarse = useIsCoarsePointer();
-  const reducedMotion = useReducedMotion();
-  const { tilt, springDuration, bounce } = useDialKit("Site previews", {
-    tilt: [2, 0, 5, 0.5],
-    springDuration: [0.35, 0.15, 0.7, 0.05],
-    bounce: [0.18, 0, 0.4, 0.02],
-  });
   const ref = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
   const [errored, setErrored] = useState(false);
@@ -35,7 +26,7 @@ export function SitePreview({ site, origin }: Props) {
 
   useEffect(() => {
     if (!site || coarse) return;
-    const handler = (e: Pick<MouseEvent, "clientX" | "clientY">) => {
+    const handler = (e: MouseEvent) => {
       if (rafRef.current != null) return;
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = null;
@@ -47,18 +38,17 @@ export function SitePreview({ site, origin }: Props) {
         let y = e.clientY + OFFSET;
         if (x + WIDTH > vw - EDGE_PAD) x = e.clientX - WIDTH - OFFSET;
         if (y + HEIGHT > vh - EDGE_PAD) y = e.clientY - HEIGHT - OFFSET;
-        el.style.setProperty("--preview-x", `${Math.max(EDGE_PAD, Math.min(x, vw - WIDTH - EDGE_PAD))}px`);
-        el.style.setProperty("--preview-y", `${Math.max(EDGE_PAD, Math.min(y, vh - HEIGHT - EDGE_PAD))}px`);
+        el.style.setProperty("--preview-x", `${x}px`);
+        el.style.setProperty("--preview-y", `${y}px`);
       });
     };
-    handler({ clientX: origin.x, clientY: origin.y });
     document.addEventListener("mousemove", handler);
     return () => {
       document.removeEventListener("mousemove", handler);
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     };
-  }, [site, coarse, origin]);
+  }, [site, coarse]);
 
   if (coarse) return null;
 
@@ -78,20 +68,15 @@ export function SitePreview({ site, origin }: Props) {
         height: HEIGHT,
       }}
     >
-      <motion.div
-        key={site?.url ?? "empty"}
-        initial={reducedMotion ? false : { opacity: 0, scale: 0.94, rotate: 0, y: 8 }}
-        animate={{ opacity: 1, scale: 1, rotate: reducedMotion ? 0 : (sites.findIndex((item) => item.url === site?.url) % 2 ? tilt : -tilt), y: 0 }}
-        transition={reducedMotion ? { duration: 0 } : { type: "spring", visualDuration: springDuration, bounce }}
-        className="rounded-xl overflow-hidden bg-[var(--theme-bg)] p-2"
+      <div
+        className="rounded-lg overflow-hidden bg-[var(--theme-bg)]"
         style={{
           width: WIDTH,
           height: HEIGHT,
           border: "1px solid var(--theme-border)",
-          boxShadow: "0 18px 40px -12px rgba(0,0,0,0.22), 0 3px 8px -2px rgba(0,0,0,0.08)",
+          boxShadow: "0 8px 24px -6px rgba(0,0,0,0.10), 0 2px 6px -2px rgba(0,0,0,0.05)",
         }}
       >
-        <div className="h-[190px] overflow-hidden rounded-md bg-[var(--theme-border)]">
         {slug && !errored ? (
           <Image
             src={`/images/site-thumbnails/${slug}.webp`}
@@ -108,17 +93,7 @@ export function SitePreview({ site, origin }: Props) {
             {site.name}
           </div>
         ) : null}
-        </div>
-        {site && (
-          <div className="px-2 pt-3 text-[var(--theme-text)]">
-            <div className="flex items-center justify-between gap-3 text-[13px] leading-5">
-              <span className="truncate">{site.name}</span>
-              <span className="opacity-40" aria-hidden>↗</span>
-            </div>
-            <p className="mt-1 truncate text-[11px] leading-4 opacity-50">{site.note}</p>
-          </div>
-        )}
-      </motion.div>
+      </div>
     </div>
   );
 }
