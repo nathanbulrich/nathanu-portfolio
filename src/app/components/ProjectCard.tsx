@@ -67,7 +67,8 @@ export default function ProjectCard({ title, images, description, link }: Projec
           {images.map((src, index) => (
             <div
               key={index}
-              className={`[filter:drop-shadow(0_4px_25px_rgba(0,0,0,0.29))] ${
+              style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.07)) drop-shadow(0 10px 24px rgba(0,0,0,0.07))" }}
+              className={`${
                 index === 0 ? "w-full md:w-[300px]" : "hidden md:block md:w-[300px]"
               }`}
             >
@@ -78,11 +79,11 @@ export default function ProjectCard({ title, images, description, link }: Projec
             </div>
           ))}
         </div>
-        <p className="text-center md:hidden">{title}</p>
+        <p className="text-center md:hidden" style={{ fontSize: "16px" }}>{title}</p>
       </div>
 
       {/* Desktop: full description */}
-      <p className="text-center hidden md:block">
+      <p className="text-center hidden md:block" style={{ fontSize: "16px" }}>
         {description}
         {link && (
           <>

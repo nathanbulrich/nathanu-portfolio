@@ -11,6 +11,7 @@ const styles = [
 export default function TypeSwitcher() {
   const { typeStyle, setTypeStyle } = useTypeStyle();
 
+
   return (
     <div className="flex gap-[6px]">
       {styles.map(({ key, font }) => (
@@ -22,6 +23,7 @@ export default function TypeSwitcher() {
           }`}
           style={{
             fontFamily: font,
+            fontSize: key === "mono" ? "21.5px" : undefined,
             opacity: typeStyle === key ? 1 : 0.4,
             border: "1px solid var(--theme-border)",
             background: typeStyle === key ? "color-mix(in srgb, var(--theme-text) 5%, transparent)" : undefined,

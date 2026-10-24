@@ -1,7 +1,17 @@
+import DeviceFrameShape from "./components/DeviceFrameShape";
 import HeroCard from "./components/HeroCard";
 import ProjectCard from "./components/ProjectCard";
 
 const projects = [
+  {
+    title: "Cosmos",
+    images: [
+      "/images/cosmos-2.png",
+      "/images/cosmos-3.png",
+      "/images/cosmos-1.png",
+    ],
+    description: "Design lead at Cosmos",
+  },
   {
     title: "Joon",
     images: [
@@ -9,7 +19,7 @@ const projects = [
       "/images/joon-2.png",
       "/images/joon-3.png",
     ],
-    description: "Currently tinkering on Joon.",
+    description: "Sometimes tinkering on Joon",
   },
   {
     title: "Solitaire",
@@ -47,14 +57,7 @@ const projects = [
 export default function Home() {
   return (
     <main className="min-h-screen">
-      {/* SVG defs for iOS-style continuous corner clip path */}
-      <svg width="0" height="0" className="absolute" aria-hidden="true">
-        <defs>
-          <clipPath id="squircle" clipPathUnits="objectBoundingBox">
-            <path d="M 0.14,0 L 0.86,0 C 0.954,0 1,0.023 1,0.065 L 1,0.935 C 1,0.977 0.954,1 0.86,1 L 0.14,1 C 0.046,1 0,0.977 0,0.935 L 0,0.065 C 0,0.023 0.046,0 0.14,0 Z" />
-          </clipPath>
-        </defs>
-      </svg>
+      <DeviceFrameShape />
       <div className="max-w-[1200px] mx-auto">
         <HeroCard />
 
