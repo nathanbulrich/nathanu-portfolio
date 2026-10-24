@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
+import { DOT_COLORS, SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
 
@@ -12,12 +12,12 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, neutralDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
+  const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
   const trackWidth = dots.length * defaultDotSize + (dots.length - 1) * dotSpacing;
-  const originColor = dots[originIndex].name === "neutral" ? neutralDotColor : dots[originIndex].hex;
+  const originColor = dots[originIndex].hex;
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [morphVisible, setMorphVisible] = useState(false);
@@ -36,9 +36,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const sliderRef = useRef<HTMLInputElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
-  const selectedColor = activeTheme === "neutral"
-    ? neutralDotColor
-    : dots[selectedIndex]?.hex ?? "transparent";
+  const selectedColor = dots[selectedIndex]?.hex ?? "transparent";
   const position = (Math.max(0, selectedIndex) / (dots.length - 1)) * 100;
 
   useEffect(() => {
@@ -98,7 +96,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
             }}
           />
           {dots.map(({ name, hex }, index) => {
-            const color = name === "neutral" ? neutralDotColor : hex;
+            const color = hex;
             const isSelected = activeTheme === name;
 
             return (
@@ -106,7 +104,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 key={name}
                 data-theme-dot={name}
                 type="button"
-                aria-label={name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
+                aria-label={name.startsWith("custom-") ? `Set custom color ${index - DOT_COLORS.length + 1} theme` : `Set ${name} theme`}
                 aria-pressed={isSelected}
                 disabled={editing}
                 onClick={() => setTheme(name)}

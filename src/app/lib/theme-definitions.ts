@@ -38,7 +38,6 @@ export const SPECTRUM_GRADIENT = `linear-gradient(to right, ${[0, 60, 120, 180, 
   .map((hue) => paletteFromHue(hue).dot).join(", ")})`;
 
 export const DOT_COLORS: { name: ThemeName; hex: string }[] = [
-  { name: "neutral", hex: "#000000" },
   { name: "red", hex: "#f9454d" },
   { name: "yellow", hex: "#fff204" },
   { name: "green", hex: "#0ed76e" },
