@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { useDialKit } from "dialkit";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
@@ -12,6 +13,7 @@ const styles = [
 
 export default function TypeSwitcher() {
   const { typeStyle, setTypeStyle } = useTypeStyle();
+  const reducedMotion = useReducedMotion();
   const [hoveredType, setHoveredType] = useState<string | null>(null);
   const values = useDialKit("Type segmented control", {
     layout: {
@@ -44,7 +46,10 @@ export default function TypeSwitcher() {
     interaction: {
       hoverTint: [5, 0, 20, 1],
       hoverCircleSize: [32, 16, 48, 1],
-      slideDuration: [240, 0, 600, 10],
+      slideStiffness: [420, 100, 900, 10],
+      slideDamping: [24, 10, 60, 1],
+      zoomStiffness: [500, 100, 900, 10],
+      zoomDamping: [20, 10, 60, 1],
       hoverScale: [1.08, 1, 1.2, 0.01],
       duration: [150, 0, 400, 10],
     },
@@ -64,9 +69,12 @@ export default function TypeSwitcher() {
         border: `${values.container.borderWidth}px solid ${tint(values.container.borderOpacity)}`,
       }}
     >
-      <span
+      <motion.span
         aria-hidden="true"
-        className="absolute pointer-events-none transition-transform motion-reduce:transition-none"
+        initial={false}
+        animate={{ x: styles.findIndex(({ key }) => key === typeStyle) * (values.layout.segmentWidth + values.layout.gap) }}
+        transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: values.interaction.slideStiffness, damping: values.interaction.slideDamping }}
+        className="absolute pointer-events-none"
         style={{
           left: values.layout.padding,
           top: values.layout.padding,
@@ -75,9 +83,6 @@ export default function TypeSwitcher() {
           borderRadius: values.selected.radius,
           background: `color-mix(in srgb, var(--theme-text) ${values.selected.tint}%, var(--theme-bg))`,
           boxShadow: `inset 0 0 0 1px ${tint(values.selected.borderOpacity)}, 0 ${values.selected.shadowY}px ${values.selected.shadowBlur}px rgba(0,0,0,${values.selected.shadowOpacity / 100})`,
-          transform: `translateX(${styles.findIndex(({ key }) => key === typeStyle) * (values.layout.segmentWidth + values.layout.gap)}px)`,
-          transitionDuration: `${values.interaction.slideDuration}ms`,
-          transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       />
       {styles.map(({ key, font, label }) => {
@@ -102,12 +107,17 @@ export default function TypeSwitcher() {
               fontFamily: font,
               fontSize: values.typography[`${key}Size`],
               transitionDuration: `${values.interaction.duration}ms`,
-              '--segment-scale': values.interaction.hoverScale,
               '--segment-duration': `${values.interaction.duration}ms`,
             } as React.CSSProperties}
           >
             <span aria-hidden="true" className="absolute rounded-full type-segment-hover pointer-events-none" style={{ opacity: hoveredType === key && !active ? 1 : 0, backgroundColor: tint(values.interaction.hoverTint), width: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight), height: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight) }} />
-            <span className="type-segment-letter relative" style={{ opacity: (active ? values.typography.activeOpacity : values.typography.inactiveOpacity) / 100 }}>A</span>
+            <motion.span
+              className="relative"
+              initial={false}
+              animate={{ scale: !reducedMotion && hoveredType === key && !active ? values.interaction.hoverScale : 1 }}
+              transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: values.interaction.zoomStiffness, damping: values.interaction.zoomDamping }}
+              style={{ opacity: (active ? values.typography.activeOpacity : values.typography.inactiveOpacity) / 100 }}
+            >A</motion.span>
           </button>
         );
       })}
