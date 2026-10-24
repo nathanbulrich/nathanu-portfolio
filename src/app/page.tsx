@@ -10,7 +10,7 @@ const projects = [
       "/images/cosmos-3.png",
       "/images/cosmos-1.png",
     ],
-    description: "Cosmos — a home for inspiration and discovery.",
+    description: "Lead designer at Cosmos",
   },
   {
     title: "Joon",
