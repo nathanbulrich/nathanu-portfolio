@@ -19,7 +19,7 @@ const projects = [
       "/images/joon-2.png",
       "/images/joon-3.png",
     ],
-    description: "Currently tinkering on Joon.",
+    description: "Sometimes tinkering on Joon",
   },
   {
     title: "Solitaire",
