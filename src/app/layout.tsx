@@ -3,6 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { DotAnimationProvider } from "./lib/DotAnimationContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
+import TuningRoot from "./components/TuningRoot";
+import "dialkit/styles.css";
 import SideNav from "./components/SideNav";
 
 export const metadata: Metadata = {
@@ -29,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <TuningRoot />
         <ThemeProvider>
           <TypeStyleProvider>
             <DotAnimationProvider>

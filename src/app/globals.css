@@ -174,3 +174,24 @@ a:hover {
     padding-left: calc((100vw - 140px - 1200px) / 2 + 48px);
   }
 }
+
+.type-segment-hover {
+  transition: background-color var(--segment-duration);
+}
+.type-segment-letter {
+  transition: transform var(--segment-duration), opacity var(--segment-duration);
+}
+.type-segment:hover .type-segment-hover {
+  background: var(--segment-hover);
+}
+.type-segment:hover .type-segment-letter {
+  transform: scale(var(--segment-scale));
+}
+@media (prefers-reduced-motion: reduce) {
+  .type-segment-hover, .type-segment-letter {
+    transition: none;
+  }
+  .type-segment:hover .type-segment-letter {
+    transform: none;
+  }
+}
