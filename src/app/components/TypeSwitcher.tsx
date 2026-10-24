@@ -58,6 +58,7 @@ export default function TypeSwitcher() {
 
   return (
     <div
+      data-text-transition-ignore
       role="group"
       aria-label="Typeface"
       className="relative inline-flex self-start"
