@@ -17,7 +17,8 @@ export interface ThemePalette {
   selection: string;
 }
 
-export const DOT_COLORS: { name: ThemeColorName; hex: string }[] = [
+export const DOT_COLORS: { name: ThemeName; hex: string }[] = [
+  { name: "neutral", hex: "#000000" },
   { name: "red", hex: "#f9454d" },
   { name: "green", hex: "#0ed76e" },
   { name: "blue", hex: "#4c4ec7" },
@@ -28,7 +29,7 @@ export const DOT_COLORS: { name: ThemeColorName; hex: string }[] = [
 
 export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
   neutral: {
-    dot: "transparent",
+    dot: "#000000",
     bg: "#fbfbfb",
     border: "rgba(37, 42, 73, 0.13)",
     text: "rgba(37, 42, 73, 0.9)",
