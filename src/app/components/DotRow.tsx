@@ -31,12 +31,14 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   useEffect(() => {
     const track = dotTrackRef.current;
     if (!track) return;
-    const syncGap = () => {
-      track.style.setProperty("--dot-gap", getComputedStyle(track).columnGap);
-      track.style.setProperty("--dot-radius", `${track.clientHeight / 2}px`);
+    const syncBounds = () => {
+      const redDot = track.querySelector<HTMLButtonElement>('[data-theme-dot="red"]');
+      if (!redDot) return;
+      track.style.setProperty("--red-dot-left", `${redDot.offsetLeft}px`);
+      track.style.setProperty("--red-dot-right", `${track.clientWidth - redDot.offsetLeft - redDot.offsetWidth}px`);
     };
-    syncGap();
-    const observer = new ResizeObserver(syncGap);
+    syncBounds();
+    const observer = new ResizeObserver(syncBounds);
     observer.observe(track);
     return () => observer.disconnect();
   }, []);
@@ -100,6 +102,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
             return (
               <button
                 key={name}
+                data-theme-dot={name}
                 type="button"
                 aria-label={name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
                 aria-pressed={isSelected}
@@ -109,35 +112,45 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                 style={{
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
+                  zIndex: name === "red" ? 1 : undefined,
                 }}
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 transition-[left,right,border-radius] ease-in-out motion-reduce:transition-none"
+                  className="pointer-events-none absolute inset-y-0 overflow-hidden rounded-full transition-[left,right,opacity] ease-in-out motion-reduce:transition-none"
                   style={{
                     backgroundColor: color,
-                    left: editing && index > 0 ? "calc(var(--dot-gap) / -2 - 0.5px)" : 0,
-                    right: editing && index < dots.length - 1 ? "calc(var(--dot-gap) / -2 - 0.5px)" : 0,
-                    borderRadius: editing
-                      ? index === 0 ? "var(--dot-radius) 0 0 var(--dot-radius)" : index === dots.length - 1 ? "0 var(--dot-radius) var(--dot-radius) 0" : "0px"
-                      : "var(--dot-radius)",
-                    transitionDuration: `${reduceMotion ? 0 : morphDuration}ms`,
+                    left: editing && name === "red" ? "calc(-1 * var(--red-dot-left))" : 0,
+                    right: editing && name === "red" ? "calc(-1 * var(--red-dot-right))" : 0,
+                    opacity: editing && name !== "red" ? 0 : 1,
+                    transitionDuration: `${reduceMotion ? 0 : name === "red" ? morphDuration : morphDuration * 0.4}ms`,
                   }}
-                />
+                >
+                  {name === "red" && (
+                    <span
+                      className="absolute inset-0 rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
+                      style={{
+                        background: SPECTRUM_GRADIENT,
+                        opacity: editing ? 1 : 0,
+                        transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.65}ms`,
+                        transitionDelay: `${editing && !reduceMotion ? morphDuration * 0.35 : 0}ms`,
+                      }}
+                    />
+                  )}
+                </span>
               </button>
             );
           })}
           <div
             aria-hidden={!editing}
             inert={!editing}
-            className={`pointer-events-none absolute inset-0 grid ${gap}`}
+            className={`pointer-events-none absolute inset-0 z-10 grid ${gap}`}
             style={{ gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
           >
             <div
               className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
               style={{
                 gridColumn: "1 / -1",
-                background: SPECTRUM_GRADIENT,
                 transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.55}ms`,
                 transitionDelay: `${editing && !reduceMotion ? morphDuration * 0.45 : 0}ms`,
                 opacity: editing ? 1 : 0,
