@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useDialKit } from "dialkit";
 import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
 import { useTypeStyle } from "../lib/TypeStyleContext";
@@ -31,6 +32,9 @@ function CosmosLabel() {
 }
 
 export default function SideNav() {
+  const { leadingPadding } = useDialKit("Font label", {
+    leadingPadding: [0, 0, 40, 1],
+  }, { id: "font-label-spacing", persist: true });
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
   const { typeStyle } = useTypeStyle();
@@ -79,7 +83,7 @@ export default function SideNav() {
         </button>
 
         <div className="mt-auto pb-8 flex flex-col gap-3">
-          <p className="text-[16px]">
+          <p className="text-[16px]" style={{ paddingInlineStart: leadingPadding }}>
             {typeStyle === "mono" ? (
               <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Berkeley Mono</a>
             ) : typeStyle === "serif" ? (
