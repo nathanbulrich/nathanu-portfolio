@@ -30,8 +30,8 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const replay = useRef<() => void>(() => {});
   const request = useRef(0);
   const settings = useDialKit("Text transitions", {
-    duration: [750, 0, 1000, 10],
-    layoutDuration: [450, 0, 1000, 10],
+    duration: [430, 0, 1000, 10],
+    layoutDuration: [1000, 0, 1000, 10],
     replay: { type: "action" },
   }, { id: "site-text-transitions", persist: true, onAction: () => replay.current() });
 

@@ -33,7 +33,7 @@ function CosmosLabel() {
 
 export default function SideNav() {
   const { leadingPadding } = useDialKit("Font label", {
-    leadingPadding: [0, 0, 40, 1],
+    leadingPadding: [3, 0, 40, 1],
   }, { id: "font-label-spacing", persist: true });
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
