@@ -23,6 +23,9 @@ export const sites: Site[] = [
   { name: "Untitled", url: "untitled.stream", note: "Delicious audiophile details" },
   { name: "Software Inc.", url: "software.inc", note: "Retro Mac OS emulator site" },
   { name: "Paul Macgregor", url: "works.pm", note: "Insane visual design craft" },
+  { name: "Khalil Cader", url: "khalilcader.com", note: "Beautiful corner radii" },
+  { name: "Rauno Freiberg", url: "rauno.me", note: "Delightful interaction details" },
+  { name: "Devouring Details", url: "devouringdetails.com", note: "The craft of interaction design" },
 ];
 
 export function slugForUrl(url: string): string {
