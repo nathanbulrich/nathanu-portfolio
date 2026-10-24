@@ -11,6 +11,7 @@ export default function DeviceFrameTuner() {
       color: "#000000",
       opacity: [12, 0, 100, 1],
       thickness: [1, 0, 8, 0.25],
+      alignment: { type: "select", options: ["Inside", "Outside"], default: "Inside" },
     },
     tightShadow: {
       enabled: true,
@@ -51,13 +52,15 @@ export default function DeviceFrameTuner() {
   useEffect(() => {
     const style = document.documentElement.style;
     style.setProperty("--device-border-color", `color-mix(in srgb, ${border.color} ${border.opacity}%, transparent)`);
-    // Half the stroke is clipped away, leaving the requested inside thickness.
+    // Clip half the centered stroke to preserve the requested pixel thickness.
     style.setProperty("--device-border-width", `${border.enabled ? border.thickness * 2 : 0}px`);
+    style.setProperty("--device-border-clip", border.alignment === "Outside" ? "url(#device-border-outside)" : "url(#squircle)");
     return () => {
       style.removeProperty("--device-border-color");
       style.removeProperty("--device-border-width");
+      style.removeProperty("--device-border-clip");
     };
-  }, [border.enabled, border.color, border.opacity, border.thickness]);
+  }, [border.enabled, border.color, border.opacity, border.thickness, border.alignment]);
 
   // Scale the original continuous corners proportionally across every device.
   const x = cornerRoundness / 100;
@@ -76,6 +79,9 @@ export default function DeviceFrameTuner() {
         <path id="device-frame-outline" d={path} vectorEffect="non-scaling-stroke" />
         <clipPath id="squircle" clipPathUnits="objectBoundingBox">
           <path d={path} />
+        </clipPath>
+        <clipPath id="device-border-outside" clipPathUnits="objectBoundingBox">
+          <path d={`M -1,-1 H 2 V 2 H -1 Z ${path}`} clipRule="evenodd" />
         </clipPath>
       </defs>
     </svg>

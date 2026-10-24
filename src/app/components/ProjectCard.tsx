@@ -58,7 +58,7 @@ function TiltImage({ src, alt }: { src: string; alt: string }) {
           viewBox="0 0 1 1"
           preserveAspectRatio="none"
           aria-hidden="true"
-          style={{ clipPath: "url(#squircle)" }}
+          style={{ overflow: "visible", clipPath: "var(--device-border-clip, url(#squircle))" }}
         >
           <use
             href="#device-frame-outline"
