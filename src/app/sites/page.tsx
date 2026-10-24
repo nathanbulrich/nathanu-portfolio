@@ -9,6 +9,7 @@ import { SitePreview } from "./SitePreview";
 
 export default function Sites() {
   const { typeStyle } = useTypeStyle();
+  const [previewOrigin, setPreviewOrigin] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState<Site | null>(null);
   return (
     <main className="min-h-screen">
@@ -33,7 +34,10 @@ export default function Sites() {
                     key={url}
                     className="group cursor-pointer hover:bg-[color-mix(in_srgb,var(--theme-text)_5%,transparent)] transition-colors"
                     onClick={() => window.open(`https://${url}`, '_blank', 'noopener,noreferrer')}
-                    onMouseEnter={() => setHovered(site)}
+                    onMouseEnter={(event) => {
+                      setPreviewOrigin({ x: event.clientX, y: event.clientY });
+                      setHovered(site);
+                    }}
                     onMouseLeave={() => setHovered((current) => (current?.url === url ? null : current))}
                   >
                     <td className="py-5 pl-6 md:pl-8 pr-8 border-b border-b-[var(--theme-border)] group-last:border-b-0">
@@ -75,7 +79,7 @@ export default function Sites() {
           </table>
         </div>
       </div>
-      <SitePreview site={hovered} />
+      <SitePreview site={hovered} origin={previewOrigin} />
     </main>
   );
 }
