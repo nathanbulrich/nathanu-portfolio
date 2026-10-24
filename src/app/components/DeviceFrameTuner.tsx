@@ -4,33 +4,43 @@ import { useDialKit } from "dialkit";
 import { useEffect } from "react";
 
 export default function DeviceFrameTuner() {
-  const { cornerRoundness, shadow } = useDialKit("Device frames", {
+  const { cornerRoundness, tightShadow, wideShadow } = useDialKit("Device frames", {
     cornerRoundness: [18, 0, 30, 1],
-    shadow: {
+    tightShadow: {
       enabled: true,
       color: "#000000",
-      opacity: [29, 0, 100, 1],
-      blur: [25, 0, 100, 1],
+      opacity: [12, 0, 100, 1],
+      blur: [3, 0, 100, 1],
       offsetX: [0, -100, 100, 1],
-      offsetY: [4, -100, 100, 1],
+      offsetY: [2, -100, 100, 1],
+    },
+    wideShadow: {
+      enabled: true,
+      color: "#000000",
+      opacity: [7, 0, 100, 1],
+      blur: [24, 0, 100, 1],
+      offsetX: [0, -100, 100, 1],
+      offsetY: [10, -100, 100, 1],
     },
   }, {
     id: "project-device-frames",
     persist: true,
   });
 
+  const shadowFilter = [tightShadow, wideShadow]
+    .filter((shadow) => shadow.enabled)
+    .map((shadow) => {
+      const color = `color-mix(in srgb, ${shadow.color} ${shadow.opacity}%, transparent)`;
+      return `drop-shadow(${shadow.offsetX}px ${shadow.offsetY}px ${shadow.blur}px ${color})`;
+    })
+    .join(" ") || "none";
+
   useEffect(() => {
-    const color = `color-mix(in srgb, ${shadow.color} ${shadow.opacity}%, transparent)`;
-    document.documentElement.style.setProperty(
-      "--device-shadow",
-      shadow.enabled
-        ? `drop-shadow(${shadow.offsetX}px ${shadow.offsetY}px ${shadow.blur}px ${color})`
-        : "none",
-    );
+    document.documentElement.style.setProperty("--device-shadow", shadowFilter);
     return () => {
       document.documentElement.style.removeProperty("--device-shadow");
     };
-  }, [shadow.enabled, shadow.color, shadow.opacity, shadow.blur, shadow.offsetX, shadow.offsetY]);
+  }, [shadowFilter]);
 
   // Scale the original continuous corners proportionally across every device.
   const x = cornerRoundness / 100;
