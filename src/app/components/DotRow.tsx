@@ -12,7 +12,7 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth } = useDotStyle();
   const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
@@ -204,7 +204,10 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   previewHue(nextHue);
                 }}
                 className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
-                style={{ "--theme-color-thumb-height": `${selectionBarHeight + 8}px` } as CSSProperties}
+                style={{
+                  "--theme-color-thumb-size": `${selectorDotSize}px`,
+                  "--theme-color-thumb-stroke": `${Math.min(selectorStrokeWidth, selectorDotSize / 2)}px`,
+                } as CSSProperties}
               />
             </div>
           </motion.div>

@@ -128,18 +128,20 @@ a:hover {
 
 .theme-color-gradient::-webkit-slider-thumb {
   appearance: none;
-  width: 12px;
-  height: var(--theme-color-thumb-height, 28px);
-  border: 3px solid white;
+  box-sizing: border-box;
+  width: var(--theme-color-thumb-size, 16px);
+  height: var(--theme-color-thumb-size, 16px);
+  border: var(--theme-color-thumb-stroke, 2px) solid white;
   border-radius: 999px;
   background: transparent;
   box-shadow: 0 1px 5px rgb(0 0 0 / 0.35);
 }
 
 .theme-color-gradient::-moz-range-thumb {
-  width: 6px;
-  height: calc(var(--theme-color-thumb-height, 28px) - 6px);
-  border: 3px solid white;
+  box-sizing: border-box;
+  width: var(--theme-color-thumb-size, 16px);
+  height: var(--theme-color-thumb-size, 16px);
+  border: var(--theme-color-thumb-stroke, 2px) solid white;
   border-radius: 999px;
   background: transparent;
   box-shadow: 0 1px 5px rgb(0 0 0 / 0.35);
