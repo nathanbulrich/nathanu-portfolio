@@ -12,11 +12,12 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce } = useDotStyle();
+  const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(210);
-  const [trackBounds, setTrackBounds] = useState({ width: 0, redLeft: 0 });
+  const [trackBounds, setTrackBounds] = useState({ width: 0, originLeft: 0 });
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
   const barTop = (defaultDotSize - barHeight) / 2;
@@ -37,15 +38,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
     const track = dotTrackRef.current;
     if (!track) return;
     const syncBounds = () => {
-      const redDot = track.querySelector<HTMLButtonElement>('[data-theme-dot="red"]');
-      if (!redDot) return;
-      setTrackBounds({ width: track.clientWidth, redLeft: redDot.offsetLeft });
+      const originDot = track.querySelectorAll<HTMLButtonElement>("[data-theme-dot]")[originIndex];
+      if (!originDot) return;
+      setTrackBounds({ width: track.clientWidth, originLeft: originDot.offsetLeft });
       track.style.setProperty("--spectrum-width", `${track.clientWidth}px`);
     };
     const observer = new ResizeObserver(syncBounds);
     observer.observe(track);
     return () => observer.disconnect();
-  }, []);
+  }, [originIndex]);
 
   useEffect(() => {
     if (!editing) return;
@@ -104,6 +105,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
           {dots.map(({ name, hex }, index) => {
             const color = name === "neutral" ? blackDotColor : hex;
             const isSelected = activeTheme === name;
+            const isOrigin = index === originIndex;
 
             return (
               <button
@@ -119,7 +121,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   ...dotDimensions,
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
-                  zIndex: name === "red" ? 1 : undefined,
+                  zIndex: isOrigin ? 1 : undefined,
                 }}
               >
                 <motion.span
@@ -128,18 +130,18 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   className="pointer-events-none absolute overflow-hidden rounded-full"
                   style={{ backgroundColor: color }}
                   animate={{
-                    left: editing && name === "red" ? -trackBounds.redLeft : 0,
-                    right: editing && name === "red" ? -(trackBounds.width - trackBounds.redLeft - defaultDotSize) : 0,
-                    top: name === "red" ? barTop : 0,
-                    height: name === "red" ? barHeight : defaultDotSize,
-                    opacity: editing && name !== "red" ? 0 : 1,
+                    left: editing && isOrigin ? -trackBounds.originLeft : 0,
+                    right: editing && isOrigin ? -(trackBounds.width - trackBounds.originLeft - defaultDotSize) : 0,
+                    top: isOrigin ? barTop : 0,
+                    height: isOrigin ? barHeight : defaultDotSize,
+                    opacity: editing && !isOrigin ? 0 : 1,
                   }}
                   transition={{
                     ...morphTransition,
                     opacity: { duration: reduceMotion ? 0 : morphDuration / 2500 },
                   }}
                 >
-                  {name === "red" && (
+                  {isOrigin && (
                     <>
                       <span
                         className="absolute inset-y-0 left-0"
