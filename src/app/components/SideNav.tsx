@@ -65,7 +65,6 @@ export default function SideNav() {
             )}
           </p>
           <TypeSwitcher />
-          <p className="opacity-40 text-[14px] mt-3">© Copyright 2026</p>
         </div>
       </nav>
 
