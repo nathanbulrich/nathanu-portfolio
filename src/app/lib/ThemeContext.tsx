@@ -9,6 +9,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { useDialKit } from "dialkit";
 import {
   THEME_PALETTES,
   DOT_COLORS,
@@ -20,8 +21,7 @@ import {
 
 interface CustomTheme {
   name: ThemeName;
-  hex: string;
-  palette: ThemePalette;
+  hue: number;
 }
 
 interface ThemeContextValue {
@@ -36,21 +36,45 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  const recipe = useDialKit("Custom color theme", {
+    background: {
+      saturation: [75, 0, 100, 1],
+      lightness: [97, 90, 100, 0.5],
+    },
+    text: {
+      saturation: [60, 0, 100, 1],
+      lightness: [28, 10, 45, 0.5],
+    },
+    secondaryText: {
+      saturation: [40, 0, 100, 1],
+      lightness: [38, 10, 55, 0.5],
+    },
+    borders: {
+      saturation: [55, 0, 100, 1],
+      lightness: [40, 10, 80, 1],
+      opacity: [20, 0, 50, 1],
+    },
+    selection: {
+      saturation: [80, 0, 100, 1],
+      lightness: [82, 65, 95, 1],
+    },
+  }, { id: "custom-color-theme", persist: true });
   const [activeTheme, setActiveTheme] = useState<ThemeName>("neutral");
   const [customThemes, setCustomThemes] = useState<CustomTheme[]>([]);
   const [preview, setPreview] = useState<number | null>(null);
   const nextColorId = useRef(0);
   const palettes: Partial<Record<ThemeName, ThemePalette>> = THEME_PALETTES;
+  const customTheme = customThemes.find(({ name }) => name === activeTheme);
   const palette = preview !== null
-    ? paletteFromHue(preview)
-    : customThemes.find(({ name }) => name === activeTheme)?.palette
-      ?? palettes[activeTheme] ?? THEME_PALETTES.neutral;
-  const dots = [...DOT_COLORS, ...customThemes];
+    ? paletteFromHue(preview, recipe)
+    : customTheme
+      ? paletteFromHue(customTheme.hue, recipe)
+      : palettes[activeTheme] ?? THEME_PALETTES.neutral;
+  const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))];
 
   const addColor = useCallback((hue: number) => {
     const name: ThemeName = `custom-${nextColorId.current++}`;
-    const customPalette = paletteFromHue(hue);
-    setCustomThemes((themes) => [...themes, { name, hex: customPalette.dot, palette: customPalette }]);
+    setCustomThemes((themes) => [...themes, { name, hue }]);
     setActiveTheme(name);
     setPreview(null);
   }, []);

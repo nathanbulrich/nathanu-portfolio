@@ -18,6 +18,22 @@ export interface ThemePalette {
   selection: string;
 }
 
+export interface ThemeRecipe {
+  background: { saturation: number; lightness: number };
+  text: { saturation: number; lightness: number };
+  secondaryText: { saturation: number; lightness: number };
+  borders: { saturation: number; lightness: number; opacity: number };
+  selection: { saturation: number; lightness: number };
+}
+
+export const DEFAULT_THEME_RECIPE: ThemeRecipe = {
+  background: { saturation: 75, lightness: 97 },
+  text: { saturation: 60, lightness: 28 },
+  secondaryText: { saturation: 40, lightness: 38 },
+  borders: { saturation: 55, lightness: 40, opacity: 20 },
+  selection: { saturation: 80, lightness: 82 },
+};
+
 export const SPECTRUM_GRADIENT = `linear-gradient(to right, ${[0, 60, 120, 180, 240, 300, 360]
   .map((hue) => paletteFromHue(hue).dot).join(", ")})`;
 
@@ -98,14 +114,39 @@ export const CSS_VAR_MAP = {
   selection: "--theme-selection",
 } as const;
 
-// Keep custom themes as light surfaces with dark, readable text at every hue.
-export function paletteFromHue(hue: number): ThemePalette {
+function luminance(hue: number, saturation: number, lightness: number): number {
+  const h = ((hue % 360) + 360) % 360;
+  const s = saturation / 100;
+  const l = lightness / 100;
+  const a = s * Math.min(l, 1 - l);
+  const channels = [0, 8, 4].map((n) => {
+    const k = (n + h / 30) % 12;
+    const channel = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+}
+
+function readableText(hue: number, saturation: number, lightness: number, backgroundLuminance: number): string {
+  // Let color and tone vary while preserving readable body-text contrast.
+  let adjustedLightness = lightness;
+  while (adjustedLightness > 0 &&
+    (backgroundLuminance + 0.05) / (luminance(hue, saturation, adjustedLightness) + 0.05) < 4.5) {
+    adjustedLightness = Math.max(0, adjustedLightness - 0.5);
+  }
+  return `hsl(${hue} ${saturation}% ${adjustedLightness}%)`;
+}
+
+export function paletteFromHue(hue: number, recipe: ThemeRecipe = DEFAULT_THEME_RECIPE): ThemePalette {
+  const { background, text, secondaryText, borders, selection } = recipe;
+  const backgroundLuminance = luminance(hue, background.saturation, background.lightness);
   return {
+    // Keep the picked swatch and spectrum independent of page styling.
     dot: `hsl(${hue} 82% 56%)`,
-    bg: `hsl(${hue} 75% 97%)`,
-    border: `hsl(${hue} 55% 40% / 0.2)`,
-    text: `hsl(${hue} 60% 28%)`,
-    textSecondary: `hsl(${hue} 40% 38%)`,
-    selection: `hsl(${hue} 80% 82%)`,
+    bg: `hsl(${hue} ${background.saturation}% ${background.lightness}%)`,
+    border: `hsl(${hue} ${borders.saturation}% ${borders.lightness}% / ${borders.opacity / 100})`,
+    text: readableText(hue, text.saturation, text.lightness, backgroundLuminance),
+    textSecondary: readableText(hue, secondaryText.saturation, secondaryText.lightness, backgroundLuminance),
+    selection: `hsl(${hue} ${selection.saturation}% ${selection.lightness}%)`,
   };
 }
