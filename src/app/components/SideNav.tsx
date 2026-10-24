@@ -17,11 +17,11 @@ function CosmosLabel() {
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        strokeLinecap="butt"
+        strokeLinejoin="miter"
         className="pointer-events-none absolute left-full ml-1.5 h-[0.65em] w-[0.65em] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
       >
-        <path d="M3.5 12.5 12.5 3.5M3.5 3.5h9v9" />
+        <path d="M1.5 14.5 12.5 3.5M3.5 3.5h9v9" />
       </svg>
       <span className="sr-only"> (opens in a new tab)</span>
     </span>
