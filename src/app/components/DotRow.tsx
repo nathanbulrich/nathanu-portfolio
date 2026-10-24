@@ -20,6 +20,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const originColor = dots[originIndex].name === "neutral" ? neutralDotColor : dots[originIndex].hex;
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
+  const [morphVisible, setMorphVisible] = useState(false);
   const [hue, setHue] = useState(0);
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
@@ -132,7 +133,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
             aria-hidden="true"
             initial={false}
             className="pointer-events-none absolute z-[1] overflow-hidden rounded-full"
-            style={{ backgroundColor: originColor }}
+            style={{ backgroundColor: originColor, visibility: morphVisible ? "visible" : "hidden" }}
             animate={{
               left: editing ? 0 : originLeft,
               width: editing ? trackWidth + barExtension : defaultDotSize,
@@ -140,6 +141,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
               height: barHeight,
             }}
             transition={morphTransition}
+            onAnimationComplete={() => {
+              if (!editing) setMorphVisible(false);
+            }}
           >
             <span
               className="absolute inset-y-0 left-0"
@@ -237,6 +241,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
               if (editing) finish(true);
               else {
                 setHue(0);
+                setMorphVisible(true);
                 setEditing(true);
                 previewHue(0);
               }
