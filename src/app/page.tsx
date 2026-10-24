@@ -3,6 +3,15 @@ import ProjectCard from "./components/ProjectCard";
 
 const projects = [
   {
+    title: "Cosmos",
+    images: [
+      "/images/cosmos-1.png",
+      "/images/cosmos-2.png",
+      "/images/cosmos-3.png",
+    ],
+    description: "Cosmos — a home for inspiration and discovery.",
+  },
+  {
     title: "Joon",
     images: [
       "/images/joon-1.png",
