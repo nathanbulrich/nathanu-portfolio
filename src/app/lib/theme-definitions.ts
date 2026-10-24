@@ -6,7 +6,8 @@ export type ThemeColorName =
   | "yellow"
   | "pink";
 
-export type ThemeName = "neutral" | ThemeColorName;
+export type BuiltInThemeName = "neutral" | ThemeColorName;
+export type ThemeName = BuiltInThemeName | `custom-${number}`;
 
 export interface ThemePalette {
   dot: string;
@@ -27,7 +28,7 @@ export const DOT_COLORS: { name: ThemeName; hex: string }[] = [
   { name: "pink", hex: "#ff52b9" },
 ];
 
-export const THEME_PALETTES: Record<ThemeName, ThemePalette> = {
+export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
   neutral: {
     dot: "#000000",
     bg: "#fbfbfb",
@@ -93,3 +94,15 @@ export const CSS_VAR_MAP = {
   textSecondary: "--theme-text-secondary",
   selection: "--theme-selection",
 } as const;
+
+// Keep custom themes as light surfaces with dark, readable text at every hue.
+export function paletteFromHue(hue: number): ThemePalette {
+  return {
+    dot: `hsl(${hue} 82% 56%)`,
+    bg: `hsl(${hue} 75% 97%)`,
+    border: `hsl(${hue} 55% 40% / 0.2)`,
+    text: `hsl(${hue} 60% 28%)`,
+    textSecondary: `hsl(${hue} 40% 38%)`,
+    selection: `hsl(${hue} 80% 82%)`,
+  };
+}

@@ -117,3 +117,37 @@ a:hover {
     padding-left: calc((100vw - 140px - 1200px) / 2 + 48px);
   }
 }
+
+/* A native slider keeps the gradient draggable with touch and keyboard. */
+.theme-color-gradient {
+  appearance: none;
+  margin: 0;
+  background: linear-gradient(to right,
+    hsl(0 82% 56%), hsl(60 82% 56%), hsl(120 82% 56%),
+    hsl(180 82% 56%), hsl(240 82% 56%), hsl(300 82% 56%), hsl(360 82% 56%));
+  touch-action: pan-y;
+}
+
+.theme-color-gradient::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 28px;
+  border: 3px solid white;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: 0 1px 5px rgb(0 0 0 / 0.35);
+}
+
+.theme-color-gradient::-moz-range-thumb {
+  width: 6px;
+  height: 22px;
+  border: 3px solid white;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: 0 1px 5px rgb(0 0 0 / 0.35);
+}
+
+.theme-color-gradient:focus-visible {
+  outline: 2px solid var(--theme-text);
+  outline-offset: 5px;
+}
