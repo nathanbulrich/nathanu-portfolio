@@ -41,6 +41,8 @@ export default function TypeSwitcher() {
     },
     interaction: {
       hoverTint: [5, 0, 20, 1],
+      hoverCircleSize: [32, 16, 48, 1],
+      slideDuration: [240, 0, 600, 10],
       hoverScale: [1.08, 1, 1.2, 0.01],
       duration: [150, 0, 400, 10],
     },
@@ -51,7 +53,7 @@ export default function TypeSwitcher() {
     <div
       role="group"
       aria-label="Typeface"
-      className="inline-flex self-start"
+      className="relative inline-flex self-start"
       style={{
         padding: values.layout.padding,
         gap: values.layout.gap,
@@ -60,6 +62,22 @@ export default function TypeSwitcher() {
         border: `${values.container.borderWidth}px solid ${tint(values.container.borderOpacity)}`,
       }}
     >
+      <span
+        aria-hidden="true"
+        className="absolute pointer-events-none transition-transform motion-reduce:transition-none"
+        style={{
+          left: values.layout.padding,
+          top: values.layout.padding,
+          width: values.layout.segmentWidth,
+          height: values.layout.segmentHeight,
+          borderRadius: values.selected.radius,
+          background: `color-mix(in srgb, var(--theme-text) ${values.selected.tint}%, var(--theme-bg))`,
+          boxShadow: `inset 0 0 0 1px ${tint(values.selected.borderOpacity)}, 0 ${values.selected.shadowY}px ${values.selected.shadowBlur}px rgba(0,0,0,${values.selected.shadowOpacity / 100})`,
+          transform: `translateX(${styles.findIndex(({ key }) => key === typeStyle) * (values.layout.segmentWidth + values.layout.gap)}px)`,
+          transitionDuration: `${values.interaction.slideDuration}ms`,
+          transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+      />
       {styles.map(({ key, font, label }) => {
         const active = typeStyle === key;
         return (
@@ -76,15 +94,13 @@ export default function TypeSwitcher() {
               borderRadius: values.selected.radius,
               fontFamily: font,
               fontSize: values.typography[`${key}Size`],
-              background: active ? `color-mix(in srgb, var(--theme-text) ${values.selected.tint}%, var(--theme-bg))` : undefined,
-              boxShadow: active ? `inset 0 0 0 1px ${tint(values.selected.borderOpacity)}, 0 ${values.selected.shadowY}px ${values.selected.shadowBlur}px rgba(0,0,0,${values.selected.shadowOpacity / 100})` : undefined,
               transitionDuration: `${values.interaction.duration}ms`,
-              '--segment-hover': active ? 'transparent' : tint(values.interaction.hoverTint),
+              '--segment-hover': tint(values.interaction.hoverTint),
               '--segment-scale': values.interaction.hoverScale,
               '--segment-duration': `${values.interaction.duration}ms`,
             } as React.CSSProperties}
           >
-            <span aria-hidden="true" className="absolute inset-0 rounded-[inherit] type-segment-hover pointer-events-none" />
+            <span aria-hidden="true" className="absolute rounded-full type-segment-hover pointer-events-none" style={{ width: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight), height: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight) }} />
             <span className="type-segment-letter relative" style={{ opacity: (active ? values.typography.activeOpacity : values.typography.inactiveOpacity) / 100 }}>A</span>
           </button>
         );
