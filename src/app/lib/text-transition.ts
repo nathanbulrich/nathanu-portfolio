@@ -7,8 +7,8 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
   const opacity = new Map(visible.map(el => [el, Number(getComputedStyle(el).opacity)]));
   let cancelled = false;
   const animations: Animation[] = [];
-  const animate = (el: HTMLElement, frames: Keyframe[], time: number) => {
-    const animation = el.animate(frames, { duration: time, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
+  const animate = (el: HTMLElement, frames: Keyframe[], time: number, easing = 'cubic-bezier(.22,1,.36,1)') => {
+    const animation = el.animate(frames, { duration: time, easing, fill: 'both' });
     animations.push(animation);
     return animation;
   };
@@ -31,14 +31,19 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
     const after = blocks.map(el => getComputedStyle(el).height);
     const layout = blocks.flatMap((el, i) => {
       if (before[i] === after[i] || !before[i].endsWith('px') || !after[i].endsWith('px')) return [];
-      return [animate(el, [{ height: before[i] }, { height: after[i] }], layoutDuration)];
+      // A symmetric ease avoids the long subpixel crawl of the text fade curve.
+      // Hold the exact final height briefly so removing the effect cannot shift it.
+      return [animate(el, [{ height: before[i], easing: 'ease-in-out' }, { height: after[i], offset: .9 }, { height: after[i] }], layoutDuration, 'linear')];
     });
     outgoing.forEach(animation => animation.cancel());
     const incoming = visible.map(el => animate(el, [
       { opacity: 0, filter: 'blur(3px)' },
-      { opacity: opacity.get(el), filter: 'blur(0px)' },
+      { opacity: opacity.get(el), filter: 'none' },
     ], duration * .6));
-    await finished([...incoming, ...layout]);
+    // Do not keep blur(0) compositing on sharp text while the layout settles.
+    await finished(incoming);
+    incoming.forEach(animation => animation.cancel());
+    await finished(layout);
     if (!cancelled) clear();
   };
   void run();
