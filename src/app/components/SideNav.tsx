@@ -7,6 +7,27 @@ import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
+function CosmosLabel() {
+  return (
+    <span className="relative inline-flex items-center">
+      Cosmos
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="pointer-events-none absolute left-full ml-1.5 h-[0.65em] w-[0.65em] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+      >
+        <path d="M3.5 12.5 12.5 3.5M3.5 3.5h9v9" />
+      </svg>
+      <span className="sr-only"> (opens in a new tab)</span>
+    </span>
+  );
+}
+
 export default function SideNav() {
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
@@ -43,9 +64,9 @@ export default function SideNav() {
           href="https://www.cosmos.so/nathanu"
           target="_blank"
           rel="noopener noreferrer"
-          className="pt-2 pb-1.5 no-underline hover:no-underline opacity-40 hover:opacity-70 transition-opacity duration-[30ms]"
+          className="group pt-2 pb-1.5 no-underline hover:no-underline opacity-40 hover:opacity-70 focus-visible:opacity-70 transition-opacity duration-[30ms]"
         >
-          Cosmos
+          <CosmosLabel />
         </a>
         <button
           onClick={() => setContactOpen(true)}
@@ -91,9 +112,9 @@ export default function SideNav() {
             href="https://www.cosmos.so/nathanu"
             target="_blank"
             rel="noopener noreferrer"
-            className="no-underline hover:no-underline opacity-40 hover:opacity-70 transition-opacity duration-[30ms]"
+            className="group no-underline hover:no-underline opacity-40 hover:opacity-70 focus-visible:opacity-70 transition-opacity duration-[30ms]"
           >
-            Cosmos
+            <CosmosLabel />
           </a>
           <button
             onClick={() => setContactOpen(true)}
