@@ -41,7 +41,6 @@ export default function DotRow({ className = "" }: DotRowProps) {
       if (!redDot) return;
       setTrackBounds({ width: track.clientWidth, redLeft: redDot.offsetLeft });
       track.style.setProperty("--spectrum-width", `${track.clientWidth}px`);
-      track.style.setProperty("--dot-diameter", `${redDot.offsetWidth}px`);
     };
     const observer = new ResizeObserver(syncBounds);
     observer.observe(track);
@@ -141,17 +140,29 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   }}
                 >
                   {name === "red" && (
-                    <span
-                      className="absolute inset-y-0 left-0"
-                      style={{
-                        width: "var(--spectrum-width)",
-                        backgroundColor: color,
-                        backgroundImage: SPECTRUM_GRADIENT,
-                        backgroundSize: "calc(100% - var(--dot-diameter)) 100%",
-                        backgroundPosition: "right center",
-                        backgroundRepeat: "no-repeat",
-                      }}
-                    />
+                    <>
+                      <span
+                        className="absolute inset-y-0 left-0"
+                        style={{
+                          width: "var(--spectrum-width)",
+                          backgroundColor: color,
+                          backgroundImage: SPECTRUM_GRADIENT,
+                          backgroundSize: "100% 100%",
+                          backgroundPosition: "left center",
+                          backgroundRepeat: "no-repeat",
+                        }}
+                      />
+                      <motion.span
+                        className="absolute inset-0"
+                        style={{ backgroundColor: color }}
+                        initial={false}
+                        animate={{ opacity: editing ? 0 : 1 }}
+                        transition={{
+                          duration: editing || reduceMotion ? 0 : 0.1,
+                          delay: editing || reduceMotion ? 0 : morphDuration / 1000,
+                        }}
+                      />
+                    </>
                   )}
                 </motion.span>
               </button>
@@ -170,7 +181,6 @@ export default function DotRow({ className = "" }: DotRowProps) {
               className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
               style={{
                 gridColumn: "1 / -1",
-                marginLeft: "var(--dot-diameter)",
                 transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.35}ms`,
                 transitionDelay: `${editing && !reduceMotion ? morphDuration : 0}ms`,
                 opacity: editing ? 1 : 0,
