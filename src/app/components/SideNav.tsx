@@ -10,7 +10,7 @@ import { useTypeStyle } from "../lib/TypeStyleContext";
 function CosmosLabel() {
   return (
     <span className="relative inline-flex items-center">
-      Cosmos
+      <span className="group-hover:underline group-focus-visible:underline">Cosmos</span>
       <svg
         aria-hidden="true"
         viewBox="0 0 16 16"
