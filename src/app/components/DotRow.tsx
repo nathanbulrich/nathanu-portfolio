@@ -12,7 +12,7 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
+  const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap } = useDotStyle();
   const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = useDotStyle();
   const { selectorDragScale, selectorDragDuration } = useDotStyle();
   // For an even count, use the right-hand middle dot.
@@ -247,10 +247,10 @@ export default function DotRow({ className = "" }: DotRowProps) {
             animate={{
               width: editing ? selectionBarHeight : defaultDotSize,
               height: editing ? selectionBarHeight : defaultDotSize,
-              backgroundColor: editing ? `hsl(${hue} 55% 40% / ${checkBackgroundTint / 100})` : "rgba(0, 0, 0, 0)",
+              backgroundColor: editing ? "#000000" : "rgba(0, 0, 0, 0)",
             }}
             whileHover={editing ? {
-              backgroundColor: `hsl(${hue} 55% 40% / ${Math.min(100, checkBackgroundTint + 5) / 100})`,
+              backgroundColor: "#1a1a1a",
               transition: { duration: reduceMotion ? 0 : 0.15 },
             } : {}}
             transition={morphTransition}
@@ -271,7 +271,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
               left: "50%",
               top: "50%",
               transform: "translate(-50%, -50%)",
-              color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
+              color: editing ? "#ffffff" : "var(--theme-text-secondary)",
             }}
           >
             <span className={`flex items-center justify-center transition-transform duration-150 ease-out ${editing ? "" : "group-hover:scale-125"} motion-reduce:transition-none`}>
