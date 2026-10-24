@@ -29,13 +29,11 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const cancel = useRef<(() => void) | null>(null);
   const replay = useRef<() => void>(() => {});
   const request = useRef(0);
-  const settings = useDialKit("Text transitions", {
-    textAnimation: true,
-    layoutAnimation: true,
+  const settings = useDialKit("Page transition", {
+    enabled: true,
     duration: [430, 0, 1000, 10],
-    layoutDuration: [1000, 0, 1000, 10],
     replay: { type: "action" },
-  }, { id: "site-text-transitions", persist: true, onAction: () => replay.current() });
+  }, { id: "global-page-type-transition", persist: true, onAction: () => replay.current() });
 
   const animateFont = async (style: TypeStyle) => {
     const id = ++request.current;
@@ -48,7 +46,7 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
     if (!root.current) return;
     cancel.current = transitionText(root.current, () => {
       document.body.style.fontFamily = fontMap[style];
-    }, settings.duration, settings.layoutDuration, settings.textAnimation, settings.layoutAnimation);
+    }, settings.duration, settings.enabled);
   };
   const setTypeStyle = (style: TypeStyle) => {
     if (style === typeStyle) return;
