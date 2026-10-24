@@ -53,22 +53,6 @@ function TiltImage({ src, alt }: { src: string; alt: string }) {
             }}
           />
         )}
-        <svg
-          className="absolute inset-0 pointer-events-none w-full h-full"
-          viewBox="0 0 1 1"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-          style={{ overflow: "visible", clipPath: "var(--device-border-clip, url(#squircle))" }}
-        >
-          <use
-            href="#device-frame-outline"
-            fill="none"
-            style={{
-              stroke: "var(--device-border-color, rgba(0,0,0,0.12))",
-              strokeWidth: "var(--device-border-width, 2px)",
-            }}
-          />
-        </svg>
       </div>
     </div>
   );
