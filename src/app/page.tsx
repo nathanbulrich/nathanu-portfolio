@@ -5,9 +5,9 @@ const projects = [
   {
     title: "Cosmos",
     images: [
-      "/images/cosmos-1.png",
       "/images/cosmos-2.png",
       "/images/cosmos-3.png",
+      "/images/cosmos-1.png",
     ],
     description: "Cosmos — a home for inspiration and discovery.",
   },
