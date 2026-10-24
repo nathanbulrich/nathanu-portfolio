@@ -3,6 +3,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { DialRoot, useDialKit } from "dialkit";
 import "dialkit/styles.css";
+import { THEME_PALETTES } from "./theme-definitions";
 
 const DotStyleContext = createContext({
   defaultDotSize: 16,
@@ -18,7 +19,7 @@ const DotStyleContext = createContext({
   ringSpacing: 2,
   ringDuration: 320,
   morphDuration: 480,
-  blackDotColor: "#000000",
+  neutralDotColor: THEME_PALETTES.neutral.dot,
 });
 
 export function DotStyleProvider({ children }: { children: ReactNode }) {
@@ -36,7 +37,7 @@ export function DotStyleProvider({ children }: { children: ReactNode }) {
     ringSpacing: [2, 0, 8, 0.5],
     ringDuration: [320, 100, 800, 10],
     morphDuration: [480, 150, 1200, 10],
-    blackDotColor: "#000000",
+    neutralDotColor: THEME_PALETTES.neutral.dot,
   }, { id: "theme-dots", persist: true });
 
   return (

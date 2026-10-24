@@ -12,12 +12,12 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
+  const { ringThickness, ringSpacing, neutralDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
   const trackWidth = dots.length * defaultDotSize + (dots.length - 1) * dotSpacing;
-  const originColor = dots[originIndex].name === "neutral" ? blackDotColor : dots[originIndex].hex;
+  const originColor = dots[originIndex].name === "neutral" ? neutralDotColor : dots[originIndex].hex;
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(0);
@@ -36,7 +36,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
   const selectedColor = activeTheme === "neutral"
-    ? blackDotColor
+    ? neutralDotColor
     : dots[selectedIndex].hex;
   const position = (selectedIndex / (dots.length - 1)) * 100;
 
@@ -97,7 +97,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
             }}
           />
           {dots.map(({ name, hex }, index) => {
-            const color = name === "neutral" ? blackDotColor : hex;
+            const color = name === "neutral" ? neutralDotColor : hex;
             const isSelected = activeTheme === name;
 
             return (

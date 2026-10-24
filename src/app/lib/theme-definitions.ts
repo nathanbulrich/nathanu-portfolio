@@ -38,18 +38,18 @@ export const SPECTRUM_GRADIENT = `linear-gradient(to right, ${[0, 60, 120, 180, 
   .map((hue) => paletteFromHue(hue).dot).join(", ")})`;
 
 export const DOT_COLORS: { name: ThemeName; hex: string }[] = [
-  { name: "neutral", hex: "#000000" },
-  { name: "red", hex: "#f9454d" },
-  { name: "green", hex: "#0ed76e" },
-  { name: "blue", hex: "#4c4ec7" },
-  { name: "cyan", hex: "#71d7ff" },
-  { name: "yellow", hex: "#fff204" },
-  { name: "pink", hex: "#ff52b9" },
+  { name: "neutral", hex: "#393e5d" },
+  { name: "red", hex: "#fa2b45" },
+  { name: "yellow", hex: "#fff200" },
+  { name: "green", hex: "#0efb76" },
+  { name: "cyan", hex: "#2ad6ff" },
+  { name: "blue", hex: "#292bff" },
+  { name: "pink", hex: "#ff26b6" },
 ];
 
 export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
   neutral: {
-    dot: "#000000",
+    dot: "#393e5d",
     bg: "#fbfbfb",
     border: "rgba(37, 42, 73, 0.13)",
     text: "rgba(37, 42, 73, 0.9)",
@@ -57,7 +57,7 @@ export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
     selection: "#fde68a",
   },
   red: {
-    dot: "#f9454d",
+    dot: "#fa2b45",
     bg: "#fef2f2",
     border: "rgba(249, 69, 77, 0.18)",
     text: "#d32f2f",
@@ -65,7 +65,7 @@ export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
     selection: "#fca5a5",
   },
   green: {
-    dot: "#0ed76e",
+    dot: "#0efb76",
     bg: "#f0fdf4",
     border: "rgba(14, 215, 110, 0.18)",
     text: "#0a8f4a",
@@ -73,7 +73,7 @@ export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
     selection: "#86efac",
   },
   blue: {
-    dot: "#4c4ec7",
+    dot: "#292bff",
     bg: "#f0f0ff",
     border: "rgba(76, 78, 199, 0.18)",
     text: "#3a3bb0",
@@ -81,7 +81,7 @@ export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
     selection: "#a5b4fc",
   },
   cyan: {
-    dot: "#71d7ff",
+    dot: "#2ad6ff",
     bg: "#f0faff",
     border: "rgba(113, 215, 255, 0.22)",
     text: "#0c7fb5",
@@ -89,7 +89,7 @@ export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
     selection: "#a5f3fc",
   },
   yellow: {
-    dot: "#fff204",
+    dot: "#fff200",
     bg: "#fffde6",
     border: "rgba(200, 180, 0, 0.18)",
     text: "#8a7d00",
@@ -97,7 +97,7 @@ export const THEME_PALETTES: Record<BuiltInThemeName, ThemePalette> = {
     selection: "#fde68a",
   },
   pink: {
-    dot: "#ff52b9",
+    dot: "#ff26b6",
     bg: "#fff0f8",
     border: "rgba(255, 82, 185, 0.18)",
     text: "#c4148a",
