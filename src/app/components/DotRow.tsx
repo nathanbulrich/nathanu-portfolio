@@ -252,7 +252,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 previewHue(0);
               }
             }}
-            className="absolute flex items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
+            className="group absolute flex items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
             style={{
               left: "50%",
               top: "50%",
@@ -260,28 +260,30 @@ export default function DotRow({ className = "" }: DotRowProps) {
               color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
             }}
           >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.svg
-                key={editing ? "check" : "plus"}
-                aria-hidden="true"
-                viewBox="0 0 16 16"
-                style={{
-                  width: editing ? selectionBarHeight / 2 : defaultDotSize,
-                  height: editing ? selectionBarHeight / 2 : defaultDotSize,
-                }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.12, ease: "easeInOut" }}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.7}
-                strokeLinecap="butt"
-                strokeLinejoin="miter"
-              >
-                <path d={editing ? "M2 8L6 12L14 4" : "M8 2L8 14M2 8L14 8"} />
-              </motion.svg>
-            </AnimatePresence>
+            <span className="flex items-center justify-center transition-transform duration-150 ease-out group-hover:scale-125 motion-reduce:transition-none">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.svg
+                  key={editing ? "check" : "plus"}
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  style={{
+                    width: editing ? selectionBarHeight / 2 : defaultDotSize,
+                    height: editing ? selectionBarHeight / 2 : defaultDotSize,
+                  }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.12, ease: "easeInOut" }}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.7}
+                  strokeLinecap="butt"
+                  strokeLinejoin="miter"
+                >
+                  <path d={editing ? "M2 8L6 12L14 4" : "M8 2L8 14M2 8L14 8"} />
+                </motion.svg>
+              </AnimatePresence>
+            </span>
           </motion.button>
         </div>
       </div>
