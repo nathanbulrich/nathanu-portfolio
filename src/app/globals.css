@@ -38,6 +38,8 @@
 }
 
 :root {
+  --type-size: 20px;
+
   /* Brand dot colors (static) */
   --dot-red: #f9454d;
   --dot-green: #0ed76e;
@@ -77,14 +79,14 @@
 body {
   background: var(--theme-bg);
   color: var(--theme-text);
-  font-family: 'Berkeley Mono', ui-monospace, monospace;
-  font-size: 16px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: calc(var(--type-size) - 2px);
   transition: background-color 300ms ease, color 300ms ease;
 }
 
 @media (min-width: 768px) {
   body {
-    font-size: 18px;
+    font-size: var(--type-size);
   }
 }
 

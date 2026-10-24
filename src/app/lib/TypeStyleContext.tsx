@@ -10,7 +10,7 @@ interface TypeStyleContextValue {
 }
 
 const TypeStyleContext = createContext<TypeStyleContextValue>({
-  typeStyle: "mono",
+  typeStyle: "serif",
   setTypeStyle: () => {},
 });
 
@@ -21,7 +21,7 @@ const fontMap: Record<TypeStyle, string> = {
 };
 
 export function TypeStyleProvider({ children }: { children: ReactNode }) {
-  const [typeStyle, setTypeStyle] = useState<TypeStyle>("mono");
+  const [typeStyle, setTypeStyle] = useState<TypeStyle>("serif");
 
   useEffect(() => {
     // Load Inter from Google Fonts if not already loaded
