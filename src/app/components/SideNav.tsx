@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useDialKit } from "dialkit";
 import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
 import { useTypeStyle } from "../lib/TypeStyleContext";
@@ -32,9 +31,7 @@ function CosmosLabel() {
 }
 
 export default function SideNav() {
-  const { leadingPadding } = useDialKit("Font label", {
-    leadingPadding: [3, 0, 40, 1],
-  }, { id: "font-label-spacing", persist: true });
+  const leadingPadding = 3;
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
   const { typeStyle } = useTypeStyle();

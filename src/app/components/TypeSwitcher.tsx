@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { useDialKit } from "dialkit";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
 const styles = [
@@ -15,45 +14,45 @@ export default function TypeSwitcher() {
   const { typeStyle, setTypeStyle } = useTypeStyle();
   const reducedMotion = useReducedMotion();
   const [hoveredType, setHoveredType] = useState<string | null>(null);
-  const values = useDialKit("Type segmented control", {
-    layout: {
-      segmentWidth: [38, 28, 48, 1],
-      segmentHeight: [38, 28, 56, 1],
-      padding: [3, 0, 8, 1],
-      gap: [2, 0, 8, 1],
+  const values = {
+    "container": {
+        "borderOpacity": 4,
+        "borderWidth": 1,
+        "radius": 30,
+        "tint": 2
     },
-    container: {
-      radius: [30, 0, 30, 1],
-      tint: [2, 0, 25, 1],
-      borderWidth: [1, 0, 3, 0.25],
-      borderOpacity: [4, 0, 50, 1],
+    "interaction": {
+        "duration": 100,
+        "hoverCircleSize": 36,
+        "hoverScale": 1.04,
+        "hoverTint": 3,
+        "slideDamping": 28,
+        "slideStiffness": 400,
+        "zoomDamping": 20,
+        "zoomStiffness": 500
     },
-    selected: {
-      radius: [24, 0, 24, 1],
-      tint: [0, 0, 25, 1],
-      borderOpacity: [4, 0, 50, 1],
-      shadowOpacity: [3, 0, 40, 1],
-      shadowBlur: [1, 0, 16, 0.5],
-      shadowY: [1, 0, 8, 0.5],
+    "layout": {
+        "gap": 2,
+        "padding": 3,
+        "segmentHeight": 38,
+        "segmentWidth": 38
     },
-    typography: {
-      serifSize: [19, 14, 28, 0.25],
-      monoSize: [21.5, 14, 28, 0.25],
-      sansSize: [19, 14, 28, 0.25],
-      inactiveOpacity: [40, 10, 100, 1],
-      activeOpacity: [100, 40, 100, 1],
+    "selected": {
+        "borderOpacity": 4,
+        "radius": 24,
+        "shadowBlur": 1,
+        "shadowOpacity": 3,
+        "shadowY": 1,
+        "tint": 0
     },
-    interaction: {
-      hoverTint: [3, 0, 20, 1],
-      hoverCircleSize: [36, 16, 48, 1],
-      slideStiffness: [400, 100, 900, 10],
-      slideDamping: [28, 10, 60, 1],
-      zoomStiffness: [500, 100, 900, 10],
-      zoomDamping: [20, 10, 60, 1],
-      hoverScale: [1.04, 1, 1.2, 0.01],
-      duration: [100, 0, 400, 10],
-    },
-  }, { id: "type-segmented-control", persist: true });
+    "typography": {
+        "activeOpacity": 100,
+        "inactiveOpacity": 40,
+        "monoSize": 21.5,
+        "sansSize": 19,
+        "serifSize": 19
+    }
+};
   const tint = (amount: number) => `color-mix(in srgb, var(--theme-text) ${amount}%, transparent)`;
 
   return (

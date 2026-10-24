@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 
-import { useDialKit } from "dialkit";
 import { transitionText } from "./text-transition";
 
 type TypeStyle = "mono" | "serif" | "sans";
@@ -27,17 +26,15 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const [typeStyle, updateTypeStyle] = useState<TypeStyle>("serif");
   const root = useRef<HTMLDivElement>(null);
   const cancel = useRef<(() => void) | null>(null);
-  const replay = useRef<() => void>(() => {});
   const request = useRef(0);
-  const settings = useDialKit("Page transition", {
-    enabled: true,
-    fadeOutDuration: [170, 0, 1000, 10],
-    fadeOutBlur: [0, 0, 20, 0.5],
-    hiddenDelay: [80, 0, 1000, 10],
-    fadeInDuration: [260, 0, 1000, 10],
-    fadeInBlur: [0, 0, 20, 0.5],
-    replay: { type: "action" },
-  }, { id: "global-page-type-transition", persist: true, onAction: () => replay.current() });
+  const settings = {
+    "enabled": true,
+    "fadeInBlur": 5,
+    "fadeInDuration": 300,
+    "fadeOutBlur": 5,
+    "fadeOutDuration": 300,
+    "hiddenDelay": 200
+};
 
   const animateFont = async (style: TypeStyle) => {
     const id = ++request.current;
@@ -57,7 +54,6 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
     updateTypeStyle(style);
     animateFont(style);
   };
-  useEffect(() => { replay.current = () => animateFont(typeStyle); });
   useEffect(() => () => { request.current++; cancel.current?.(); }, []);
 
   useEffect(() => {
