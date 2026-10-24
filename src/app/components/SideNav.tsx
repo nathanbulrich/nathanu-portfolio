@@ -8,7 +8,12 @@ import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
-function CosmosLabel({ stemLength, strokeWidth, iconSize }: { stemLength: number; strokeWidth: number; iconSize: number }) {
+function CosmosLabel({ stemLength, strokeWidth, iconSize, iconGap }: {
+  stemLength: number;
+  strokeWidth: number;
+  iconSize: number;
+  iconGap: number;
+}) {
   const stemOffset = stemLength / Math.SQRT2;
   return (
     <span className="relative inline-flex items-center">
@@ -19,10 +24,10 @@ function CosmosLabel({ stemLength, strokeWidth, iconSize }: { stemLength: number
         fill="none"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        style={{ width: `${iconSize}em`, height: `${iconSize}em` }}
+        style={{ width: `${iconSize}em`, height: `${iconSize}em`, marginLeft: iconGap }}
         strokeLinecap="butt"
         strokeLinejoin="miter"
-        className="pointer-events-none absolute left-full translate-y-[1px] ml-1.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+        className="pointer-events-none absolute left-full translate-y-[1px] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
       >
         <path d={`M${12.5 - stemOffset} ${3.5 + stemOffset} 12.5 3.5M3.5 3.5h9v9`} />
       </svg>
@@ -39,6 +44,7 @@ export default function SideNav() {
     stemLength: [Math.hypot(11, 11), 6, 16, 0.25],
     strokeWidth: [1.5, 0.5, 3, 0.1],
     iconSize: [0.65, 0.4, 1.2, 0.05],
+    iconGap: [6, 0, 24, 1],
   }, {
     id: "cosmos-arrow",
     persist: true,
