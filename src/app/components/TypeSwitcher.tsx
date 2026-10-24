@@ -95,12 +95,11 @@ export default function TypeSwitcher() {
               fontFamily: font,
               fontSize: values.typography[`${key}Size`],
               transitionDuration: `${values.interaction.duration}ms`,
-              '--segment-hover': tint(values.interaction.hoverTint),
               '--segment-scale': values.interaction.hoverScale,
               '--segment-duration': `${values.interaction.duration}ms`,
             } as React.CSSProperties}
           >
-            <span aria-hidden="true" className="absolute rounded-full type-segment-hover pointer-events-none" style={{ width: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight), height: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight) }} />
+            <span aria-hidden="true" className="absolute rounded-full type-segment-hover pointer-events-none" style={{ backgroundColor: tint(values.interaction.hoverTint), width: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight), height: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight) }} />
             <span className="type-segment-letter relative" style={{ opacity: (active ? values.typography.activeOpacity : values.typography.inactiveOpacity) / 100 }}>A</span>
           </button>
         );

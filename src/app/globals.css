@@ -176,13 +176,14 @@ a:hover {
 }
 
 .type-segment-hover {
-  transition: background-color var(--segment-duration);
+  opacity: 0;
+  transition: opacity var(--segment-duration);
 }
 .type-segment-letter {
   transition: transform var(--segment-duration), opacity var(--segment-duration);
 }
 .type-segment:hover .type-segment-hover {
-  background: var(--segment-hover);
+  opacity: 1;
 }
 .type-segment:hover .type-segment-letter {
   transform: scale(var(--segment-scale));
