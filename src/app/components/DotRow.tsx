@@ -12,7 +12,7 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, barExtension, checkButtonGap, checkBackgroundTint } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, checkButtonGap, checkBackgroundTint } = useDotStyle();
   const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
@@ -20,6 +20,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const [trackBounds, setTrackBounds] = useState({ width: 0, originLeft: 0 });
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
+  const barExtension = dotSpacing + (defaultDotSize - selectionBarHeight) / 2 - checkButtonGap;
   const barTop = (defaultDotSize - barHeight) / 2;
   // Native range thumbs stop half a thumb-width inside the input.
   // Add the remaining inset so their centers meet the capsule end centers.
@@ -218,47 +219,51 @@ export default function DotRow({ className = "" }: DotRowProps) {
             </div>
           </motion.div>
         </div>
-        <motion.button
-          ref={addButtonRef}
-          initial={false}
-          animate={{
-            width: editing ? selectionBarHeight : defaultDotSize,
-            height: editing ? selectionBarHeight : defaultDotSize,
-            backgroundColor: editing ? `hsl(${hue} 55% 40% / ${checkBackgroundTint / 100})` : "rgba(0, 0, 0, 0)",
-            marginLeft: editing ? barExtension + checkButtonGap - dotSpacing : 0,
-          }}
-          transition={morphTransition}
-          type="button"
-          aria-label={editing ? "Add selected color" : "Add a theme color"}
-          title={editing ? "Add selected color" : "Add a theme color"}
-          onClick={() => {
-            if (editing) finish(true);
-            else {
-              setEditing(true);
-              previewHue(hue);
-            }
-          }}
-          className="flex shrink-0 items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
-          style={{
-            color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
-          }}
-        >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 16 16"
-            style={{ width: editing ? "50%" : "100%", height: editing ? "50%" : "100%" }}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
+        <div className="relative shrink-0" style={dotDimensions}>
+          <motion.button
+            ref={addButtonRef}
+            initial={false}
+            animate={{
+              width: editing ? selectionBarHeight : defaultDotSize,
+              height: editing ? selectionBarHeight : defaultDotSize,
+              backgroundColor: editing ? `hsl(${hue} 55% 40% / ${checkBackgroundTint / 100})` : "rgba(0, 0, 0, 0)",
+            }}
+            transition={morphTransition}
+            type="button"
+            aria-label={editing ? "Add selected color" : "Add a theme color"}
+            title={editing ? "Add selected color" : "Add a theme color"}
+            onClick={() => {
+              if (editing) finish(true);
+              else {
+                setEditing(true);
+                previewHue(hue);
+              }
+            }}
+            className="absolute flex items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
+            style={{
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
+            }}
           >
-            <motion.path
-              initial={false}
-              animate={{ d: editing ? "M2 8L6 12M6 12L14 4" : "M8 2L8 14M2 8L14 8" }}
-              transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
-            />
-          </svg>
-        </motion.button>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              style={{ width: editing ? "50%" : "100%", height: editing ? "50%" : "100%" }}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+            >
+              <motion.path
+                initial={false}
+                animate={{ d: editing ? "M2 8L6 12M6 12L14 4" : "M8 2L8 14M2 8L14 8" }}
+                transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
+              />
+            </svg>
+          </motion.button>
+        </div>
       </div>
     </div>
   );
