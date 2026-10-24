@@ -7,13 +7,12 @@ import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
 
 interface DotRowProps {
-  gap: string;
   className?: string;
 }
 
-export default function DotRow({ gap, className = "" }: DotRowProps) {
+export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, selectionBarHeight, springBounce } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce } = useDotStyle();
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(210);
@@ -76,7 +75,8 @@ export default function DotRow({ gap, className = "" }: DotRowProps) {
     <div className={`flex ${className}`}>
       <div
         ref={componentRef}
-        className={`relative flex items-center ${gap}`}
+        className="relative flex items-center"
+        style={{ gap: dotSpacing }}
         onKeyDown={(event) => {
           if (!editing) return;
           if (event.key === "Escape") {
@@ -88,7 +88,7 @@ export default function DotRow({ gap, className = "" }: DotRowProps) {
           }
         }}
       >
-        <div ref={dotTrackRef} className={`relative flex items-center ${gap}`}>
+        <div ref={dotTrackRef} className="relative flex items-center" style={{ gap: dotSpacing }}>
           <span
             aria-hidden="true"
             className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
@@ -163,8 +163,8 @@ export default function DotRow({ gap, className = "" }: DotRowProps) {
             transition={morphTransition}
             aria-hidden={!editing}
             inert={!editing}
-            className={`pointer-events-none absolute left-0 right-0 z-10 grid ${gap}`}
-            style={{ gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
+            className="pointer-events-none absolute left-0 right-0 z-10 grid"
+            style={{ gap: dotSpacing, gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
           >
             <div
               className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
