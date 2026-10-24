@@ -12,7 +12,7 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, barExtension, checkButtonGap, checkBackgroundTint } = useDotStyle();
   const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
@@ -134,7 +134,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   style={{ backgroundColor: color }}
                   animate={{
                     left: editing && isOrigin ? -trackBounds.originLeft : 0,
-                    right: editing && isOrigin ? -(trackBounds.width - trackBounds.originLeft - defaultDotSize) : 0,
+                    right: editing && isOrigin ? -(trackBounds.width + barExtension - trackBounds.originLeft - defaultDotSize) : 0,
                     top: isOrigin ? barTop : 0,
                     height: isOrigin ? barHeight : defaultDotSize,
                     opacity: editing && !isOrigin ? 0 : 1,
@@ -149,7 +149,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                       <span
                         className="absolute inset-y-0 left-0"
                         style={{
-                          width: "var(--spectrum-width)",
+                          width: `calc(var(--spectrum-width) + ${barExtension}px)`,
                           backgroundColor: color,
                           backgroundImage: SPECTRUM_GRADIENT,
                           backgroundSize: "100% 100%",
@@ -175,7 +175,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
           })}
           <motion.div
             initial={false}
-            animate={{ top: barTop, height: barHeight }}
+            animate={{ top: barTop, height: barHeight, right: editing ? -barExtension : 0 }}
             transition={morphTransition}
             aria-hidden={!editing}
             inert={!editing}
@@ -224,7 +224,8 @@ export default function DotRow({ className = "" }: DotRowProps) {
           animate={{
             width: editing ? selectionBarHeight : defaultDotSize,
             height: editing ? selectionBarHeight : defaultDotSize,
-            backgroundColor: editing ? "var(--theme-border)" : "rgba(0, 0, 0, 0)",
+            backgroundColor: editing ? `hsl(${hue} 55% 40% / ${checkBackgroundTint / 100})` : "rgba(0, 0, 0, 0)",
+            marginLeft: editing ? barExtension + checkButtonGap - dotSpacing : 0,
           }}
           transition={morphTransition}
           type="button"
