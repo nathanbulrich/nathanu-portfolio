@@ -3,18 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useDialKit } from "dialkit";
 import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
-function CosmosLabel({ stemLength, strokeWidth, iconSize, iconGap }: {
-  stemLength: number;
-  strokeWidth: number;
-  iconSize: number;
-  iconGap: number;
-}) {
-  const stemOffset = stemLength / Math.SQRT2;
+function CosmosLabel() {
+  const stemOffset = 16 / Math.SQRT2;
   return (
     <span className="relative inline-flex items-center">
       <span className="group-hover:underline group-focus-visible:underline">Cosmos</span>
@@ -23,8 +17,8 @@ function CosmosLabel({ stemLength, strokeWidth, iconSize, iconGap }: {
         viewBox="0 0 16 16"
         fill="none"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
-        style={{ width: `${iconSize}em`, height: `${iconSize}em`, marginLeft: iconGap }}
+        strokeWidth={1.7}
+        style={{ width: "0.75em", height: "0.75em", marginLeft: 8 }}
         strokeLinecap="butt"
         strokeLinejoin="miter"
         className="pointer-events-none absolute left-full translate-y-[1px] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
@@ -40,15 +34,7 @@ export default function SideNav() {
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
   const { typeStyle } = useTypeStyle();
-  const arrow = useDialKit("Cosmos Arrow", {
-    stemLength: [Math.hypot(11, 11), 6, 16, 0.25],
-    strokeWidth: [1.5, 0.5, 3, 0.1],
-    iconSize: [0.65, 0.4, 1.2, 0.05],
-    iconGap: [6, 0, 24, 1],
-  }, {
-    id: "cosmos-arrow",
-    persist: true,
-  });
+
 
   const links = [
     { label: "Work", href: "/" },
@@ -83,7 +69,7 @@ export default function SideNav() {
           rel="noopener noreferrer"
           className="group pt-2 pb-1.5 no-underline hover:no-underline opacity-40 hover:opacity-70 focus-visible:opacity-70 transition-opacity duration-[30ms]"
         >
-          <CosmosLabel {...arrow} />
+          <CosmosLabel />
         </a>
         <button
           onClick={() => setContactOpen(true)}
@@ -131,7 +117,7 @@ export default function SideNav() {
             rel="noopener noreferrer"
             className="group no-underline hover:no-underline opacity-40 hover:opacity-70 focus-visible:opacity-70 transition-opacity duration-[30ms]"
           >
-            <CosmosLabel {...arrow} />
+            <CosmosLabel />
           </a>
           <button
             onClick={() => setContactOpen(true)}
