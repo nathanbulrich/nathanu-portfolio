@@ -12,6 +12,7 @@ import {
 import { useDialKit } from "dialkit";
 import {
   THEME_PALETTES,
+  DEFAULT_THEME_RECIPE,
   DOT_COLORS,
   paletteFromHue,
   CSS_VAR_MAP,
@@ -37,6 +38,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const recipe = useDialKit("Custom color theme", {
+    useCustomTheme: true,
     background: {
       saturation: [75, 0, 100, 1],
       lightness: [97, 90, 100, 0.5],
@@ -59,6 +61,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       lightness: [82, 65, 95, 1],
     },
   }, { id: "custom-color-theme", persist: true });
+  const activeRecipe = recipe.useCustomTheme ? recipe : DEFAULT_THEME_RECIPE;
   const [activeTheme, setActiveTheme] = useState<ThemeName>("neutral");
   const [customThemes, setCustomThemes] = useState<CustomTheme[]>([]);
   const [preview, setPreview] = useState<number | null>(null);
@@ -66,9 +69,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const palettes: Partial<Record<ThemeName, ThemePalette>> = THEME_PALETTES;
   const customTheme = customThemes.find(({ name }) => name === activeTheme);
   const palette = preview !== null
-    ? paletteFromHue(preview, recipe)
+    ? paletteFromHue(preview, activeRecipe)
     : customTheme
-      ? paletteFromHue(customTheme.hue, recipe)
+      ? paletteFromHue(customTheme.hue, activeRecipe)
       : palettes[activeTheme] ?? THEME_PALETTES.neutral;
   const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))];
 
