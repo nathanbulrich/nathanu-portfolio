@@ -15,7 +15,9 @@ import {
   DEFAULT_THEME_RECIPE,
   DOT_COLORS,
   paletteFromHue,
+  paletteFromPreset,
   CSS_VAR_MAP,
+  type BuiltInThemeName,
   type ThemeName,
   type ThemePalette,
 } from "./theme-definitions";
@@ -68,11 +70,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const nextColorId = useRef(0);
   const palettes: Partial<Record<ThemeName, ThemePalette>> = THEME_PALETTES;
   const customTheme = customThemes.find(({ name }) => name === activeTheme);
+  const presetName: BuiltInThemeName = activeTheme in THEME_PALETTES
+    ? activeTheme as BuiltInThemeName
+    : "neutral";
   const palette = preview !== null
     ? paletteFromHue(preview, activeRecipe)
     : customTheme
       ? paletteFromHue(customTheme.hue, activeRecipe)
-      : palettes[activeTheme] ?? THEME_PALETTES.neutral;
+      : recipe.useCustomTheme && presetName !== "neutral"
+        ? paletteFromPreset(presetName, recipe)
+        : palettes[activeTheme] ?? THEME_PALETTES.neutral;
   const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))];
 
   const addColor = useCallback((hue: number) => {

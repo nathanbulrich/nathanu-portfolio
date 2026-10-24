@@ -150,3 +150,14 @@ export function paletteFromHue(hue: number, recipe: ThemeRecipe = DEFAULT_THEME_
     selection: `hsl(${hue} ${selection.saturation}% ${selection.lightness}%)`,
   };
 }
+
+export function paletteFromPreset(name: ThemeColorName, recipe: ThemeRecipe): ThemePalette {
+  const { dot } = THEME_PALETTES[name];
+  const [r, g, b] = [1, 3, 5].map((offset) => parseInt(dot.slice(offset, offset + 2), 16) / 255);
+  const max = Math.max(r, g, b);
+  const chroma = max - Math.min(r, g, b);
+  const hue = chroma === 0 ? 0 : ((60 * (
+    max === r ? (g - b) / chroma : max === g ? (b - r) / chroma + 2 : (r - g) / chroma + 4
+  )) + 360) % 360;
+  return { ...paletteFromHue(hue, recipe), dot };
+}
