@@ -31,7 +31,7 @@ interface ThemeContextValue {
   dots: { name: ThemeName; hex: string }[];
   previewHue: (hue: number | null) => void;
   addColor: (hue: number) => void;
-  activeTheme: ThemeName;
+  activeTheme: ThemeName | null;
   setTheme: (name: ThemeName) => void;
   palette: ThemePalette;
 }
@@ -64,13 +64,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     },
   }, { id: "custom-color-theme", persist: true });
   const activeRecipe = recipe.useCustomTheme ? recipe : DEFAULT_THEME_RECIPE;
-  const [activeTheme, setActiveTheme] = useState<ThemeName>("neutral");
+  const [activeTheme, setActiveTheme] = useState<ThemeName | null>(null);
   const [customThemes, setCustomThemes] = useState<CustomTheme[]>([]);
   const [preview, setPreview] = useState<number | null>(null);
   const nextColorId = useRef(0);
   const palettes: Partial<Record<ThemeName, ThemePalette>> = THEME_PALETTES;
   const customTheme = customThemes.find(({ name }) => name === activeTheme);
-  const presetName: BuiltInThemeName = activeTheme in THEME_PALETTES
+  const presetName: BuiltInThemeName = activeTheme !== null && activeTheme in THEME_PALETTES
     ? activeTheme as BuiltInThemeName
     : "neutral";
   const palette = preview !== null
@@ -79,7 +79,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       ? paletteFromHue(customTheme.hue, activeRecipe)
       : recipe.useCustomTheme && presetName !== "neutral"
         ? paletteFromPreset(presetName, recipe)
-        : palettes[activeTheme] ?? THEME_PALETTES.neutral;
+        : palettes[activeTheme ?? "neutral"] ?? THEME_PALETTES.neutral;
   const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))];
 
   const addColor = useCallback((hue: number) => {
@@ -91,7 +91,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = useCallback((name: ThemeName) => {
     setPreview(null);
-    setActiveTheme((prev) => (prev === name ? "neutral" : name));
+    setActiveTheme((prev) => (prev === name ? null : name));
   }, []);
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.style.setProperty(CSS_VAR_MAP.text, p.text);
     root.style.setProperty(CSS_VAR_MAP.textSecondary, p.textSecondary);
     root.style.setProperty(CSS_VAR_MAP.selection, p.selection);
-    root.dataset.theme = activeTheme;
+    root.dataset.theme = activeTheme ?? "neutral";
   }, [activeTheme, palette]);
 
   return (

@@ -19,7 +19,7 @@ export default function ThemeDebugger() {
     const lines = (Object.keys(CSS_VAR_MAP) as Array<keyof typeof CSS_VAR_MAP>)
       .map((key) => `  ${CSS_VAR_MAP[key]}: ${palette[key]};`)
       .join("\n");
-    const block = `/* Theme: ${activeTheme} */\n:root {\n${lines}\n}`;
+    const block = `/* Theme: ${activeTheme ?? "neutral"} */\n:root {\n${lines}\n}`;
     navigator.clipboard.writeText(block);
     setCopied("all");
     setTimeout(() => setCopied(null), 1500);
@@ -61,7 +61,7 @@ export default function ThemeDebugger() {
 
       <div className="px-4 py-3 border-b border-gray-100">
         <div className="text-gray-500 mb-2">
-          Active: <span className="text-black font-bold">{activeTheme}</span>
+          Active: <span className="text-black font-bold">{activeTheme ?? "neutral (default)"}</span>
         </div>
         <div className="flex gap-2">
           {DOT_COLORS.map(({ name, hex }) => (

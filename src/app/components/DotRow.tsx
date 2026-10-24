@@ -38,8 +38,8 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
   const selectedColor = activeTheme === "neutral"
     ? neutralDotColor
-    : dots[selectedIndex].hex;
-  const position = (selectedIndex / (dots.length - 1)) * 100;
+    : dots[selectedIndex]?.hex ?? "transparent";
+  const position = (Math.max(0, selectedIndex) / (dots.length - 1)) * 100;
 
   useEffect(() => {
     if (!editing) return;
@@ -84,7 +84,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
         <div className="relative flex items-center" style={{ gap: dotSpacing }}>
           {/* New dots get a fresh ring so their selection appears without sliding. */}
           <span
-            key={dots.length}
+            key={`${dots.length}-${selectedIndex >= 0}`}
             aria-hidden="true"
             className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
             style={{
@@ -93,7 +93,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
               translate: `${-position}% 0`,
               transitionDuration: `${ringDuration}ms`,
               boxShadow: `0 0 0 ${ringSpacing}px var(--theme-bg), 0 0 0 ${ringSpacing + ringThickness}px ${selectedColor}`,
-              visibility: ringThickness > 0 ? "visible" : "hidden",
+              visibility: selectedIndex >= 0 && ringThickness > 0 ? "visible" : "hidden",
               opacity: editing ? 0 : 1,
             }}
           />
