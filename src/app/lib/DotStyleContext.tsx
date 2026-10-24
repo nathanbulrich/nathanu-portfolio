@@ -7,6 +7,7 @@ import "dialkit/styles.css";
 const DotStyleContext = createContext({
   ringThickness: 2,
   ringSpacing: 2,
+  ringDuration: 320,
   blackDotColor: "#000000",
 });
 
@@ -14,6 +15,7 @@ export function DotStyleProvider({ children }: { children: ReactNode }) {
   const values = useDialKit("Theme dots", {
     ringThickness: [2, 0, 6, 0.5],
     ringSpacing: [2, 0, 8, 0.5],
+    ringDuration: [320, 100, 800, 10],
     blackDotColor: "#000000",
   }, { id: "theme-dots", persist: true });
 
