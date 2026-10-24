@@ -14,6 +14,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
   const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
   const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = useDotStyle();
+  const { selectorDragScale, selectorDragDuration } = useDotStyle();
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
@@ -22,6 +23,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [morphVisible, setMorphVisible] = useState(false);
+  const [draggingSelector, setDraggingSelector] = useState(false);
   const [hue, setHue] = useState(0);
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
@@ -46,6 +48,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
     const cancelOutside = (event: PointerEvent) => {
       if (event.target instanceof Node && !componentRef.current?.contains(event.target)) {
         setEditing(false);
+        setDraggingSelector(false);
         previewHue(null);
       }
     };
@@ -60,6 +63,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
     if (save) addColor(hue);
     else previewHue(null);
     setEditing(false);
+    setDraggingSelector(false);
     addButtonRef.current?.focus();
   };
 
@@ -188,11 +192,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 initial={false}
                 animate={{
                   "--selector-scale": editing ? 1 : 0,
+                  "--selector-drag-scale": editing && draggingSelector ? selectorDragScale : 1,
                   opacity: editing ? 1 : 0,
                 }}
                 transition={{
                   ...morphTransition,
                   delay: editing && !reduceMotion ? selectorDelay / 1000 : 0,
+                  "--selector-drag-scale": reduceMotion
+                    ? { duration: 0, delay: 0 }
+                    : { type: "spring", visualDuration: selectorDragDuration / 1000, bounce: 0, delay: 0 },
                   opacity: {
                     duration: reduceMotion ? 0 : 0.2,
                     delay: editing && !reduceMotion ? selectorDelay / 1000 : 0,
@@ -205,6 +213,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 value={hue}
                 aria-label="New theme color"
                 aria-valuetext={`${hue} degrees hue`}
+                onPointerDown={(event) => {
+                  if (!event.isPrimary || event.button !== 0) return;
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  setDraggingSelector(true);
+                }}
+                onPointerUp={() => setDraggingSelector(false)}
+                onPointerCancel={() => setDraggingSelector(false)}
+                onLostPointerCapture={() => setDraggingSelector(false)}
+                onBlur={() => setDraggingSelector(false)}
                 onChange={(event) => {
                   const nextHue = Number(event.target.value);
                   setHue(nextHue);

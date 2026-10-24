@@ -134,7 +134,7 @@ a:hover {
   border: 0;
   border-radius: 999px;
   background-color: var(--theme-color-thumb-color, #eb3333);
-  transform: scale(var(--selector-scale, 0));
+  transform: scale(var(--selector-scale, 0)) scale(var(--selector-drag-scale, 1));
   transform-origin: center;
   box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
     0 1px 5px var(--theme-color-thumb-stroke, 2px) rgb(0 0 0 / 0.35);
@@ -147,7 +147,7 @@ a:hover {
   border: 0;
   border-radius: 999px;
   background-color: var(--theme-color-thumb-color, #eb3333);
-  transform: scale(var(--selector-scale, 0));
+  transform: scale(var(--selector-scale, 0)) scale(var(--selector-drag-scale, 1));
   transform-origin: center;
   box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
     0 1px 5px var(--theme-color-thumb-stroke, 2px) rgb(0 0 0 / 0.35);
