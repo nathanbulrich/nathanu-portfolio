@@ -19,5 +19,5 @@ export default function TypographyTuner() {
     };
   }, [typeSize]);
 
-  return <DialRoot productionEnabled />;
+  return <DialRoot productionEnabled defaultOpen={false} position="bottom-right" />;
 }

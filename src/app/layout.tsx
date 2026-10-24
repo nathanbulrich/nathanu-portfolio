@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { DotAnimationProvider } from "./lib/DotAnimationContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
-import SideNav from "./components/SideNav";
+
 import TypographyTuner from "./components/TypographyTuner";
 import "dialkit/styles.css";
 
@@ -35,8 +35,7 @@ export default function RootLayout({
         <ThemeProvider>
           <TypeStyleProvider>
             <DotAnimationProvider>
-              <SideNav />
-              <div className="lg:ml-[228px]">
+              <div>
                 {children}
               </div>
             </DotAnimationProvider>
