@@ -23,7 +23,7 @@ export default function HeroCard() {
 
       {/* Dots — horizontal, left-aligned, below hero text */}
       <div className="mt-8">
-        <DotRow dotSize="w-[16px] h-[16px]" gap="gap-[14px]" />
+        <DotRow gap="gap-[14px]" />
       </div>
     </div>
   );

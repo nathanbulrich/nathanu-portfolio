@@ -5,6 +5,9 @@ import { DialRoot, useDialKit } from "dialkit";
 import "dialkit/styles.css";
 
 const DotStyleContext = createContext({
+  defaultDotSize: 16,
+  selectionBarHeight: 32,
+  springBounce: 0.3,
   ringThickness: 2,
   ringSpacing: 2,
   ringDuration: 320,
@@ -14,6 +17,9 @@ const DotStyleContext = createContext({
 
 export function DotStyleProvider({ children }: { children: ReactNode }) {
   const values = useDialKit("Theme dots", {
+    defaultDotSize: [16, 8, 32, 1],
+    selectionBarHeight: [32, 16, 64, 1],
+    springBounce: [0.3, 0, 0.6, 0.05],
     ringThickness: [2, 0, 6, 0.5],
     ringSpacing: [2, 0, 8, 0.5],
     ringDuration: [320, 100, 800, 10],

@@ -7,7 +7,6 @@ export default function Header() {
       {/* Colored dots */}
       <div className="flex md:absolute md:left-1/2 md:-translate-x-1/2">
         <DotRow
-          dotSize="w-[16px] h-[16px]"
           gap="gap-[16px]"
         />
       </div>

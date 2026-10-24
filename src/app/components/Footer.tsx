@@ -7,7 +7,6 @@ export default function Footer() {
       style={{ border: "1px solid var(--theme-border)" }}
     >
       <DotRow
-        dotSize="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16"
         gap="gap-4 md:gap-6"
         className="justify-center"
       />

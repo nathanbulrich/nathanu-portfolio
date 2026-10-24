@@ -1,23 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { SPECTRUM_GRADIENT } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
 
 interface DotRowProps {
-  dotSize: string;
   gap: string;
   className?: string;
 }
 
-export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
+export default function DotRow({ gap, className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, selectionBarHeight, springBounce } = useDotStyle();
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(210);
+  const [trackBounds, setTrackBounds] = useState({ width: 0, redLeft: 0 });
+  const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
+  const barHeight = editing ? selectionBarHeight : defaultDotSize;
+  const barTop = (defaultDotSize - barHeight) / 2;
+  const morphTransition = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, visualDuration: morphDuration / 1000, bounce: springBounce };
   const componentRef = useRef<HTMLDivElement>(null);
   const dotTrackRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
@@ -34,12 +40,10 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
     const syncBounds = () => {
       const redDot = track.querySelector<HTMLButtonElement>('[data-theme-dot="red"]');
       if (!redDot) return;
+      setTrackBounds({ width: track.clientWidth, redLeft: redDot.offsetLeft });
       track.style.setProperty("--spectrum-width", `${track.clientWidth}px`);
       track.style.setProperty("--dot-diameter", `${redDot.offsetWidth}px`);
-      track.style.setProperty("--red-dot-left", `${redDot.offsetLeft}px`);
-      track.style.setProperty("--red-dot-right", `${track.clientWidth - redDot.offsetLeft - redDot.offsetWidth}px`);
     };
-    syncBounds();
     const observer = new ResizeObserver(syncBounds);
     observer.observe(track);
     return () => observer.disconnect();
@@ -87,8 +91,9 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
         <div ref={dotTrackRef} className={`relative flex items-center ${gap}`}>
           <span
             aria-hidden="true"
-            className={`${dotSize} pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
+            className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
             style={{
+              ...dotDimensions,
               left: `${position}%`,
               translate: `${-position}% 0`,
               transitionDuration: `${ringDuration}ms`,
@@ -110,22 +115,29 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                 aria-pressed={isSelected}
                 disabled={editing}
                 onClick={() => setTheme(name)}
-                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none ${isSelected || editing ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
+                className={`relative flex items-center justify-center shrink-0 rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none ${isSelected || editing ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
                 style={{
+                  ...dotDimensions,
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
                   zIndex: name === "red" ? 1 : undefined,
                 }}
               >
-                <span
+                <motion.span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 overflow-hidden rounded-full transition-[left,right,opacity] ease-in-out motion-reduce:transition-none"
-                  style={{
-                    backgroundColor: color,
-                    left: editing && name === "red" ? "calc(-1 * var(--red-dot-left))" : 0,
-                    right: editing && name === "red" ? "calc(-1 * var(--red-dot-right))" : 0,
+                  initial={false}
+                  className="pointer-events-none absolute overflow-hidden rounded-full"
+                  style={{ backgroundColor: color }}
+                  animate={{
+                    left: editing && name === "red" ? -trackBounds.redLeft : 0,
+                    right: editing && name === "red" ? -(trackBounds.width - trackBounds.redLeft - defaultDotSize) : 0,
+                    top: name === "red" ? barTop : 0,
+                    height: name === "red" ? barHeight : defaultDotSize,
                     opacity: editing && name !== "red" ? 0 : 1,
-                    transitionDuration: `${reduceMotion ? 0 : name === "red" ? morphDuration : morphDuration * 0.4}ms`,
+                  }}
+                  transition={{
+                    ...morphTransition,
+                    opacity: { duration: reduceMotion ? 0 : morphDuration / 2500 },
                   }}
                 >
                   {name === "red" && (
@@ -141,14 +153,17 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                       }}
                     />
                   )}
-                </span>
+                </motion.span>
               </button>
             );
           })}
-          <div
+          <motion.div
+            initial={false}
+            animate={{ top: barTop, height: barHeight }}
+            transition={morphTransition}
             aria-hidden={!editing}
             inert={!editing}
-            className={`pointer-events-none absolute inset-0 z-10 grid ${gap}`}
+            className={`pointer-events-none absolute left-0 right-0 z-10 grid ${gap}`}
             style={{ gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
           >
             <div
@@ -177,9 +192,10 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                   previewHue(nextHue);
                 }}
                 className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
+                style={{ "--theme-color-thumb-height": `${selectionBarHeight + 8}px` } as CSSProperties}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
         <button
           ref={addButtonRef}
@@ -193,8 +209,9 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
               previewHue(hue);
             }
           }}
-          className={`${dotSize} flex shrink-0 items-center justify-center border-0 bg-transparent p-0 cursor-pointer transition-[color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
+          className={`flex shrink-0 items-center justify-center border-0 bg-transparent p-0 cursor-pointer transition-[color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
           style={{
+            ...dotDimensions,
             color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
           }}
         >
