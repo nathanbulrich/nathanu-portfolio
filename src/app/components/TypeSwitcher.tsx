@@ -3,8 +3,8 @@
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
 const styles = [
-  { key: "mono" as const, font: "'Berkeley Mono', monospace" },
   { key: "serif" as const, font: "Georgia, serif" },
+  { key: "mono" as const, font: "'Berkeley Mono', monospace" },
   { key: "sans" as const, font: "'Inter', sans-serif" },
 ];
 
