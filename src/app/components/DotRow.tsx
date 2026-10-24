@@ -16,6 +16,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
+  const [selectorReady, setSelectorReady] = useState(false);
   const [hue, setHue] = useState(0);
   const [trackBounds, setTrackBounds] = useState({ width: 0, originLeft: 0 });
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
@@ -57,6 +58,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
     sliderRef.current?.focus();
     const cancelOutside = (event: PointerEvent) => {
       if (event.target instanceof Node && !componentRef.current?.contains(event.target)) {
+        setSelectorReady(false);
         setEditing(false);
         previewHue(null);
       }
@@ -71,6 +73,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const finish = (save: boolean) => {
     if (save) addColor(hue);
     else previewHue(null);
+    setSelectorReady(false);
     setEditing(false);
     addButtonRef.current?.focus();
   };
@@ -133,6 +136,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   initial={false}
                   className="pointer-events-none absolute overflow-hidden rounded-full"
                   style={{ backgroundColor: color }}
+                  onAnimationComplete={() => {
+                    if (isOrigin && editing) setSelectorReady(true);
+                  }}
                   animate={{
                     left: editing && isOrigin ? -trackBounds.originLeft : 0,
                     right: editing && isOrigin ? -(trackBounds.width + barExtension - trackBounds.originLeft - defaultDotSize) : 0,
@@ -194,10 +200,13 @@ export default function DotRow({ className = "" }: DotRowProps) {
               <motion.input
                 ref={sliderRef}
                 initial={false}
-                animate={{ "--selector-scale": editing ? 1 : 0 }}
+                animate={{
+                  "--selector-scale": editing && selectorReady ? 1 : 0,
+                  opacity: editing && selectorReady ? 1 : 0,
+                }}
                 transition={{
                   ...morphTransition,
-                  delay: editing && !reduceMotion ? morphDuration / 2500 : 0,
+                  opacity: { duration: reduceMotion ? 0 : 0.2 },
                 }}
                 type="range"
                 min={0}
@@ -240,6 +249,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
               if (editing) finish(true);
               else {
                 setHue(0);
+                setSelectorReady(false);
                 setEditing(true);
                 previewHue(0);
               }
