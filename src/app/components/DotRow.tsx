@@ -24,7 +24,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const [editing, setEditing] = useState(false);
   const [morphVisible, setMorphVisible] = useState(false);
   const [draggingSelector, setDraggingSelector] = useState(false);
-  const [hue, setHue] = useState(0);
+  const [hue, setHue] = useState(180);
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
   const barExtension = dotSpacing + (defaultDotSize - selectionBarHeight) / 2 - checkButtonGap;
@@ -260,10 +260,10 @@ export default function DotRow({ className = "" }: DotRowProps) {
             onClick={() => {
               if (editing) finish(true);
               else {
-                setHue(0);
+                setHue(180);
                 setMorphVisible(true);
                 setEditing(true);
-                previewHue(0);
+                previewHue(180);
               }
             }}
             className="group absolute flex items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
