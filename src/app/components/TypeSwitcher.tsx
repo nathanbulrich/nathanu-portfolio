@@ -1,7 +1,6 @@
 "use client";
 
 import { useTypeStyle } from "../lib/TypeStyleContext";
-import { useDialKit } from "dialkit";
 
 const styles = [
   { key: "serif" as const, font: "Georgia, serif" },
@@ -11,9 +10,7 @@ const styles = [
 
 export default function TypeSwitcher() {
   const { typeStyle, setTypeStyle } = useTypeStyle();
-  const { monoSize } = useDialKit("Type switcher", {
-    monoSize: [19, 14, 28, 0.25],
-  }, { id: "type-switcher-optical-size", persist: true });
+
 
   return (
     <div className="flex gap-[6px]">
@@ -26,7 +23,7 @@ export default function TypeSwitcher() {
           }`}
           style={{
             fontFamily: font,
-            fontSize: key === "mono" ? `${monoSize}px` : undefined,
+            fontSize: key === "mono" ? "21.5px" : undefined,
             opacity: typeStyle === key ? 1 : 0.4,
             border: "1px solid var(--theme-border)",
             background: typeStyle === key ? "color-mix(in srgb, var(--theme-text) 5%, transparent)" : undefined,

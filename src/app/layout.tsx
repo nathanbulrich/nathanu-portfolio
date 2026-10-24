@@ -4,8 +4,6 @@ import { ThemeProvider } from "./lib/ThemeContext";
 import { DotAnimationProvider } from "./lib/DotAnimationContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
 import SideNav from "./components/SideNav";
-import TuningRoot from "./components/TuningRoot";
-import "dialkit/styles.css";
 
 export const metadata: Metadata = {
   title: "Nathan Ulrich - NYC Software Designer",
@@ -31,7 +29,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <TuningRoot />
         <ThemeProvider>
           <TypeStyleProvider>
             <DotAnimationProvider>
