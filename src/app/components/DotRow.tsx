@@ -81,7 +81,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
         }}
       >
         <div className="relative flex items-center" style={{ gap: dotSpacing }}>
+          {/* New dots get a fresh ring so their selection appears without sliding. */}
           <span
+            key={dots.length}
             aria-hidden="true"
             className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
             style={{
