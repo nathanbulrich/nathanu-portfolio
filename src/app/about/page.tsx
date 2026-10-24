@@ -18,9 +18,7 @@ export default function About() {
             </p>
             <p>
               Right now I&apos;m focused on growing my engineering breadth and figuring out
-              the new best way to work as a designer in 2026.{' '}
-              <span className="inline-block">I also</span> like to tinker on
-              iOS apps for fun.
+              the new best way to work as a designer in 2026.
             </p>
           </div>
 
