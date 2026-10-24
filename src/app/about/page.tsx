@@ -11,14 +11,14 @@ export default function About() {
 
           <div className="space-y-6 leading-relaxed">
             <p>
-              Hi I&apos;m Nathan. I&apos;m a designer in New York City who
-              ships. My focus is on mobile, growing consumer products,
-              and interactive prototyping. I&apos;ve lead the design for
+              Hi I&apos;m Nathan. I&apos;m a software designer in New York City who
+              ships. My focus is on mobile and growing consumer products.
+              I&apos;ve lead the design for
               apps that are used by millions everyday.
             </p>
             <p>
-              Right now I&apos;m focusing on leveling up my engineering
-              skillset to help empower product orgs with AI tooling.{' '}
+              Right now I&apos;m focused on growing my engineering breadth and figuring out
+              the new best way to work as a designer in 2026.{' '}
               <span className="inline-block">I also</span> like to tinker on
               iOS apps for fun.
             </p>
