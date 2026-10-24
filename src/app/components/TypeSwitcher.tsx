@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useDialKit } from "dialkit";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
@@ -11,6 +12,7 @@ const styles = [
 
 export default function TypeSwitcher() {
   const { typeStyle, setTypeStyle } = useTypeStyle();
+  const [hoveredType, setHoveredType] = useState<string | null>(null);
   const values = useDialKit("Type segmented control", {
     layout: {
       segmentWidth: [38, 28, 48, 1],
@@ -84,6 +86,11 @@ export default function TypeSwitcher() {
           <button
             key={key}
             onClick={() => setTypeStyle(key)}
+            onPointerEnter={(event) => {
+              if (event.pointerType !== "touch") setHoveredType(key);
+            }}
+            onPointerLeave={() => setHoveredType(null)}
+            onPointerCancel={() => setHoveredType(null)}
             aria-label={label}
             aria-pressed={active}
             title={label}
@@ -99,7 +106,7 @@ export default function TypeSwitcher() {
               '--segment-duration': `${values.interaction.duration}ms`,
             } as React.CSSProperties}
           >
-            <span aria-hidden="true" className="absolute rounded-full type-segment-hover pointer-events-none" style={{ backgroundColor: tint(values.interaction.hoverTint), width: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight), height: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight) }} />
+            <span aria-hidden="true" className="absolute rounded-full type-segment-hover pointer-events-none" style={{ opacity: hoveredType === key && !active ? 1 : 0, backgroundColor: tint(values.interaction.hoverTint), width: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight), height: Math.min(values.interaction.hoverCircleSize, values.layout.segmentWidth, values.layout.segmentHeight) }} />
             <span className="type-segment-letter relative" style={{ opacity: (active ? values.typography.activeOpacity : values.typography.inactiveOpacity) / 100 }}>A</span>
           </button>
         );

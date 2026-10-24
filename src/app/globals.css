@@ -182,9 +182,6 @@ a:hover {
 .type-segment-letter {
   transition: transform var(--segment-duration), opacity var(--segment-duration);
 }
-.type-segment:hover .type-segment-hover {
-  opacity: 1;
-}
 .type-segment:hover .type-segment-letter {
   transform: scale(var(--segment-scale));
 }
