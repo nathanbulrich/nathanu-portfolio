@@ -73,7 +73,7 @@ export default function DeviceFrameTuner() {
   return (
     <svg width="0" height="0" className="absolute" aria-hidden="true">
       <defs>
-        <path id="device-frame-outline" d={path} />
+        <path id="device-frame-outline" d={path} vectorEffect="non-scaling-stroke" />
         <clipPath id="squircle" clipPathUnits="objectBoundingBox">
           <path d={path} />
         </clipPath>

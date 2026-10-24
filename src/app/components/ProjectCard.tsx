@@ -63,7 +63,6 @@ function TiltImage({ src, alt }: { src: string; alt: string }) {
           <use
             href="#device-frame-outline"
             fill="none"
-            vectorEffect="non-scaling-stroke"
             style={{
               stroke: "var(--device-border-color, rgba(0,0,0,0.12))",
               strokeWidth: "var(--device-border-width, 2px)",
