@@ -8,11 +8,13 @@ type TypeStyle = "mono" | "serif" | "sans";
 
 interface TypeStyleContextValue {
   typeStyle: TypeStyle;
+  displayedTypeStyle: TypeStyle;
   setTypeStyle: (style: TypeStyle) => void;
 }
 
 const TypeStyleContext = createContext<TypeStyleContextValue>({
   typeStyle: "serif",
+  displayedTypeStyle: "serif",
   setTypeStyle: () => {},
 });
 
@@ -24,6 +26,7 @@ const fontMap: Record<TypeStyle, string> = {
 
 export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const [typeStyle, updateTypeStyle] = useState<TypeStyle>("serif");
+  const [displayedTypeStyle, setDisplayedTypeStyle] = useState<TypeStyle>("serif");
   const root = useRef<HTMLDivElement>(null);
   const cancel = useRef<(() => void) | null>(null);
   const request = useRef(0);
@@ -47,6 +50,7 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
     if (!root.current) return;
     cancel.current = transitionText(root.current, () => {
       document.body.style.fontFamily = fontMap[style];
+      setDisplayedTypeStyle(style);
     }, settings.fadeOutDuration, settings.hiddenDelay, settings.fadeInDuration, settings.enabled, settings.fadeOutBlur, settings.fadeInBlur);
   };
   const setTypeStyle = (style: TypeStyle) => {
@@ -71,7 +75,7 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <TypeStyleContext.Provider value={{ typeStyle, setTypeStyle }}>
+    <TypeStyleContext.Provider value={{ typeStyle, displayedTypeStyle, setTypeStyle }}>
       <div ref={root} style={{ display: "contents" }}>{children}</div>
     </TypeStyleContext.Provider>
   );

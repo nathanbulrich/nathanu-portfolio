@@ -34,7 +34,7 @@ export default function SideNav() {
   const leadingPadding = 3;
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
-  const { typeStyle } = useTypeStyle();
+  const { displayedTypeStyle: typeStyle } = useTypeStyle();
 
 
   const links = [
