@@ -44,7 +44,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
               aria-label={`Set ${name} theme`}
               aria-pressed={isSelected}
               onClick={() => setTheme(name)}
-              className={`${dotSize} rounded-full transition-transform duration-150 ease-out hover:scale-125 cursor-pointer border-0 p-0`}
+              className={`${dotSize} rounded-full transition-transform duration-150 ease-out ${isSelected ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
               style={{
                 backgroundColor: color,
                 color,
