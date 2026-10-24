@@ -133,7 +133,7 @@ a:hover {
   height: var(--theme-color-thumb-size, 16px);
   border: 0;
   border-radius: 999px;
-  background: transparent;
+  background: var(--theme-color-thumb-color, #eb3333);
   transform: scale(var(--selector-scale, 0));
   transform-origin: center;
   box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
@@ -146,7 +146,7 @@ a:hover {
   height: var(--theme-color-thumb-size, 16px);
   border: 0;
   border-radius: 999px;
-  background: transparent;
+  background: var(--theme-color-thumb-color, #eb3333);
   transform: scale(var(--selector-scale, 0));
   transform-origin: center;
   box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,

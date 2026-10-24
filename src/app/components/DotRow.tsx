@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { SPECTRUM_GRADIENT } from "../lib/theme-definitions";
+import { SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
 
@@ -225,6 +225,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   left: selectorInset,
                   right: selectorInset,
                   width: `calc(100% - ${selectorInset * 2}px)`,
+                  "--theme-color-thumb-color": paletteFromHue(hue).dot,
                   "--theme-color-thumb-size": `${selectorDotSize}px`,
                   "--theme-color-thumb-stroke": `${selectorStrokeWidth}px`,
                 } as CSSProperties}
