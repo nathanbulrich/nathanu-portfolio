@@ -12,12 +12,15 @@ interface DotRowProps {
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, animationOrigin, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
-  const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
+  // For an even count, use the right-hand middle dot.
+  const originIndex = Math.floor(dots.length / 2);
+  const originLeft = originIndex * (defaultDotSize + dotSpacing);
+  const trackWidth = dots.length * defaultDotSize + (dots.length - 1) * dotSpacing;
+  const originColor = dots[originIndex].name === "neutral" ? blackDotColor : dots[originIndex].hex;
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(0);
-  const [trackBounds, setTrackBounds] = useState({ width: 0, originLeft: 0 });
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
   const barExtension = dotSpacing + (defaultDotSize - selectionBarHeight) / 2 - checkButtonGap;
@@ -29,7 +32,6 @@ export default function DotRow({ className = "" }: DotRowProps) {
     ? { duration: 0 }
     : { type: "spring" as const, visualDuration: morphDuration / 1000, bounce: springBounce };
   const componentRef = useRef<HTMLDivElement>(null);
-  const dotTrackRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
@@ -37,20 +39,6 @@ export default function DotRow({ className = "" }: DotRowProps) {
     ? blackDotColor
     : dots[selectedIndex].hex;
   const position = (selectedIndex / (dots.length - 1)) * 100;
-
-  useEffect(() => {
-    const track = dotTrackRef.current;
-    if (!track) return;
-    const syncBounds = () => {
-      const originDot = track.querySelectorAll<HTMLButtonElement>("[data-theme-dot]")[originIndex];
-      if (!originDot) return;
-      setTrackBounds({ width: track.clientWidth, originLeft: originDot.offsetLeft });
-      track.style.setProperty("--spectrum-width", `${track.clientWidth}px`);
-    };
-    const observer = new ResizeObserver(syncBounds);
-    observer.observe(track);
-    return () => observer.disconnect();
-  }, [originIndex]);
 
   useEffect(() => {
     if (!editing) return;
@@ -92,7 +80,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
           }
         }}
       >
-        <div ref={dotTrackRef} className="relative flex items-center" style={{ gap: dotSpacing }}>
+        <div className="relative flex items-center" style={{ gap: dotSpacing }}>
           <span
             aria-hidden="true"
             className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
@@ -109,7 +97,6 @@ export default function DotRow({ className = "" }: DotRowProps) {
           {dots.map(({ name, hex }, index) => {
             const color = name === "neutral" ? blackDotColor : hex;
             const isSelected = activeTheme === name;
-            const isOrigin = index === originIndex;
 
             return (
               <button
@@ -125,55 +112,55 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   ...dotDimensions,
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
-                  zIndex: isOrigin ? 1 : undefined,
                 }}
               >
                 <motion.span
                   aria-hidden="true"
                   initial={false}
-                  className="pointer-events-none absolute overflow-hidden rounded-full"
+                  className="pointer-events-none absolute inset-0 rounded-full"
                   style={{ backgroundColor: color }}
-                  animate={{
-                    left: editing && isOrigin ? -trackBounds.originLeft : 0,
-                    right: editing && isOrigin ? -(trackBounds.width + barExtension - trackBounds.originLeft - defaultDotSize) : 0,
-                    top: isOrigin ? barTop : 0,
-                    height: isOrigin ? barHeight : defaultDotSize,
-                    opacity: editing && !isOrigin ? 0 : 1,
-                  }}
-                  transition={{
-                    ...morphTransition,
-                    opacity: { duration: reduceMotion ? 0 : morphDuration / 2500 },
-                  }}
-                >
-                  {isOrigin && (
-                    <>
-                      <span
-                        className="absolute inset-y-0 left-0"
-                        style={{
-                          width: `calc(var(--spectrum-width) + ${barExtension}px)`,
-                          backgroundColor: color,
-                          backgroundImage: SPECTRUM_GRADIENT,
-                          backgroundSize: "100% 100%",
-                          backgroundPosition: "left center",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      />
-                      <motion.span
-                        className="absolute inset-0"
-                        style={{ backgroundColor: color }}
-                        initial={false}
-                        animate={{ opacity: editing ? 0 : 1 }}
-                        transition={{
-                          duration: editing || reduceMotion ? 0 : 0.1,
-                          delay: editing || reduceMotion ? 0 : morphDuration / 1000,
-                        }}
-                      />
-                    </>
-                  )}
-                </motion.span>
+                  animate={{ opacity: editing ? 0 : 1 }}
+                  transition={{ duration: reduceMotion ? 0 : morphDuration / 2500 }}
+                />
               </button>
             );
           })}
+          <motion.span
+            data-color-morph="true"
+            aria-hidden="true"
+            initial={false}
+            className="pointer-events-none absolute z-[1] overflow-hidden rounded-full"
+            style={{ backgroundColor: originColor }}
+            animate={{
+              left: editing ? 0 : originLeft,
+              width: editing ? trackWidth + barExtension : defaultDotSize,
+              top: barTop,
+              height: barHeight,
+            }}
+            transition={morphTransition}
+          >
+            <span
+              className="absolute inset-y-0 left-0"
+              style={{
+                width: trackWidth + barExtension,
+                backgroundColor: originColor,
+                backgroundImage: SPECTRUM_GRADIENT,
+                backgroundSize: "100% 100%",
+                backgroundPosition: "left center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+            <motion.span
+              className="absolute inset-0"
+              style={{ backgroundColor: originColor }}
+              initial={false}
+              animate={{ opacity: editing ? 0 : 1 }}
+              transition={{
+                duration: editing || reduceMotion ? 0 : 0.1,
+                delay: editing || reduceMotion ? 0 : morphDuration / 1000,
+              }}
+            />
+          </motion.span>
           <motion.div
             initial={false}
             animate={{ top: barTop, height: barHeight, right: editing ? -barExtension : 0 }}
