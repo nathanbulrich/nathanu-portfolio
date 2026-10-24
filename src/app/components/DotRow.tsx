@@ -21,6 +21,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
   const barTop = (defaultDotSize - barHeight) / 2;
+  // Native range thumbs stop half a thumb-width inside the input.
+  // Add the remaining inset so their centers meet the capsule end centers.
+  const selectorInset = Math.max(0, (selectionBarHeight - selectorDotSize) / 2);
   const morphTransition = reduceMotion
     ? { duration: 0 }
     : { type: "spring" as const, visualDuration: morphDuration / 1000, bounce: springBounce };
@@ -205,6 +208,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 }}
                 className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
                 style={{
+                  left: selectorInset,
+                  right: selectorInset,
+                  width: `calc(100% - ${selectorInset * 2}px)`,
                   "--theme-color-thumb-size": `${selectorDotSize}px`,
                   "--theme-color-thumb-stroke": `${selectorStrokeWidth}px`,
                 } as CSSProperties}
