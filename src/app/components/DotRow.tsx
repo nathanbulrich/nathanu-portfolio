@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { animate, AnimatePresence, motion, useReducedMotion, type AnimationPlaybackControls } from "motion/react";
 import { DOT_COLORS, SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
@@ -14,7 +14,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
   const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap } = useDotStyle();
   const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = useDotStyle();
-  const { selectorDragScale, selectorDragDuration } = useDotStyle();
+  const { selectorDragScale, selectorDragDuration, selectorMoveDuration } = useDotStyle();
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
@@ -37,16 +37,50 @@ export default function DotRow({ className = "" }: DotRowProps) {
     : { type: "spring" as const, visualDuration: morphDuration / 1000, bounce: springBounce };
   const componentRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
+  const hueAnimation = useRef<AnimationPlaybackControls | null>(null);
+  const targetHue = useRef(180);
+  const pointerStart = useRef<{ id: number; x: number; moved: boolean } | null>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
   const selectedColor = dots[selectedIndex]?.hex ?? "transparent";
   const position = (Math.max(0, selectedIndex) / (dots.length - 1)) * 100;
+
+  const selectHue = (nextHue: number, smooth: boolean) => {
+    hueAnimation.current?.stop();
+    targetHue.current = nextHue;
+    const update = (value: number) => {
+      setHue(value);
+      previewHue(value);
+    };
+    if (smooth && !reduceMotion) {
+      hueAnimation.current = animate(hue, nextHue, {
+        duration: selectorMoveDuration / 1000,
+        ease: [0.22, 1, 0.36, 1],
+        onUpdate: update,
+      });
+    } else update(nextHue);
+  };
+
+  const hueAtPointer = (input: HTMLInputElement, clientX: number) => {
+    const bounds = input.getBoundingClientRect();
+    const travel = Math.max(1, bounds.width - selectorDotSize);
+    return Math.round(Math.max(0, Math.min(1, (clientX - bounds.left - selectorDotSize / 2) / travel)) * 360);
+  };
+
+  const releaseSelector = () => {
+    pointerStart.current = null;
+    setDraggingSelector(false);
+  };
+
+  useEffect(() => () => hueAnimation.current?.stop(), []);
 
   useEffect(() => {
     if (!editing) return;
     sliderRef.current?.focus();
     const cancelOutside = (event: PointerEvent) => {
       if (event.target instanceof Node && !componentRef.current?.contains(event.target)) {
+        hueAnimation.current?.stop();
+        pointerStart.current = null;
         setEditing(false);
         setDraggingSelector(false);
         previewHue(null);
@@ -60,7 +94,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
   }, [editing, previewHue]);
 
   const finish = (save: boolean) => {
-    if (save) addColor(hue);
+    hueAnimation.current?.stop();
+    pointerStart.current = null;
+    if (save) addColor(targetHue.current);
     else previewHue(null);
     setEditing(false);
     setDraggingSelector(false);
@@ -212,20 +248,28 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 step={1}
                 value={hue}
                 aria-label="New theme color"
-                aria-valuetext={`${hue} degrees hue`}
+                aria-valuetext={`${Math.round(hue)} degrees hue`}
                 onPointerDown={(event) => {
                   if (!event.isPrimary || event.button !== 0) return;
+                  event.preventDefault();
+                  event.currentTarget.focus();
                   event.currentTarget.setPointerCapture(event.pointerId);
+                  pointerStart.current = { id: event.pointerId, x: event.clientX, moved: false };
                   setDraggingSelector(true);
+                  selectHue(hueAtPointer(event.currentTarget, event.clientX), true);
                 }}
-                onPointerUp={() => setDraggingSelector(false)}
-                onPointerCancel={() => setDraggingSelector(false)}
-                onLostPointerCapture={() => setDraggingSelector(false)}
-                onBlur={() => setDraggingSelector(false)}
+                onPointerMove={(event) => {
+                  const pointer = pointerStart.current;
+                  if (!pointer || pointer.id !== event.pointerId) return;
+                  if (Math.abs(event.clientX - pointer.x) > 3) pointer.moved = true;
+                  if (pointer.moved) selectHue(hueAtPointer(event.currentTarget, event.clientX), false);
+                }}
+                onPointerUp={releaseSelector}
+                onPointerCancel={releaseSelector}
+                onLostPointerCapture={releaseSelector}
+                onBlur={releaseSelector}
                 onChange={(event) => {
-                  const nextHue = Number(event.target.value);
-                  setHue(nextHue);
-                  previewHue(nextHue);
+                  selectHue(Number(event.target.value), false);
                 }}
                 className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
                 style={{
@@ -260,6 +304,8 @@ export default function DotRow({ className = "" }: DotRowProps) {
             onClick={() => {
               if (editing) finish(true);
               else {
+                hueAnimation.current?.stop();
+                targetHue.current = 180;
                 setHue(180);
                 setMorphVisible(true);
                 setEditing(true);
