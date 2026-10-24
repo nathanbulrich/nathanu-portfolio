@@ -34,6 +34,8 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
     const syncBounds = () => {
       const redDot = track.querySelector<HTMLButtonElement>('[data-theme-dot="red"]');
       if (!redDot) return;
+      track.style.setProperty("--spectrum-width", `${track.clientWidth}px`);
+      track.style.setProperty("--dot-diameter", `${redDot.offsetWidth}px`);
       track.style.setProperty("--red-dot-left", `${redDot.offsetLeft}px`);
       track.style.setProperty("--red-dot-right", `${track.clientWidth - redDot.offsetLeft - redDot.offsetWidth}px`);
     };
@@ -128,12 +130,14 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                 >
                   {name === "red" && (
                     <span
-                      className="absolute inset-0 rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
+                      className="absolute inset-y-0 left-0"
                       style={{
-                        background: SPECTRUM_GRADIENT,
-                        opacity: editing ? 1 : 0,
-                        transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.35}ms`,
-                        transitionDelay: `${editing && !reduceMotion ? morphDuration : 0}ms`,
+                        width: "var(--spectrum-width)",
+                        backgroundColor: color,
+                        backgroundImage: SPECTRUM_GRADIENT,
+                        backgroundSize: "calc(100% - var(--dot-diameter)) 100%",
+                        backgroundPosition: "right center",
+                        backgroundRepeat: "no-repeat",
                       }}
                     />
                   )}
@@ -151,6 +155,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
               className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
               style={{
                 gridColumn: "1 / -1",
+                marginLeft: "var(--dot-diameter)",
                 transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.35}ms`,
                 transitionDelay: `${editing && !reduceMotion ? morphDuration : 0}ms`,
                 opacity: editing ? 1 : 0,
