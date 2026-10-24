@@ -17,6 +17,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(210);
+  const componentRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
@@ -28,7 +29,17 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   useEffect(() => {
     if (!editing) return;
     sliderRef.current?.focus();
-    return () => previewHue(null);
+    const cancelOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !componentRef.current?.contains(event.target)) {
+        setEditing(false);
+        previewHue(null);
+      }
+    };
+    document.addEventListener("pointerdown", cancelOutside, true);
+    return () => {
+      document.removeEventListener("pointerdown", cancelOutside, true);
+      previewHue(null);
+    };
   }, [editing, previewHue]);
 
   const finish = (save: boolean) => {
@@ -41,7 +52,8 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   return (
     <div className={`flex ${className}`}>
       <div
-        className={`relative flex items-center rounded-full border border-[var(--theme-border)] px-4 py-3 transition-[border-color] duration-300 ${gap}`}
+        ref={componentRef}
+        className={`relative flex items-center ${gap}`}
         onKeyDown={(event) => {
           if (!editing) return;
           if (event.key === "Escape") {
@@ -69,40 +81,24 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
           {dots.map(({ name, hex }, index) => {
             const color = name === "neutral" ? blackDotColor : hex;
             const isSelected = activeTheme === name;
-            const isConfirm = editing && name === "neutral";
 
             return (
               <button
                 key={name}
                 type="button"
-                aria-label={isConfirm ? "Add selected color" : name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
-                aria-pressed={isConfirm ? undefined : isSelected}
-                disabled={editing && !isConfirm}
-                onClick={() => isConfirm ? finish(true) : setTheme(name)}
-                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-[transform,opacity,background-color] duration-200 ease-out motion-reduce:transition-none ${isSelected || isConfirm ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
+                aria-label={name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
+                aria-pressed={isSelected}
+                disabled={editing}
+                onClick={() => setTheme(name)}
+                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-[transform,opacity,background-color] duration-200 ease-out motion-reduce:transition-none ${isSelected ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
                 style={{
-                  backgroundColor: isConfirm ? "transparent" : color,
+                  backgroundColor: color,
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
-                  opacity: editing && !isConfirm ? 0 : 1,
-                  transform: editing && !isConfirm ? "scale(0.6)" : undefined,
+                  opacity: editing ? 0 : 1,
+                  transform: editing ? "scale(0.6)" : undefined,
                 }}
-              >
-                {name === "neutral" && (
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 16 16"
-                    className="h-full w-full transition-[opacity,transform] duration-300 motion-reduce:transition-none"
-                    style={{ opacity: isConfirm ? 1 : 0, transform: isConfirm ? "rotate(0deg)" : "rotate(-90deg) scale(0.5)" }}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    strokeLinecap="round"
-                  >
-                    <path d="M2 8l4 4L14 4" />
-                  </svg>
-                )}
-              </button>
+              />
             );
           })}
           <div
@@ -114,7 +110,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
             <div
               className="relative origin-right rounded-full transition-[clip-path,opacity] duration-300 ease-in-out motion-reduce:transition-none"
               style={{
-                gridColumn: "2 / -1",
+                gridColumn: "1 / -1",
                 clipPath: editing ? "inset(-10px -10px -10px -10px round 999px)" : "inset(0 0 0 100% round 999px)",
                 opacity: editing ? 1 : 0,
                 pointerEvents: editing ? "auto" : "none",
@@ -142,10 +138,10 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
         <button
           ref={addButtonRef}
           type="button"
-          aria-label={editing ? "Cancel color selection" : "Add a theme color"}
-          title={editing ? "Cancel color selection" : "Add a theme color"}
+          aria-label={editing ? "Add selected color" : "Add a theme color"}
+          title={editing ? "Add selected color" : "Add a theme color"}
           onClick={() => {
-            if (editing) finish(false);
+            if (editing) finish(true);
             else {
               setEditing(true);
               previewHue(hue);
@@ -156,7 +152,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
             color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
           }}
         >
-          <motion.svg
+          <svg
             aria-hidden="true"
             viewBox="0 0 16 16"
             className="h-full w-full"
@@ -164,12 +160,13 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
             stroke="currentColor"
             strokeWidth="1.75"
             strokeLinecap="round"
-            initial={false}
-            animate={{ rotate: editing ? 45 : 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
           >
-            <path d="M8 2v12M2 8h12" />
-          </motion.svg>
+            <motion.path
+              initial={false}
+              animate={{ d: editing ? "M2 8L6 12M6 12L14 4" : "M8 2L8 14M2 8L14 8" }}
+              transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
+            />
+          </svg>
         </button>
       </div>
     </div>
