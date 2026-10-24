@@ -7,10 +7,34 @@ import ContactModal from "./ContactModal";
 import TypeSwitcher from "./TypeSwitcher";
 import { useTypeStyle } from "../lib/TypeStyleContext";
 
+function CosmosLabel() {
+  const stemOffset = 16 / Math.SQRT2;
+  return (
+    <span className="relative inline-flex items-center">
+      <span className="group-hover:underline group-focus-visible:underline">Cosmos</span>
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.7}
+        style={{ width: "0.75em", height: "0.75em", marginLeft: 8 }}
+        strokeLinecap="butt"
+        strokeLinejoin="miter"
+        className="pointer-events-none absolute left-full translate-y-[1px] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+      >
+        <path d={`M${12.5 - stemOffset} ${3.5 + stemOffset} 12.5 3.5M3.5 3.5h9v9`} />
+      </svg>
+      <span className="sr-only"> (opens in a new tab)</span>
+    </span>
+  );
+}
+
 export default function SideNav() {
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
   const { typeStyle } = useTypeStyle();
+
 
   const links = [
     { label: "Work", href: "/" },
@@ -43,9 +67,9 @@ export default function SideNav() {
           href="https://www.cosmos.so/nathanu"
           target="_blank"
           rel="noopener noreferrer"
-          className="pt-2 pb-1.5 no-underline hover:no-underline opacity-40 hover:opacity-70 transition-opacity duration-[30ms]"
+          className="group pt-2 pb-1.5 no-underline hover:no-underline opacity-40 hover:opacity-70 focus-visible:opacity-70 transition-opacity duration-[30ms]"
         >
-          Cosmos
+          <CosmosLabel />
         </a>
         <button
           onClick={() => setContactOpen(true)}
@@ -91,9 +115,9 @@ export default function SideNav() {
             href="https://www.cosmos.so/nathanu"
             target="_blank"
             rel="noopener noreferrer"
-            className="no-underline hover:no-underline opacity-40 hover:opacity-70 transition-opacity duration-[30ms]"
+            className="group no-underline hover:no-underline opacity-40 hover:opacity-70 focus-visible:opacity-70 transition-opacity duration-[30ms]"
           >
-            Cosmos
+            <CosmosLabel />
           </a>
           <button
             onClick={() => setContactOpen(true)}

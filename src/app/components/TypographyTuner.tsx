@@ -4,10 +4,7 @@ import { useEffect } from "react";
 import { DialRoot, useDialKit } from "dialkit";
 
 export default function TypographyTuner() {
-  return process.env.NODE_ENV === "development" ? <DevelopmentTypographyTuner /> : null;
-}
 
-function DevelopmentTypographyTuner() {
   const { typeSize } = useDialKit("Typography", {
     typeSize: [20, 16, 28, 1],
   }, {
@@ -22,5 +19,5 @@ function DevelopmentTypographyTuner() {
     };
   }, [typeSize]);
 
-  return <DialRoot />;
+  return <DialRoot productionEnabled />;
 }
