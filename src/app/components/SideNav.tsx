@@ -79,7 +79,7 @@ export default function SideNav() {
         </button>
 
         <div className="mt-auto pb-8 flex flex-col gap-3">
-          <p className="text-[14px]">
+          <p className="text-[16px]">
             {typeStyle === "mono" ? (
               <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Berkeley Mono</a>
             ) : typeStyle === "serif" ? (

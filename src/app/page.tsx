@@ -1,4 +1,4 @@
-import DeviceFrameTuner from "./components/DeviceFrameTuner";
+import DeviceFrameShape from "./components/DeviceFrameShape";
 import HeroCard from "./components/HeroCard";
 import ProjectCard from "./components/ProjectCard";
 
@@ -57,7 +57,7 @@ const projects = [
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <DeviceFrameTuner />
+      <DeviceFrameShape />
       <div className="max-w-[1200px] mx-auto">
         <HeroCard />
 
