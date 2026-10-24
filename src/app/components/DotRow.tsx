@@ -13,6 +13,7 @@ interface DotRowProps {
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
   const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap, checkBackgroundTint } = useDotStyle();
+  const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = useDotStyle();
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
@@ -231,6 +232,10 @@ export default function DotRow({ className = "" }: DotRowProps) {
               height: editing ? selectionBarHeight : defaultDotSize,
               backgroundColor: editing ? `hsl(${hue} 55% 40% / ${checkBackgroundTint / 100})` : "rgba(0, 0, 0, 0)",
             }}
+            whileHover={editing ? {
+              backgroundColor: `hsl(${hue} 55% 40% / ${Math.min(100, checkBackgroundTint + 5) / 100})`,
+              transition: { duration: reduceMotion ? 0 : 0.15 },
+            } : {}}
             transition={morphTransition}
             type="button"
             aria-label={editing ? "Add selected color" : "Add a theme color"}
@@ -252,15 +257,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
               color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
             }}
           >
-            <span className="flex items-center justify-center transition-transform duration-150 ease-out group-hover:scale-125 motion-reduce:transition-none">
+            <span className={`flex items-center justify-center transition-transform duration-150 ease-out ${editing ? "" : "group-hover:scale-125"} motion-reduce:transition-none`}>
               <AnimatePresence mode="wait" initial={false}>
                 <motion.svg
                   key={editing ? "check" : "plus"}
                   aria-hidden="true"
                   viewBox="0 0 16 16"
                   style={{
-                    width: editing ? selectionBarHeight / 2 : defaultDotSize,
-                    height: editing ? selectionBarHeight / 2 : defaultDotSize,
+                    width: editing ? checkIconSize : plusIconSize,
+                    height: editing ? checkIconSize : plusIconSize,
                   }}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -268,11 +273,11 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   transition={{ duration: reduceMotion ? 0 : 0.12, ease: "easeInOut" }}
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth={1.7}
+                  strokeWidth={editing ? checkIconStrokeWidth : plusIconStrokeWidth}
                   strokeLinecap="butt"
                   strokeLinejoin="miter"
                 >
-                  <path d={editing ? "M2 8L6 12L14 4" : "M8 2L8 14M2 8L14 8"} />
+                  <path vectorEffect="non-scaling-stroke" d={editing ? "M2 8L6 12L14 4" : "M8 2L8 14M2 8L14 8"} />
                 </motion.svg>
               </AnimatePresence>
             </span>
