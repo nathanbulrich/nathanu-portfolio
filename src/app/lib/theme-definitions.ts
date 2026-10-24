@@ -128,13 +128,16 @@ function luminance(hue: number, saturation: number, lightness: number): number {
 }
 
 function readableText(hue: number, saturation: number, lightness: number, backgroundLuminance: number): string {
-  // Let color and tone vary while preserving readable body-text contrast.
-  let adjustedLightness = lightness;
-  while (adjustedLightness > 0 &&
-    (backgroundLuminance + 0.05) / (luminance(hue, saturation, adjustedLightness) + 0.05) < 4.5) {
-    adjustedLightness = Math.max(0, adjustedLightness - 0.5);
+  // Find the nearest readable tone on either light or dark backgrounds.
+  for (let distance = 0; distance <= 100; distance += 0.5) {
+    for (const candidate of [Math.max(0, lightness - distance), Math.min(100, lightness + distance)]) {
+      const textLuminance = luminance(hue, saturation, candidate);
+      const contrast = (Math.max(backgroundLuminance, textLuminance) + 0.05) /
+        (Math.min(backgroundLuminance, textLuminance) + 0.05);
+      if (contrast >= 4.5) return `hsl(${hue} ${saturation}% ${candidate}%)`;
+    }
   }
-  return `hsl(${hue} ${saturation}% ${adjustedLightness}%)`;
+  return backgroundLuminance > 0.179 ? "#000000" : "#ffffff";
 }
 
 export function paletteFromHue(hue: number, recipe: ThemeRecipe = DEFAULT_THEME_RECIPE): ThemePalette {

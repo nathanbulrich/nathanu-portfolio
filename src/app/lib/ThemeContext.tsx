@@ -43,24 +43,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     useCustomTheme: true,
     background: {
       saturation: [75, 0, 100, 1],
-      lightness: [97, 90, 100, 0.5],
+      lightness: [97, 0, 100, 0.5],
     },
     text: {
       saturation: [60, 0, 100, 1],
-      lightness: [28, 10, 45, 0.5],
+      lightness: [28, 0, 100, 0.5],
     },
     secondaryText: {
       saturation: [40, 0, 100, 1],
-      lightness: [38, 10, 55, 0.5],
+      lightness: [38, 0, 100, 0.5],
     },
     borders: {
       saturation: [55, 0, 100, 1],
-      lightness: [40, 10, 80, 1],
-      opacity: [20, 0, 50, 1],
+      lightness: [40, 0, 100, 1],
+      opacity: [20, 0, 100, 1],
     },
     selection: {
       saturation: [80, 0, 100, 1],
-      lightness: [82, 65, 95, 1],
+      lightness: [82, 0, 100, 1],
     },
   }, { id: "custom-color-theme", persist: true });
   const activeRecipe = recipe.useCustomTheme ? recipe : DEFAULT_THEME_RECIPE;
