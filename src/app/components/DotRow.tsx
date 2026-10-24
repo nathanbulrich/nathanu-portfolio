@@ -79,7 +79,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
       <div
         ref={componentRef}
         className="relative flex items-center"
-        style={{ gap: dotSpacing }}
+        style={{ gap: dotSpacing, height: defaultDotSize }}
         onKeyDown={(event) => {
           if (!editing) return;
           if (event.key === "Escape") {
@@ -218,8 +218,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
             </div>
           </motion.div>
         </div>
-        <button
+        <motion.button
           ref={addButtonRef}
+          initial={false}
+          animate={{
+            width: editing ? selectionBarHeight : defaultDotSize,
+            height: editing ? selectionBarHeight : defaultDotSize,
+            backgroundColor: editing ? "var(--theme-border)" : "rgba(0, 0, 0, 0)",
+          }}
+          transition={morphTransition}
           type="button"
           aria-label={editing ? "Add selected color" : "Add a theme color"}
           title={editing ? "Add selected color" : "Add a theme color"}
@@ -230,16 +237,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
               previewHue(hue);
             }
           }}
-          className={`flex shrink-0 items-center justify-center border-0 bg-transparent p-0 cursor-pointer transition-[color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
+          className="flex shrink-0 items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
           style={{
-            ...dotDimensions,
             color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
           }}
         >
           <svg
             aria-hidden="true"
             viewBox="0 0 16 16"
-            className="h-full w-full"
+            style={{ width: editing ? "50%" : "100%", height: editing ? "50%" : "100%" }}
             fill="none"
             stroke="currentColor"
             strokeWidth="1.75"
@@ -251,7 +257,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
               transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
             />
           </svg>
-        </button>
+        </motion.button>
       </div>
     </div>
   );
