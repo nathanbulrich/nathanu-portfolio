@@ -7,9 +7,28 @@ export default function TypographyTuner() {
   return (
     <>
       {process.env.NODE_ENV === "development" && <DevelopmentTypographyTuner />}
+      <CaptionTuner />
       <DialRoot productionEnabled />
     </>
   );
+}
+
+function CaptionTuner() {
+  const { size } = useDialKit("Project captions", {
+    size: [20, 12, 36, 1],
+  }, {
+    id: "project-caption-typography",
+    persist: true,
+  });
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--caption-size", `${size}px`);
+    return () => {
+      document.documentElement.style.removeProperty("--caption-size");
+    };
+  }, [size]);
+
+  return null;
 }
 
 function DevelopmentTypographyTuner() {

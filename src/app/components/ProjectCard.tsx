@@ -79,11 +79,11 @@ export default function ProjectCard({ title, images, description, link }: Projec
             </div>
           ))}
         </div>
-        <p className="text-center md:hidden">{title}</p>
+        <p className="text-center md:hidden" style={{ fontSize: "var(--caption-size, 20px)" }}>{title}</p>
       </div>
 
       {/* Desktop: full description */}
-      <p className="text-center hidden md:block">
+      <p className="text-center hidden md:block" style={{ fontSize: "var(--caption-size, 20px)" }}>
         {description}
         {link && (
           <>
