@@ -32,8 +32,10 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   const settings = useDialKit("Page transition", {
     enabled: true,
     fadeOutDuration: [170, 0, 1000, 10],
+    fadeOutBlur: [0, 0, 20, 0.5],
     hiddenDelay: [80, 0, 1000, 10],
     fadeInDuration: [260, 0, 1000, 10],
+    fadeInBlur: [0, 0, 20, 0.5],
     replay: { type: "action" },
   }, { id: "global-page-type-transition", persist: true, onAction: () => replay.current() });
 
@@ -48,7 +50,7 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
     if (!root.current) return;
     cancel.current = transitionText(root.current, () => {
       document.body.style.fontFamily = fontMap[style];
-    }, settings.fadeOutDuration, settings.hiddenDelay, settings.fadeInDuration, settings.enabled);
+    }, settings.fadeOutDuration, settings.hiddenDelay, settings.fadeInDuration, settings.enabled, settings.fadeOutBlur, settings.fadeInBlur);
   };
   const setTypeStyle = (style: TypeStyle) => {
     if (style === typeStyle) return;

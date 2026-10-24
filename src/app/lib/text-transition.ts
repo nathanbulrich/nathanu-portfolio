@@ -1,5 +1,5 @@
 /** Hide the page around the persistent type selector, swap fonts, then reveal the settled layout. */
-export function transitionText(root: HTMLElement, applyFont: () => void, fadeOutDuration: number, hiddenDelay: number, fadeInDuration: number, enabled = true) {
+export function transitionText(root: HTMLElement, applyFont: () => void, fadeOutDuration: number, hiddenDelay: number, fadeInDuration: number, enabled = true, fadeOutBlur = 0, fadeInBlur = 0) {
   const targets: HTMLElement[] = [];
   const collect = (parent: HTMLElement) => {
     for (const child of parent.children) {
@@ -10,6 +10,9 @@ export function transitionText(root: HTMLElement, applyFont: () => void, fadeOut
   };
   collect(root);
   const opacity = targets.map(el => Number(getComputedStyle(el).opacity));
+  const filters = targets.map(el => getComputedStyle(el).filter);
+  const blurred = (index: number, amount: number) =>
+    `${filters[index] === 'none' ? '' : `${filters[index]} `}blur(${amount}px)`;
   let cancelled = false;
   let delayTimer: ReturnType<typeof setTimeout> | undefined;
   let releaseDelay: (() => void) | undefined;
@@ -20,7 +23,8 @@ export function transitionText(root: HTMLElement, applyFont: () => void, fadeOut
   const run = async () => {
     if (!enabled || (fadeOutDuration === 0 && hiddenDelay === 0 && fadeInDuration === 0) || matchMedia('(prefers-reduced-motion: reduce)').matches) { applyFont(); return; }
     const outgoing = targets.map((el, i) => el.animate([
-      { opacity: opacity[i] }, { opacity: 0 },
+      { opacity: opacity[i], ...(fadeOutBlur > 0 ? { filter: filters[i] } : {}) },
+      { opacity: 0, ...(fadeOutBlur > 0 ? { filter: blurred(i, fadeOutBlur) } : {}) },
     ], { duration: fadeOutDuration, easing: 'ease-in', fill: 'both' }));
     animations.push(...outgoing);
     await finished(outgoing);
@@ -36,7 +40,8 @@ export function transitionText(root: HTMLElement, applyFont: () => void, fadeOut
     ]);
     if (cancelled) return;
     const incoming = targets.map((el, i) => el.animate([
-      { opacity: 0 }, { opacity: opacity[i] },
+      { opacity: 0, ...(fadeInBlur > 0 ? { filter: blurred(i, fadeInBlur) } : {}) },
+      { opacity: opacity[i], ...(fadeInBlur > 0 ? { filter: filters[i] } : {}) },
     ], { duration: fadeInDuration, easing: 'ease-out', fill: 'both' }));
     animations.push(...incoming);
     outgoing.forEach(animation => animation.cancel());
