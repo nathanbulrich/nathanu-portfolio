@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { paletteFromHue } from "../lib/theme-definitions";
+import { motion, useReducedMotion } from "motion/react";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
 
@@ -14,6 +14,7 @@ interface DotRowProps {
 export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
   const { ringThickness, ringSpacing, blackDotColor, ringDuration } = useDotStyle();
+  const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(210);
   const sliderRef = useRef<HTMLInputElement>(null);
@@ -68,23 +69,23 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
           {dots.map(({ name, hex }, index) => {
             const color = name === "neutral" ? blackDotColor : hex;
             const isSelected = activeTheme === name;
-            const isCancel = editing && name === "neutral";
+            const isConfirm = editing && name === "neutral";
 
             return (
               <button
                 key={name}
                 type="button"
-                aria-label={isCancel ? "Cancel color selection" : name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
-                aria-pressed={isCancel ? undefined : isSelected}
-                disabled={editing && !isCancel}
-                onClick={() => isCancel ? finish(false) : setTheme(name)}
-                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-[transform,opacity,background-color] duration-200 ease-out motion-reduce:transition-none ${isSelected || isCancel ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
+                aria-label={isConfirm ? "Add selected color" : name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
+                aria-pressed={isConfirm ? undefined : isSelected}
+                disabled={editing && !isConfirm}
+                onClick={() => isConfirm ? finish(true) : setTheme(name)}
+                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-[transform,opacity,background-color] duration-200 ease-out motion-reduce:transition-none ${isSelected || isConfirm ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
                 style={{
-                  backgroundColor: isCancel ? "transparent" : color,
+                  backgroundColor: isConfirm ? "transparent" : color,
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
-                  opacity: editing && !isCancel ? 0 : 1,
-                  transform: editing && !isCancel ? "scale(0.6)" : undefined,
+                  opacity: editing && !isConfirm ? 0 : 1,
+                  transform: editing && !isConfirm ? "scale(0.6)" : undefined,
                 }}
               >
                 {name === "neutral" && (
@@ -92,13 +93,13 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                     aria-hidden="true"
                     viewBox="0 0 16 16"
                     className="h-full w-full transition-[opacity,transform] duration-300 motion-reduce:transition-none"
-                    style={{ opacity: isCancel ? 1 : 0, transform: isCancel ? "rotate(0deg)" : "rotate(-90deg) scale(0.5)" }}
+                    style={{ opacity: isConfirm ? 1 : 0, transform: isConfirm ? "rotate(0deg)" : "rotate(-90deg) scale(0.5)" }}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.75"
                     strokeLinecap="round"
                   >
-                    <path d="M3 3l10 10M13 3 3 13" />
+                    <path d="M2 8l4 4L14 4" />
                   </svg>
                 )}
               </button>
@@ -141,24 +142,34 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
         <button
           ref={addButtonRef}
           type="button"
-          aria-label={editing ? "Add selected color" : "Add a theme color"}
-          title={editing ? "Add selected color" : "Add a theme color"}
+          aria-label={editing ? "Cancel color selection" : "Add a theme color"}
+          title={editing ? "Cancel color selection" : "Add a theme color"}
           onClick={() => {
-            if (editing) finish(true);
+            if (editing) finish(false);
             else {
               setEditing(true);
               previewHue(hue);
             }
           }}
-          className={`${dotSize} flex shrink-0 items-center justify-center ${editing ? "rounded-full border border-current" : "border-0"} p-0 cursor-pointer transition-[color,background-color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
+          className={`${dotSize} flex shrink-0 items-center justify-center border-0 bg-transparent p-0 cursor-pointer transition-[color,transform] duration-200 hover:scale-110 motion-reduce:transition-none`}
           style={{
-            color: editing ? "var(--theme-bg)" : "var(--theme-text-secondary)",
-            backgroundColor: editing ? paletteFromHue(hue).text : "transparent",
+            color: editing ? "var(--theme-text)" : "var(--theme-text-secondary)",
           }}
         >
-          <svg aria-hidden="true" viewBox="0 0 16 16" className={editing ? "h-[70%] w-[70%]" : "h-full w-full"} fill="none" stroke="currentColor" strokeWidth={editing ? 1.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-            <path d={editing ? "M3 8l3 3 7-7" : "M8 2v12M2 8h12"} />
-          </svg>
+          <motion.svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            className="h-full w-full"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            initial={false}
+            animate={{ rotate: editing ? 45 : 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
+          >
+            <path d="M8 2v12M2 8h12" />
+          </motion.svg>
         </button>
       </div>
     </div>
