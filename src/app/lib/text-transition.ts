@@ -1,4 +1,4 @@
-/** Soft-focus transition with real height interpolation so downstream content flows smoothly. */
+/** Soft-focus text with a single layout change and compositor-only position interpolation. */
 export function transitionText(root: HTMLElement, applyFont: () => void, duration: number, layoutDuration: number, textAnimation = true, layoutAnimation = true) {
   const candidates = Array.from(root.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, h5, h6, a, button, label, li, span'))
     .filter(el => el.textContent?.trim() && !el.closest('[data-text-transition-ignore]') && !el.querySelector('img, video, canvas') && el.getClientRects().length);
@@ -18,26 +18,42 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || (!textAnimation && !layoutAnimation)) { applyFont(); return; }
     const outgoing = textAnimation && duration > 0 ? visible.map(el => animate(el, [
       { opacity: opacity.get(el), filter: 'blur(0px)' },
-      { opacity: 0, filter: 'blur(3px)' },
+      { opacity: 0, filter: 'blur(1.5px)' },
     ], duration * .4)) : [];
     await finished(outgoing);
     if (cancelled) return;
 
-    // Measure actual layout heights, not transformed bounds. Animating height rather
-    // than scaling glyphs lets paragraphs, images and following sections reflow together.
-    const blocks = elements.filter(el => ['block', 'flow-root', 'list-item'].includes(getComputedStyle(el).display));
-    const before = blocks.map(el => getComputedStyle(el).height);
+    // Measure once on either side of the font swap. Never animate height: that
+    // reflows all following content each frame and repeatedly rasterizes images.
+    const blocks = [...new Set([
+      ...elements,
+      ...root.querySelectorAll<HTMLElement>('main > div > *, main .card-border, main img, main svg, header, footer'),
+    ])].filter(el => !el.closest('[data-text-transition-ignore]') && el.getClientRects().length && getComputedStyle(el).display !== 'inline');
+    const before = new Map(blocks.map(el => [el, el.getBoundingClientRect()]));
     applyFont();
-    const after = blocks.map(el => getComputedStyle(el).height);
-    const layout = layoutAnimation && layoutDuration > 0 ? blocks.flatMap((el, i) => {
-      if (before[i] === after[i] || !before[i].endsWith('px') || !after[i].endsWith('px')) return [];
-      // A symmetric ease avoids the long subpixel crawl of the text fade curve.
-      // Hold the exact final height briefly so removing the effect cannot shift it.
-      return [animate(el, [{ height: before[i], easing: 'ease-in-out' }, { height: after[i], offset: .9 }, { height: after[i] }], layoutDuration, 'linear')];
+    const offsets = new Map(blocks.map(el => {
+      const first = before.get(el)!;
+      const last = el.getBoundingClientRect();
+      return [el, { x: first.x - last.x, y: first.y - last.y }];
+    }));
+    const layout = layoutAnimation && layoutDuration > 0 ? blocks.flatMap(el => {
+      const delta = offsets.get(el)!;
+      let parent = el.parentElement;
+      while (parent && !offsets.has(parent)) parent = parent.parentElement;
+      const inherited = parent ? offsets.get(parent)! : { x: 0, y: 0 };
+      // Subtract the ancestor's movement so nested text doesn't move twice.
+      const x = delta.x - inherited.x;
+      const y = delta.y - inherited.y;
+      if (Math.abs(x) < .01 && Math.abs(y) < .01) return [];
+      return [animate(el, [
+        { translate: `${x}px ${y}px`, willChange: 'translate', easing: 'ease-in-out' },
+        { translate: '0px 0px', willChange: 'translate', offset: .9 },
+        { translate: '0px 0px', willChange: 'translate' },
+      ], layoutDuration, 'linear')];
     }) : [];
     outgoing.forEach(animation => animation.cancel());
     const incoming = textAnimation && duration > 0 ? visible.map(el => animate(el, [
-      { opacity: 0, filter: 'blur(3px)' },
+      { opacity: 0, filter: 'blur(1.5px)' },
       { opacity: opacity.get(el), filter: 'none' },
     ], duration * .6)) : [];
     // Do not keep blur(0) compositing on sharp text while the layout settles.
