@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { SPECTRUM_GRADIENT } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { useDotStyle } from "../lib/DotStyleContext";
 
@@ -13,11 +14,12 @@ interface DotRowProps {
 
 export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, blackDotColor, ringDuration } = useDotStyle();
+  const { ringThickness, ringSpacing, blackDotColor, ringDuration, morphDuration } = useDotStyle();
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
   const [hue, setHue] = useState(210);
   const componentRef = useRef<HTMLDivElement>(null);
+  const dotTrackRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
@@ -25,6 +27,19 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
     ? blackDotColor
     : dots[selectedIndex].hex;
   const position = (selectedIndex / (dots.length - 1)) * 100;
+
+  useEffect(() => {
+    const track = dotTrackRef.current;
+    if (!track) return;
+    const syncGap = () => {
+      track.style.setProperty("--dot-gap", getComputedStyle(track).columnGap);
+      track.style.setProperty("--dot-radius", `${track.clientHeight / 2}px`);
+    };
+    syncGap();
+    const observer = new ResizeObserver(syncGap);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!editing) return;
@@ -65,7 +80,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
           }
         }}
       >
-        <div className={`relative flex items-center ${gap}`}>
+        <div ref={dotTrackRef} className={`relative flex items-center ${gap}`}>
           <span
             aria-hidden="true"
             className={`${dotSize} pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
@@ -90,15 +105,26 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                 aria-pressed={isSelected}
                 disabled={editing}
                 onClick={() => setTheme(name)}
-                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-[transform,opacity,background-color] duration-200 ease-out motion-reduce:transition-none ${isSelected ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
+                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none ${isSelected || editing ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
                 style={{
-                  backgroundColor: color,
                   color: "var(--theme-text-secondary)",
                   outlineColor: color,
-                  opacity: editing ? 0 : 1,
-                  transform: editing ? "scale(0.6)" : undefined,
                 }}
-              />
+              >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 transition-[left,right,border-radius] ease-in-out motion-reduce:transition-none"
+                  style={{
+                    backgroundColor: color,
+                    left: editing && index > 0 ? "calc(var(--dot-gap) / -2 - 0.5px)" : 0,
+                    right: editing && index < dots.length - 1 ? "calc(var(--dot-gap) / -2 - 0.5px)" : 0,
+                    borderRadius: editing
+                      ? index === 0 ? "var(--dot-radius) 0 0 var(--dot-radius)" : index === dots.length - 1 ? "0 var(--dot-radius) var(--dot-radius) 0" : "0px"
+                      : "var(--dot-radius)",
+                    transitionDuration: `${reduceMotion ? 0 : morphDuration}ms`,
+                  }}
+                />
+              </button>
             );
           })}
           <div
@@ -108,10 +134,12 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
             style={{ gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
           >
             <div
-              className="relative origin-right rounded-full transition-[clip-path,opacity] duration-300 ease-in-out motion-reduce:transition-none"
+              className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
               style={{
                 gridColumn: "1 / -1",
-                clipPath: editing ? "inset(-10px -10px -10px -10px round 999px)" : "inset(0 0 0 100% round 999px)",
+                background: SPECTRUM_GRADIENT,
+                transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.55}ms`,
+                transitionDelay: `${editing && !reduceMotion ? morphDuration * 0.45 : 0}ms`,
                 opacity: editing ? 1 : 0,
                 pointerEvents: editing ? "auto" : "none",
               }}
