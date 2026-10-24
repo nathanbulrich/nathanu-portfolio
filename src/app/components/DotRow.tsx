@@ -68,52 +68,74 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
           {dots.map(({ name, hex }, index) => {
             const color = name === "neutral" ? blackDotColor : hex;
             const isSelected = activeTheme === name;
+            const isCancel = editing && name === "neutral";
 
             return (
               <button
                 key={name}
                 type="button"
-                aria-label={name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
-                aria-pressed={isSelected}
-                disabled={editing}
-                onClick={() => setTheme(name)}
-                className={`${dotSize} shrink-0 rounded-full transition-[transform,opacity] duration-200 ease-out motion-reduce:transition-none ${isSelected ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
+                aria-label={isCancel ? "Cancel color selection" : name.startsWith("custom-") ? `Set custom color ${index - 6} theme` : `Set ${name} theme`}
+                aria-pressed={isCancel ? undefined : isSelected}
+                disabled={editing && !isCancel}
+                onClick={() => isCancel ? finish(false) : setTheme(name)}
+                className={`${dotSize} relative flex items-center justify-center shrink-0 rounded-full transition-[transform,opacity,background-color] duration-200 ease-out motion-reduce:transition-none ${isSelected || isCancel ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
                 style={{
-                  backgroundColor: color,
-                  color,
+                  backgroundColor: isCancel ? "transparent" : color,
+                  color: "var(--theme-text-secondary)",
                   outlineColor: color,
-                  opacity: editing ? 0 : 1,
-                  transform: editing ? "scale(0.6)" : undefined,
+                  opacity: editing && !isCancel ? 0 : 1,
+                  transform: editing && !isCancel ? "scale(0.6)" : undefined,
                 }}
-              />
+              >
+                {name === "neutral" && (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    className="h-full w-full transition-[opacity,transform] duration-300 motion-reduce:transition-none"
+                    style={{ opacity: isCancel ? 1 : 0, transform: isCancel ? "rotate(0deg)" : "rotate(-90deg) scale(0.5)" }}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                  >
+                    <path d="M3 3l10 10M13 3 3 13" />
+                  </svg>
+                )}
+              </button>
             );
           })}
           <div
             aria-hidden={!editing}
             inert={!editing}
-            className="absolute inset-0 origin-right rounded-full transition-[clip-path,opacity] duration-300 ease-in-out motion-reduce:transition-none"
-            style={{
-              clipPath: editing ? "inset(-10px -10px -10px -10px round 999px)" : "inset(0 0 0 100% round 999px)",
-              opacity: editing ? 1 : 0,
-              pointerEvents: editing ? "auto" : "none",
-            }}
+            className={`pointer-events-none absolute inset-0 grid ${gap}`}
+            style={{ gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
           >
-            <input
-              ref={sliderRef}
-              type="range"
-              min={0}
-              max={360}
-              step={1}
-              value={hue}
-              aria-label="New theme color"
-              aria-valuetext={`${hue} degrees hue`}
-              onChange={(event) => {
-                const nextHue = Number(event.target.value);
-                setHue(nextHue);
-                previewHue(nextHue);
+            <div
+              className="relative origin-right rounded-full transition-[clip-path,opacity] duration-300 ease-in-out motion-reduce:transition-none"
+              style={{
+                gridColumn: "2 / -1",
+                clipPath: editing ? "inset(-10px -10px -10px -10px round 999px)" : "inset(0 0 0 100% round 999px)",
+                opacity: editing ? 1 : 0,
+                pointerEvents: editing ? "auto" : "none",
               }}
-              className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
-            />
+            >
+              <input
+                ref={sliderRef}
+                type="range"
+                min={0}
+                max={360}
+                step={1}
+                value={hue}
+                aria-label="New theme color"
+                aria-valuetext={`${hue} degrees hue`}
+                onChange={(event) => {
+                  const nextHue = Number(event.target.value);
+                  setHue(nextHue);
+                  previewHue(nextHue);
+                }}
+                className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
+              />
+            </div>
           </div>
         </div>
         <button
@@ -138,15 +160,6 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
             <path d={editing ? "M3 8l3 3 7-7" : "M8 2v12M2 8h12"} />
           </svg>
         </button>
-        {editing && (
-          <button
-            type="button"
-            onClick={() => finish(false)}
-            className="absolute right-0 top-full mt-3 cursor-pointer text-xs text-[var(--theme-text-secondary)] hover:underline"
-          >
-            Cancel
-          </button>
-        )}
       </div>
     </div>
   );
