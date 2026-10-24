@@ -10,6 +10,7 @@
     "capture-thumbnails": "node scripts/capture-thumbnails.mjs"
   },
   "dependencies": {
+    "dialkit": "^2.0.2",
     "motion": "^14.6.0",
     "next": "16.1.6",
     "react": "19.2.3",
