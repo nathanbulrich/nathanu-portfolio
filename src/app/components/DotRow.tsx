@@ -132,8 +132,8 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
                       style={{
                         background: SPECTRUM_GRADIENT,
                         opacity: editing ? 1 : 0,
-                        transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.65}ms`,
-                        transitionDelay: `${editing && !reduceMotion ? morphDuration * 0.35 : 0}ms`,
+                        transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.35}ms`,
+                        transitionDelay: `${editing && !reduceMotion ? morphDuration : 0}ms`,
                       }}
                     />
                   )}
@@ -151,8 +151,8 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
               className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
               style={{
                 gridColumn: "1 / -1",
-                transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.55}ms`,
-                transitionDelay: `${editing && !reduceMotion ? morphDuration * 0.45 : 0}ms`,
+                transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.35}ms`,
+                transitionDelay: `${editing && !reduceMotion ? morphDuration : 0}ms`,
                 opacity: editing ? 1 : 0,
                 pointerEvents: editing ? "auto" : "none",
               }}
