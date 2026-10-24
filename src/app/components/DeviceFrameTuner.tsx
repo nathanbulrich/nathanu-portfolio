@@ -1,14 +1,36 @@
 "use client";
 
 import { useDialKit } from "dialkit";
+import { useEffect } from "react";
 
 export default function DeviceFrameTuner() {
-  const { cornerRoundness } = useDialKit("Device frames", {
+  const { cornerRoundness, shadow } = useDialKit("Device frames", {
     cornerRoundness: [18, 0, 30, 1],
+    shadow: {
+      enabled: true,
+      color: "#000000",
+      opacity: [29, 0, 100, 1],
+      blur: [25, 0, 100, 1],
+      offsetX: [0, -100, 100, 1],
+      offsetY: [4, -100, 100, 1],
+    },
   }, {
     id: "project-device-frames",
     persist: true,
   });
+
+  useEffect(() => {
+    const color = `color-mix(in srgb, ${shadow.color} ${shadow.opacity}%, transparent)`;
+    document.documentElement.style.setProperty(
+      "--device-shadow",
+      shadow.enabled
+        ? `drop-shadow(${shadow.offsetX}px ${shadow.offsetY}px ${shadow.blur}px ${color})`
+        : "none",
+    );
+    return () => {
+      document.documentElement.style.removeProperty("--device-shadow");
+    };
+  }, [shadow.enabled, shadow.color, shadow.opacity, shadow.blur, shadow.offsetX, shadow.offsetY]);
 
   // Scale the original continuous corners proportionally across every device.
   const x = cornerRoundness / 100;
