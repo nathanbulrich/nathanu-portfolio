@@ -41,7 +41,7 @@ export default function DotRow({ dotSize, gap, className = "" }: DotRowProps) {
   return (
     <div className={`flex ${className}`}>
       <div
-        className={`relative flex items-center ${gap}`}
+        className={`relative flex items-center rounded-full border border-[var(--theme-border)] px-4 py-3 transition-[border-color] duration-300 ${gap}`}
         onKeyDown={(event) => {
           if (!editing) return;
           if (event.key === "Escape") {
