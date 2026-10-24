@@ -17,7 +17,7 @@ export default function TypeSwitcher() {
         <button
           key={key}
           onClick={() => setTypeStyle(key)}
-          className={`w-[38px] h-[38px] flex items-center justify-center cursor-pointer rounded transition-all duration-[30ms] text-[19px] ${
+          className={`group w-[38px] h-[38px] flex items-center justify-center cursor-pointer rounded transition-all duration-[30ms] text-[19px] ${
             typeStyle !== key ? "hover:opacity-60 hover:bg-[color-mix(in_srgb,var(--theme-text)_3%,transparent)]" : ""
           }`}
           style={{
@@ -28,7 +28,9 @@ export default function TypeSwitcher() {
           }}
           title={key.charAt(0).toUpperCase() + key.slice(1)}
         >
-          A
+          <span className="inline-block transition-transform duration-150 ease-out group-hover:scale-110 group-focus-visible:scale-110 motion-reduce:transition-none motion-reduce:transform-none">
+            A
+          </span>
         </button>
       ))}
     </div>
