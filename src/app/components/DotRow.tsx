@@ -16,7 +16,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const originIndex = Math.max(0, Math.min(dots.length - 1, Number(animationOrigin) || 0));
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
-  const [hue, setHue] = useState(210);
+  const [hue, setHue] = useState(0);
   const [trackBounds, setTrackBounds] = useState({ width: 0, originLeft: 0 });
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
@@ -184,17 +184,21 @@ export default function DotRow({ className = "" }: DotRowProps) {
             style={{ gap: dotSpacing, gridTemplateColumns: `repeat(${dots.length}, minmax(0, 1fr))` }}
           >
             <div
-              className="relative rounded-full transition-opacity ease-in-out motion-reduce:transition-none"
+              className="relative rounded-full"
               style={{
                 gridColumn: "1 / -1",
-                transitionDuration: `${reduceMotion ? 0 : morphDuration * 0.35}ms`,
-                transitionDelay: `${editing && !reduceMotion ? morphDuration : 0}ms`,
-                opacity: editing ? 1 : 0,
+                visibility: editing ? "visible" : "hidden",
                 pointerEvents: editing ? "auto" : "none",
               }}
             >
-              <input
+              <motion.input
                 ref={sliderRef}
+                initial={false}
+                animate={{ "--selector-scale": editing ? 1 : 0 }}
+                transition={{
+                  ...morphTransition,
+                  delay: editing && !reduceMotion ? morphDuration / 2500 : 0,
+                }}
                 type="range"
                 min={0}
                 max={360}
@@ -235,8 +239,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
             onClick={() => {
               if (editing) finish(true);
               else {
+                setHue(0);
                 setEditing(true);
-                previewHue(hue);
+                previewHue(0);
               }
             }}
             className="absolute flex items-center justify-center rounded-full border-0 p-0 cursor-pointer transition-colors duration-200 motion-reduce:transition-none"
