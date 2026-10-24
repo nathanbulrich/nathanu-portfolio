@@ -174,3 +174,13 @@ a:hover {
     padding-left: calc((100vw - 140px - 1200px) / 2 + 48px);
   }
 }
+
+.type-segment-hover {
+  opacity: 0;
+  transition: opacity var(--segment-duration);
+}
+@media (prefers-reduced-motion: reduce) {
+  .type-segment-hover {
+    transition: none;
+  }
+}
