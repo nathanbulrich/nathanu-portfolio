@@ -4,6 +4,7 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
     .filter(el => el.textContent?.trim() && !el.closest('[data-text-transition-ignore]') && !el.querySelector('img, video, canvas') && el.getClientRects().length);
   const elements = candidates.filter(el => !candidates.some(parent => parent !== el && parent.contains(el)));
   const visible = elements.filter(el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; });
+  const opacity = new Map(visible.map(el => [el, Number(getComputedStyle(el).opacity)]));
   let cancelled = false;
   const animations: Animation[] = [];
   const animate = (el: HTMLElement, frames: Keyframe[], time: number) => {
@@ -16,7 +17,7 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
   const run = async () => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || duration === 0) { applyFont(); return; }
     const outgoing = visible.map(el => animate(el, [
-      { opacity: 1, filter: 'blur(0px)' },
+      { opacity: opacity.get(el), filter: 'blur(0px)' },
       { opacity: 0, filter: 'blur(3px)' },
     ], duration * .4));
     await finished(outgoing);
@@ -35,7 +36,7 @@ export function transitionText(root: HTMLElement, applyFont: () => void, duratio
     outgoing.forEach(animation => animation.cancel());
     const incoming = visible.map(el => animate(el, [
       { opacity: 0, filter: 'blur(3px)' },
-      { opacity: 1, filter: 'blur(0px)' },
+      { opacity: opacity.get(el), filter: 'blur(0px)' },
     ], duration * .6));
     await finished([...incoming, ...layout]);
     if (!cancelled) clear();
