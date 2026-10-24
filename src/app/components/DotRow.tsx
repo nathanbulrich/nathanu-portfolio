@@ -206,7 +206,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
                 style={{
                   "--theme-color-thumb-size": `${selectorDotSize}px`,
-                  "--theme-color-thumb-stroke": `${Math.min(selectorStrokeWidth, selectorDotSize / 2)}px`,
+                  "--theme-color-thumb-stroke": `${selectorStrokeWidth}px`,
                 } as CSSProperties}
               />
             </div>

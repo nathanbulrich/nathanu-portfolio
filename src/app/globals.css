@@ -131,20 +131,22 @@ a:hover {
   box-sizing: border-box;
   width: var(--theme-color-thumb-size, 16px);
   height: var(--theme-color-thumb-size, 16px);
-  border: var(--theme-color-thumb-stroke, 2px) solid white;
+  border: 0;
   border-radius: 999px;
   background: transparent;
-  box-shadow: 0 1px 5px rgb(0 0 0 / 0.35);
+  box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
+    0 1px 5px var(--theme-color-thumb-stroke, 2px) rgb(0 0 0 / 0.35);
 }
 
 .theme-color-gradient::-moz-range-thumb {
   box-sizing: border-box;
   width: var(--theme-color-thumb-size, 16px);
   height: var(--theme-color-thumb-size, 16px);
-  border: var(--theme-color-thumb-stroke, 2px) solid white;
+  border: 0;
   border-radius: 999px;
   background: transparent;
-  box-shadow: 0 1px 5px rgb(0 0 0 / 0.35);
+  box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
+    0 1px 5px var(--theme-color-thumb-stroke, 2px) rgb(0 0 0 / 0.35);
 }
 
 .theme-color-gradient:focus-visible {
