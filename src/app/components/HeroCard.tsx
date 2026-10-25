@@ -5,15 +5,15 @@ export default function HeroCard() {
     <div className="px-6 md:px-12 lg:px-12 pt-8 pb-8 md:pt-[88px] lg:pt-[90px] md:pb-[56px]">
       <div className="space-y-6 max-w-[664px]">
         <p className="leading-relaxed">
-          Hi, I&apos;m Nathan Ulrich. I&apos;m a semi-technical designer in NYC who builds apps.
-          I&apos;m designing the space to dream at{" "}
+          Hi, I&apos;m Nathan Ulrich. I&apos;m a technical software designer in NYC who can build end-to-end.
+          I lead design at{" "}
           <a
             href="https://www.cosmos.so/"
             target="_blank"
             rel="noopener noreferrer"
           >
             Cosmos
-          </a>.
+          </a>, the best place to dream.
         </p>
         <p className="leading-relaxed">
           I believe in the benefits of a social internet and want to help build it.
