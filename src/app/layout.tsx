@@ -3,7 +3,6 @@ import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
 import SideNav from "./components/SideNav";
-import { ProjectImageDialRoot } from "./components/ProjectImageTuning";
 
 export const metadata: Metadata = {
   title: "Nathan Ulrich - NYC Software Designer",
@@ -35,7 +34,6 @@ export default function RootLayout({
             <div className="lg:ml-[228px]">
               {children}
             </div>
-            {process.env.NODE_ENV === "development" && <ProjectImageDialRoot />}
           </TypeStyleProvider>
         </ThemeProvider>
       </body>

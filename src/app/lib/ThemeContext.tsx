@@ -54,11 +54,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       : presetName !== "neutral"
         ? paletteFromPreset(presetName, THEME_RECIPE)
         : palettes[activeTheme ?? "neutral"] ?? THEME_PALETTES.neutral;
-  const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))];
+  const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))]
+    .slice(-DOT_COLORS.length);
 
   const addColor = useCallback((hue: number) => {
     const name: ThemeName = `custom-${nextColorId.current++}`;
-    setCustomThemes((themes) => [...themes, { name, hue }]);
+    setCustomThemes((themes) => [...themes, { name, hue }].slice(-DOT_COLORS.length));
     setActiveTheme(name);
     setPreview(null);
   }, []);
