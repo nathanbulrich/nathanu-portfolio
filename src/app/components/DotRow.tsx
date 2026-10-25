@@ -10,11 +10,14 @@ interface DotRowProps {
   className?: string;
 }
 
+type SavePhase = "idle" | "closing" | "spacing" | "revealing";
+
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
   const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap } = useDotStyle();
   const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = useDotStyle();
   const { selectorDragScale, selectorDragDuration, selectorMoveDuration } = useDotStyle();
+  const { addColorSpaceDuration, newColorPopDuration } = useDotStyle();
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
@@ -25,6 +28,11 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const [morphVisible, setMorphVisible] = useState(false);
   const [draggingSelector, setDraggingSelector] = useState(false);
   const [hue, setHue] = useState(180);
+  const [savePhase, setSavePhase] = useState<SavePhase>("idle");
+  const savePhaseRef = useRef<SavePhase>("idle");
+  const pendingHue = useRef<number | null>(null);
+  const closeComplete = useRef({ bar: false, button: false, icon: false });
+  const saving = savePhase !== "idle";
   const dotDimensions = { width: defaultDotSize, height: defaultDotSize };
   const barHeight = editing ? selectionBarHeight : defaultDotSize;
   const barExtension = dotSpacing + (defaultDotSize - selectionBarHeight) / 2 - checkButtonGap;
@@ -72,7 +80,34 @@ export default function DotRow({ className = "" }: DotRowProps) {
     setDraggingSelector(false);
   };
 
-  useEffect(() => () => hueAnimation.current?.stop(), []);
+  useEffect(() => () => {
+    hueAnimation.current?.stop();
+    previewHue(null);
+  }, [previewHue]);
+
+  const advanceAfterClose = (part: "bar" | "button" | "icon") => {
+    if (savePhaseRef.current !== "closing") return;
+    closeComplete.current[part] = true;
+    if (Object.values(closeComplete.current).every(Boolean)) {
+      savePhaseRef.current = "spacing";
+      setSavePhase("spacing");
+    }
+  };
+
+  const revealNewColor = () => {
+    if (savePhaseRef.current !== "spacing" || pendingHue.current === null) return;
+    savePhaseRef.current = "revealing";
+    setSavePhase("revealing");
+    addColor(pendingHue.current);
+  };
+
+  const finishReveal = () => {
+    if (savePhaseRef.current !== "revealing") return;
+    pendingHue.current = null;
+    savePhaseRef.current = "idle";
+    setSavePhase("idle");
+    addButtonRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!editing) return;
@@ -89,14 +124,20 @@ export default function DotRow({ className = "" }: DotRowProps) {
     document.addEventListener("pointerdown", cancelOutside, true);
     return () => {
       document.removeEventListener("pointerdown", cancelOutside, true);
-      previewHue(null);
     };
   }, [editing, previewHue]);
 
   const finish = (save: boolean) => {
+    if (savePhaseRef.current !== "idle") return;
     hueAnimation.current?.stop();
     pointerStart.current = null;
-    if (save) addColor(targetHue.current);
+    if (save && !reduceMotion) {
+      pendingHue.current = targetHue.current;
+      closeComplete.current = { bar: false, button: false, icon: false };
+      savePhaseRef.current = "closing";
+      setSavePhase("closing");
+      previewHue(targetHue.current);
+    } else if (save) addColor(targetHue.current);
     else previewHue(null);
     setEditing(false);
     setDraggingSelector(false);
@@ -107,6 +148,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
     <div className={`flex ${className}`}>
       <div
         ref={componentRef}
+        data-save-phase={savePhase}
         className="relative flex items-center"
         style={{ gap: dotSpacing, height: defaultDotSize }}
         onKeyDown={(event) => {
@@ -122,10 +164,14 @@ export default function DotRow({ className = "" }: DotRowProps) {
       >
         <div className="relative flex items-center" style={{ gap: dotSpacing }}>
           {/* New dots get a fresh ring so their selection appears without sliding. */}
-          <span
+          <motion.span
             key={`${dots.length}-${selectedIndex >= 0}`}
+            data-selection-ring="true"
             aria-hidden="true"
-            className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow,opacity] ease-in-out motion-reduce:transition-none`}
+            initial={savePhase === "revealing" ? { scale: 0.5, opacity: 0 } : false}
+            animate={{ scale: 1, opacity: editing || (saving && savePhase !== "revealing") ? 0 : 1 }}
+            transition={{ duration: reduceMotion ? 0 : newColorPopDuration / 1000, ease: [0.22, 1, 0.36, 1] }}
+            className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow] ease-in-out motion-reduce:transition-none`}
             style={{
               ...dotDimensions,
               left: `${position}%`,
@@ -133,12 +179,12 @@ export default function DotRow({ className = "" }: DotRowProps) {
               transitionDuration: `${ringDuration}ms`,
               boxShadow: `0 0 0 ${ringSpacing}px var(--theme-bg), 0 0 0 ${ringSpacing + ringThickness}px ${selectedColor}`,
               visibility: selectedIndex >= 0 && ringThickness > 0 ? "visible" : "hidden",
-              opacity: editing ? 0 : 1,
             }}
           />
           {dots.map(({ name, hex }, index) => {
             const color = hex;
             const isSelected = activeTheme === name;
+            const isNewColor = savePhase === "revealing" && index === dots.length - 1;
 
             return (
               <button
@@ -147,9 +193,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 type="button"
                 aria-label={name.startsWith("custom-") ? `Set custom color ${index - DOT_COLORS.length + 1} theme` : `Set ${name} theme`}
                 aria-pressed={isSelected}
-                disabled={editing}
+                disabled={editing || saving}
                 onClick={() => setTheme(name)}
-                className={`relative flex items-center justify-center shrink-0 rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none ${isSelected || editing ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
+                className={`relative flex items-center justify-center shrink-0 rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none ${isSelected || editing || saving ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
                 style={{
                   ...dotDimensions,
                   color: "var(--theme-text-secondary)",
@@ -158,15 +204,30 @@ export default function DotRow({ className = "" }: DotRowProps) {
               >
                 <motion.span
                   aria-hidden="true"
-                  initial={false}
+                  initial={isNewColor ? { scale: 0.5, opacity: 0 } : false}
                   className="pointer-events-none absolute inset-0 rounded-full"
                   style={{ backgroundColor: color }}
-                  animate={{ opacity: editing ? 0 : 1 }}
-                  transition={{ duration: reduceMotion ? 0 : morphDuration / 2500 }}
+                  animate={{ scale: 1, opacity: editing ? 0 : 1 }}
+                  transition={isNewColor
+                    ? { duration: reduceMotion ? 0 : newColorPopDuration / 1000, ease: [0.22, 1, 0.36, 1] }
+                    : { duration: reduceMotion ? 0 : morphDuration / 2500 }}
+                  onAnimationComplete={isNewColor ? finishReveal : undefined}
                 />
               </button>
             );
           })}
+          {savePhase === "spacing" && (
+            <motion.span
+              aria-hidden="true"
+              data-new-color-space="true"
+              className="shrink-0"
+              style={{ marginLeft: -dotSpacing, height: defaultDotSize }}
+              initial={{ width: 0 }}
+              animate={{ width: defaultDotSize + dotSpacing }}
+              transition={{ duration: reduceMotion ? 0 : addColorSpaceDuration / 1000, ease: [0.22, 1, 0.36, 1] }}
+              onAnimationComplete={revealNewColor}
+            />
+          )}
           <motion.span
             data-color-morph="true"
             aria-hidden="true"
@@ -181,7 +242,10 @@ export default function DotRow({ className = "" }: DotRowProps) {
             }}
             transition={morphTransition}
             onAnimationComplete={() => {
-              if (!editing) setMorphVisible(false);
+              if (!editing) {
+                setMorphVisible(false);
+                advanceAfterClose("bar");
+              }
             }}
           >
             <span
@@ -298,10 +362,15 @@ export default function DotRow({ className = "" }: DotRowProps) {
               transition: { duration: reduceMotion ? 0 : 0.15 },
             } : {}}
             transition={morphTransition}
+            onAnimationComplete={() => {
+              if (!editing) advanceAfterClose("button");
+            }}
             type="button"
+            aria-disabled={saving}
             aria-label={editing ? "Add selected color" : "Add a theme color"}
             title={editing ? "Add selected color" : "Add a theme color"}
             onClick={() => {
+              if (savePhaseRef.current !== "idle") return;
               if (editing) finish(true);
               else {
                 hueAnimation.current?.stop();
@@ -320,7 +389,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
               color: editing ? "#ffffff" : "var(--theme-text-secondary)",
             }}
           >
-            <span className={`flex items-center justify-center transition-transform duration-150 ease-out ${editing ? "" : "group-hover:scale-125"} motion-reduce:transition-none`}>
+            <span className={`flex items-center justify-center transition-transform duration-150 ease-out ${editing || saving ? "" : "group-hover:scale-125"} motion-reduce:transition-none`}>
               <AnimatePresence mode="wait" initial={false}>
                 <motion.svg
                   key={editing ? "check" : "plus"}
@@ -332,6 +401,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
                   }}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
+                  onAnimationComplete={() => {
+                    if (!editing) advanceAfterClose("icon");
+                  }}
                   exit={{ scale: 0 }}
                   transition={{ duration: reduceMotion ? 0 : 0.12, ease: "easeInOut" }}
                   fill="none"
