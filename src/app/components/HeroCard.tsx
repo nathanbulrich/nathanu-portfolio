@@ -13,7 +13,7 @@ export default function HeroCard() {
             rel="noopener noreferrer"
           >
             Cosmos
-          </a>, the best place to dream on the web.
+          </a>, the best place to dream.
         </p>
         <p className="leading-relaxed">
           I believe in the benefits of a social internet and want to help build it.
