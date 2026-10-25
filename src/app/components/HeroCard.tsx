@@ -5,7 +5,7 @@ export default function HeroCard() {
     <div className="px-6 md:px-12 lg:px-12 pt-8 pb-8 md:pt-[88px] lg:pt-[90px] md:pb-[56px]">
       <div className="space-y-6 max-w-[664px]">
         <p className="leading-relaxed">
-          Hi, I&apos;m Nathan Ulrich. I&apos;m a technical software designer in NYC who builds apps.
+          Hi, I&apos;m Nathan Ulrich. I&apos;m a technical software designer in NYC who can build end-to-end.
           I lead design at{" "}
           <a
             href="https://www.cosmos.so/"
