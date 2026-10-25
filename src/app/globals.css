@@ -111,68 +111,51 @@ a:hover {
   }
 }
 
-/* ── Dot micro-animations ───────────────────────────────── */
-
-/* Bounce — squash & stretch */
-@keyframes dot-bounce {
-  0%, 100% { transform: scaleX(1) scaleY(1) translateY(0); }
-  15%      { transform: scaleX(1.2) scaleY(0.8) translateY(0); }
-  30%      { transform: scaleX(0.85) scaleY(1.15) translateY(-8px); }
-  50%      { transform: scaleX(1.05) scaleY(0.95) translateY(0); }
-  65%      { transform: scaleX(0.97) scaleY(1.03) translateY(-2px); }
-  80%      { transform: scaleX(1) scaleY(1) translateY(0); }
-}
-.dot-anim-bounce {
-  animation: dot-bounce 2s ease-in-out 1;
-}
-
-/* Spin — shrink-rotate-pop */
-@keyframes dot-spin {
-  0%   { transform: scale(1) rotate(0deg); }
-  25%  { transform: scale(0.6) rotate(180deg); }
-  50%  { transform: scale(1.2) rotate(360deg); }
-  75%  { transform: scale(0.9) rotate(360deg); }
-  100% { transform: scale(1) rotate(360deg); }
-}
-.dot-anim-spin {
-  animation: dot-spin 2s ease-in-out 1;
-}
-
-/* Pop — shrink then burst outward */
-@keyframes dot-pop {
-  0%, 100% { transform: scale(1); }
-  20%      { transform: scale(0.6); }
-  40%      { transform: scale(1.4); }
-  60%      { transform: scale(0.9); }
-  80%      { transform: scale(1.05); }
-}
-.dot-anim-pop {
-  animation: dot-pop 2s ease-in-out 1;
-}
-
-/* Flip forward — single flip rightward */
-@keyframes dot-flip {
-  0%   { transform: perspective(200px) rotateY(0deg); }
-  100% { transform: perspective(200px) rotateY(180deg); }
-}
-.dot-anim-flip {
-  animation: dot-flip 0.6s ease-in-out 1 forwards;
-}
-
-/* Flip back — single flip leftward */
-@keyframes dot-flip-back {
-  0%   { transform: perspective(200px) rotateY(0deg); }
-  100% { transform: perspective(200px) rotateY(-180deg); }
-}
-.dot-anim-flip-back {
-  animation: dot-flip-back 0.6s ease-in-out 1 forwards;
-}
-
 /* Sites table — match centered content left edge, extend toward right */
 @media (min-width: 1024px) {
   .sites-layout {
     padding-left: calc((100vw - 140px - 1200px) / 2 + 48px);
   }
+}
+
+/* A native slider keeps the gradient draggable with touch and keyboard. */
+.theme-color-gradient {
+  appearance: none;
+  margin: 0;
+  background: transparent;
+  touch-action: pan-y;
+}
+
+.theme-color-gradient::-webkit-slider-thumb {
+  appearance: none;
+  box-sizing: border-box;
+  width: var(--theme-color-thumb-size, 16px);
+  height: var(--theme-color-thumb-size, 16px);
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--theme-color-thumb-color, #eb3333);
+  transform: scale(calc(var(--selector-scale, 0) * var(--selector-drag-scale, 1)));
+  transform-origin: center;
+  box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
+    0 1px 5px var(--theme-color-thumb-stroke, 2px) rgb(0 0 0 / 0.35);
+}
+
+.theme-color-gradient::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--theme-color-thumb-size, 16px);
+  height: var(--theme-color-thumb-size, 16px);
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--theme-color-thumb-color, #eb3333);
+  transform: scale(calc(var(--selector-scale, 0) * var(--selector-drag-scale, 1)));
+  transform-origin: center;
+  box-shadow: 0 0 0 var(--theme-color-thumb-stroke, 2px) white,
+    0 1px 5px var(--theme-color-thumb-stroke, 2px) rgb(0 0 0 / 0.35);
+}
+
+.theme-color-gradient:focus-visible {
+  outline: 2px solid var(--theme-text);
+  outline-offset: 5px;
 }
 
 .type-segment-hover {
