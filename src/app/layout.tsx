@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "dialkit/styles.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
 import SideNav from "./components/SideNav";
@@ -36,7 +35,7 @@ export default function RootLayout({
             <div className="lg:ml-[228px]">
               {children}
             </div>
-            <ProjectImageDialRoot />
+            {process.env.NODE_ENV === "development" && <ProjectImageDialRoot />}
           </TypeStyleProvider>
         </ThemeProvider>
       </body>

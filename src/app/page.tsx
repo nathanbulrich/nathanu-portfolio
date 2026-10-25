@@ -56,6 +56,17 @@ const projects = [
 ];
 
 export default function Home() {
+  const projectCards = projects.map((project, index) => (
+    <ProjectCard
+      key={index}
+      title={project.title}
+      images={project.images}
+      description={project.description}
+      link={project.link}
+      priority={index === 0}
+    />
+  ));
+
   return (
     <main className="min-h-screen">
       <DeviceFrameShape />
@@ -68,18 +79,9 @@ export default function Home() {
             Recent work
           </h2>
 
-          <ProjectImageTuning>
-            {projects.map((project, index) => (
-              <ProjectCard
-                key={index}
-                title={project.title}
-                images={project.images}
-                description={project.description}
-                link={project.link}
-                priority={index === 0}
-              />
-            ))}
-          </ProjectImageTuning>
+          {process.env.NODE_ENV === "development" ? (
+            <ProjectImageTuning>{projectCards}</ProjectImageTuning>
+          ) : projectCards}
         </section>
       </div>
     </main>

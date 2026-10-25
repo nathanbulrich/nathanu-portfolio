@@ -1,6 +1,7 @@
 "use client";
 
 import { DialRoot, useDialKit } from "dialkit";
+import "dialkit/styles.css";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 const skeletonControls = {
@@ -10,7 +11,7 @@ const skeletonControls = {
 };
 
 export function ProjectImageDialRoot() {
-  return <DialRoot position="bottom-right" productionEnabled />;
+  return <DialRoot position="bottom-right" />;
 }
 
 export default function ProjectImageTuning({ children }: { children: ReactNode }) {
