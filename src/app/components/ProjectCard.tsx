@@ -65,28 +65,30 @@ function TiltImage({ src, alt, desktopOnly, priority, onReady }: {
           className="project-image-skeleton absolute inset-0"
           style={{ clipPath: 'url(#squircle)' }}
         />
-        <picture>
-          <source
-            media={desktopOnly ? '(min-width: 768px)' : undefined}
-            srcSet={image.srcSet}
-            sizes={IMAGE_SIZES}
-            type="image/webp"
-          />
-          <img
-            ref={imageRef}
-            src={desktopOnly ? EMPTY_IMAGE : image.src}
-            alt={alt}
-            width={image.width}
-            height={image.height}
-            loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority && !desktopOnly ? 'high' : 'auto'}
-            decoding="async"
-            onLoad={(event) => imageRef(event.currentTarget)}
-            onError={() => onReady(src)}
-            className="project-image-reveal relative h-auto w-full block"
-            style={{ clipPath: 'url(#squircle)' }}
-          />
-        </picture>
+        <div className="project-image-reveal relative">
+          <picture>
+            <source
+              media={desktopOnly ? '(min-width: 768px)' : undefined}
+              srcSet={image.srcSet}
+              sizes={IMAGE_SIZES}
+              type="image/webp"
+            />
+            <img
+              ref={imageRef}
+              src={desktopOnly ? EMPTY_IMAGE : image.src}
+              alt={alt}
+              width={image.width}
+              height={image.height}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority && !desktopOnly ? 'high' : 'auto'}
+              decoding="async"
+              onLoad={(event) => imageRef(event.currentTarget)}
+              onError={() => onReady(src)}
+              className="relative h-auto w-full block"
+              style={{ clipPath: 'url(#squircle)' }}
+            />
+          </picture>
+        </div>
         {glareBackground !== 'none' && (
           <div
             className="absolute inset-0 pointer-events-none"
@@ -121,7 +123,6 @@ export default function ProjectCard({ title, images, description, link, priority
           {images.map((src, index) => (
             <div
               key={index}
-              style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.07)) drop-shadow(0 10px 24px rgba(0,0,0,0.07))" }}
               className={`${
                 index === 0 ? "w-full md:w-[300px]" : "hidden md:block md:w-[300px]"
               }`}

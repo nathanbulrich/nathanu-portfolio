@@ -59,8 +59,8 @@ try {
     releaseImages();
     await page.waitForFunction(() => document.querySelector('.project-image-group').dataset.mobileReady === 'true');
     if (width >= 768) {
-      const opacities = await cards.first().locator('picture img').evaluateAll((images) =>
-        images.map((img) => getComputedStyle(img).opacity));
+      const opacities = await cards.first().locator('.project-image-reveal').evaluateAll((images) =>
+        images.map((image) => getComputedStyle(image).opacity));
       assert.deepEqual(opacities, ['0', '0', '0'], 'Early screenshots must stay hidden until the whole row is decoded');
       assert.equal(await cards.first().locator('.project-image-skeleton:visible').count(), 3);
     }
@@ -69,7 +69,7 @@ try {
       await cards.nth(i).scrollIntoViewIfNeeded();
       await page.waitForFunction((index) => Array.from(document.querySelectorAll('.card-border')[index]
         .querySelectorAll('picture img')).every((img) =>
-          img.getBoundingClientRect().width === 0 || (img.complete && img.naturalWidth > 1 && getComputedStyle(img).opacity === '1')), i);
+          img.getBoundingClientRect().width === 0 || (img.complete && img.naturalWidth > 1 && getComputedStyle(img.closest('.project-image-reveal')).opacity === '1')), i);
     }
     const after = await geometry();
     assert.deepEqual(after.map(({ height }) => height), before.map(({ height }) => height));
