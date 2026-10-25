@@ -111,6 +111,52 @@ a:hover {
   }
 }
 
+/* Reveal the visible screenshots in each card in one shared fade. */
+.project-image-group {
+  --project-image-opacity: 0;
+  --project-skeleton-opacity: 1;
+  --project-skeleton-visibility: visible;
+}
+
+@media (width < 768px) {
+  .project-image-group[data-mobile-ready="true"] {
+    --project-image-opacity: 1;
+    --project-skeleton-opacity: 0;
+    --project-skeleton-visibility: hidden;
+  }
+}
+
+@media (min-width: 768px) {
+  .project-image-group[data-desktop-ready="true"] {
+    --project-image-opacity: 1;
+    --project-skeleton-opacity: 0;
+    --project-skeleton-visibility: hidden;
+  }
+}
+
+.project-image-reveal {
+  opacity: var(--project-image-opacity);
+  transition: opacity 240ms ease-out;
+}
+
+.project-image-skeleton {
+  opacity: var(--project-skeleton-opacity);
+  visibility: var(--project-skeleton-visibility);
+  transition: opacity 240ms ease-out, visibility 0s linear 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-image-reveal,
+  .project-image-skeleton {
+    transition: none;
+  }
+}
+
+@media (scripting: none) {
+  .project-image-reveal { opacity: 1; }
+  .project-image-skeleton { display: none; }
+}
+
 /* Sites table — match centered content left edge, extend toward right */
 @media (min-width: 1024px) {
   .sites-layout {

@@ -37,10 +37,14 @@ try {
     await page.route('https://fonts.googleapis.com/**', (route) => route.abort());
     let releaseImages;
     const imageGate = new Promise((resolve) => { releaseImages = resolve; });
+    let releaseLastImage;
+    const lastImageGate = new Promise((resolve) => { releaseLastImage = resolve; });
     const requests = [];
     await page.route('**/images/**', async (route) => {
       requests.push(route.request().url());
       await imageGate;
+      // The third Cosmos screenshot deliberately arrives after the others.
+      if (route.request().url().includes('/cosmos-1-')) await lastImageGate;
       await route.continue();
     });
     await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
@@ -63,10 +67,21 @@ try {
     };
     await capture('skeleton');
     releaseImages();
+    await page.waitForFunction(() => document.querySelector('.project-image-group').dataset.mobileReady === 'true');
+    if (width >= 768) {
+      const opacities = await cards.first().locator('picture img').evaluateAll((images) =>
+        images.map((img) => getComputedStyle(img).opacity));
+      assert.deepEqual(opacities, ['0', '0', '0'], 'Early screenshots must stay hidden until the whole row is decoded');
+      assert.equal(await cards.first().locator('.project-image-skeleton:visible').count(), 3);
+    }
+    releaseLastImage();
     await page.waitForFunction(() => Array.from(document.querySelectorAll('.card-border picture img'))
       .filter((img) => img.getBoundingClientRect().width > 0)
       .slice(0, window.innerWidth < 768 ? 1 : 3)
       .every((img) => img.complete && img.naturalWidth > 1));
+    await page.waitForFunction(() => Array.from(document.querySelectorAll('.card-border:first-of-type picture img'))
+      .filter((img) => img.getBoundingClientRect().width > 0)
+      .every((img) => getComputedStyle(img).opacity === '1'));
     assert.deepEqual(await geometry(), before, 'Loading the first card must not move any card');
     await capture('loaded');
     for (let i = 0; i < await cards.count(); i++) {
@@ -79,14 +94,14 @@ try {
     assert.deepEqual(after.map(({ height }) => height), before.map(({ height }) => height));
     assert.deepEqual(after.map(({ y }) => y - after[0].y), before.map(({ y }) => y - before[0].y));
     await page.waitForFunction(() => Array.from(document.querySelectorAll('.card-border span[aria-hidden="true"]'))
-      .every((node) => node.getBoundingClientRect().width === 0));
+      .every((node) => node.getBoundingClientRect().width === 0 || getComputedStyle(node).visibility === 'hidden'));
     assert.equal(await cards.locator('span[aria-hidden="true"]:visible').count(), 0);
     assert.equal(requests.length, width < 768 ? 5 : 15, JSON.stringify(requests, null, 2));
     assert.ok(requests.every((url) => url.endsWith('.webp')), 'Only optimized project images should load');
     assert.deepEqual(errors, []);
     const cls = await page.evaluate(() => window.projectCLS);
     assert.ok(cls < 0.01, `Unexpected layout shift: ${cls}`);
-    console.log(`${name}: ${requests.length} images, stable card geometry, CLS ${cls}`);
+    console.log(`${name}: ${requests.length} images, synchronized reveal, stable card geometry, CLS ${cls}`);
     await context.close();
   }
 } finally {

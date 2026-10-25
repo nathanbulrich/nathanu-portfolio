@@ -44,6 +44,8 @@ builds. Commit the generated images and manifest with screenshot changes. Genera
 include content hashes so they can be cached immutably without serving stale replacements.
 
 Project cards reserve each screenshot's aspect ratio and show a skeleton in that same space.
+Once all visible screenshots in a card are decoded, they fade in together over 240ms
+(immediately for reduced-motion users). Mobile only waits for its one visible screenshot.
 The first card loads eagerly; remaining cards load lazily. Desktop-only screenshots use media
 sources so mobile browsers don't download hidden images. Conversion happens before deployment,
 avoiding image transformation work on a visitor's first request.
