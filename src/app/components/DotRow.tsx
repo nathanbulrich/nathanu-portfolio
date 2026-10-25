@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { animate, AnimatePresence, motion, useReducedMotion, type AnimationPlaybackControls } from "motion/react";
-import { DOT_COLORS, SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
+import { SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
 import { DOT_STYLE } from "../lib/theme-settings";
 
@@ -10,18 +10,19 @@ interface DotRowProps {
   className?: string;
 }
 
-type SavePhase = "idle" | "closing" | "spacing" | "revealing";
+type SavePhase = "idle" | "closing" | "revealing";
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
   const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap } = DOT_STYLE;
   const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = DOT_STYLE;
   const { selectorDragScale, selectorDragDuration, selectorMoveDuration } = DOT_STYLE;
-  const { addColorSpaceDuration, newColorPopDuration } = DOT_STYLE;
+  const { colorShiftDuration, newColorPopDuration } = DOT_STYLE;
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
   const trackWidth = dots.length * defaultDotSize + (dots.length - 1) * dotSpacing;
+  const dotStep = defaultDotSize + dotSpacing;
   const originColor = dots[originIndex].hex;
   const reduceMotion = useReducedMotion();
   const [editing, setEditing] = useState(false);
@@ -51,7 +52,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const selectedIndex = dots.findIndex(({ name }) => name === activeTheme);
   const selectedColor = dots[selectedIndex]?.hex ?? "transparent";
-  const position = (Math.max(0, selectedIndex) / (dots.length - 1)) * 100;
+  const selectedLeft = Math.max(0, selectedIndex) * dotStep;
+  const newestColor = dots[dots.length - 1].name;
+  const newColorSelected = activeTheme === newestColor && activeTheme.startsWith("custom-");
 
   const selectHue = (nextHue: number, smooth: boolean) => {
     hueAnimation.current?.stop();
@@ -89,13 +92,12 @@ export default function DotRow({ className = "" }: DotRowProps) {
     if (savePhaseRef.current !== "closing") return;
     closeComplete.current[part] = true;
     if (Object.values(closeComplete.current).every(Boolean)) {
-      savePhaseRef.current = "spacing";
-      setSavePhase("spacing");
+      revealNewColor();
     }
   };
 
   const revealNewColor = () => {
-    if (savePhaseRef.current !== "spacing" || pendingHue.current === null) return;
+    if (savePhaseRef.current !== "closing" || pendingHue.current === null) return;
     savePhaseRef.current = "revealing";
     setSavePhase("revealing");
     addColor(pendingHue.current);
@@ -162,72 +164,68 @@ export default function DotRow({ className = "" }: DotRowProps) {
           }
         }}
       >
-        <div className="relative flex items-center" style={{ gap: dotSpacing }}>
-          {/* New dots get a fresh ring so their selection appears without sliding. */}
+        <div className="relative" style={{ width: trackWidth, height: defaultDotSize }}>
           <motion.span
-            key={`${dots.length}-${selectedIndex >= 0}`}
+            key={newestColor}
             data-selection-ring="true"
             aria-hidden="true"
-            initial={savePhase === "revealing" ? { scale: 0.5, opacity: 0 } : false}
-            animate={{ scale: 1, opacity: editing || (saving && savePhase !== "revealing") ? 0 : 1 }}
-            transition={{ duration: reduceMotion ? 0 : newColorPopDuration / 1000, ease: [0.22, 1, 0.36, 1] }}
-            className={`pointer-events-none absolute top-0 rounded-full transition-[left,translate,box-shadow] ease-in-out motion-reduce:transition-none`}
+            initial={newColorSelected ? { scale: 0.5, opacity: 0 } : false}
+            animate={{ x: selectedLeft, scale: 1, opacity: editing || (saving && savePhase !== "revealing") ? 0 : 1 }}
+            transition={{
+              x: { duration: reduceMotion ? 0 : ringDuration / 1000, ease: "easeInOut" },
+              scale: { duration: reduceMotion ? 0 : newColorPopDuration / 1000, delay: reduceMotion || editing || !newColorSelected ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] },
+              opacity: { duration: reduceMotion ? 0 : newColorPopDuration / 1000, delay: reduceMotion || editing || !newColorSelected ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] },
+            }}
+            className="pointer-events-none absolute top-0 rounded-full"
             style={{
               ...dotDimensions,
-              left: `${position}%`,
-              translate: `${-position}% 0`,
-              transitionDuration: `${ringDuration}ms`,
               boxShadow: `0 0 0 ${ringSpacing}px var(--theme-bg), 0 0 0 ${ringSpacing + ringThickness}px ${selectedColor}`,
               visibility: selectedIndex >= 0 && ringThickness > 0 ? "visible" : "hidden",
             }}
           />
-          {dots.map(({ name, hex }, index) => {
-            const color = hex;
-            const isSelected = activeTheme === name;
-            const isNewColor = savePhase === "revealing" && index === dots.length - 1;
+          <AnimatePresence initial={false}>
+            {dots.map(({ name, hex }, index) => {
+              const color = hex;
+              const isSelected = activeTheme === name;
+              const isNewColor = savePhase === "revealing" && isSelected;
 
-            return (
-              <button
-                key={name}
-                data-theme-dot={name}
-                type="button"
-                aria-label={name.startsWith("custom-") ? `Set custom color ${index - DOT_COLORS.length + 1} theme` : `Set ${name} theme`}
-                aria-pressed={isSelected}
-                disabled={editing || saving}
-                onClick={() => setTheme(name)}
-                className={`relative flex items-center justify-center shrink-0 rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none ${isSelected || editing || saving ? "" : "hover:scale-125"} cursor-pointer border-0 p-0`}
-                style={{
-                  ...dotDimensions,
-                  color: "var(--theme-text-secondary)",
-                  outlineColor: color,
-                }}
-              >
-                <motion.span
-                  aria-hidden="true"
-                  initial={isNewColor ? { scale: 0.5, opacity: 0 } : false}
-                  className="pointer-events-none absolute inset-0 rounded-full"
-                  style={{ backgroundColor: color }}
-                  animate={{ scale: 1, opacity: editing ? 0 : 1 }}
-                  transition={isNewColor
-                    ? { duration: reduceMotion ? 0 : newColorPopDuration / 1000, ease: [0.22, 1, 0.36, 1] }
-                    : { duration: reduceMotion ? 0 : morphDuration / 2500 }}
+              return (
+                <motion.button
+                  key={name}
+                  data-theme-dot={name}
+                  type="button"
+                  aria-label={name.startsWith("custom-") ? `Set custom color ${Number(name.slice(7)) + 1} theme` : `Set ${name} theme`}
+                  aria-pressed={isSelected}
+                  disabled={editing || saving}
+                  onClick={() => setTheme(name)}
+                  initial={{ x: index * dotStep, scale: 0.5, opacity: 0 }}
+                  animate={{ x: index * dotStep, scale: 1, opacity: 1 }}
+                  exit={{ x: -defaultDotSize, scale: 0.5, opacity: 0, transition: { duration: reduceMotion ? 0 : 0.16, ease: "easeIn" } }}
+                  transition={{
+                    x: { duration: reduceMotion ? 0 : colorShiftDuration / 1000, delay: reduceMotion ? 0 : 0.12, ease: [0.22, 1, 0.36, 1] },
+                    scale: { duration: reduceMotion ? 0 : newColorPopDuration / 1000, delay: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: reduceMotion ? 0 : newColorPopDuration / 1000, delay: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] },
+                  }}
+                  whileHover={!isSelected && !editing && !saving ? { scale: 1.25 } : undefined}
                   onAnimationComplete={isNewColor ? finishReveal : undefined}
-                />
-              </button>
-            );
-          })}
-          {savePhase === "spacing" && (
-            <motion.span
-              aria-hidden="true"
-              data-new-color-space="true"
-              className="shrink-0"
-              style={{ marginLeft: -dotSpacing, height: defaultDotSize }}
-              initial={{ width: 0 }}
-              animate={{ width: defaultDotSize + dotSpacing }}
-              transition={{ duration: reduceMotion ? 0 : addColorSpaceDuration / 1000, ease: [0.22, 1, 0.36, 1] }}
-              onAnimationComplete={revealNewColor}
-            />
-          )}
+                  className="absolute left-0 top-0 flex items-center justify-center rounded-full cursor-pointer border-0 p-0"
+                  style={{
+                    ...dotDimensions,
+                    color: "var(--theme-text-secondary)",
+                    outlineColor: color,
+                  }}
+                >
+                  <motion.span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 rounded-full"
+                    style={{ backgroundColor: color }}
+                    animate={{ scale: 1, opacity: editing ? 0 : 1 }}
+                    transition={{ duration: reduceMotion ? 0 : morphDuration / 2500 }}
+                  />
+                </motion.button>
+              );
+            })}
+          </AnimatePresence>
           <motion.span
             data-color-morph="true"
             aria-hidden="true"

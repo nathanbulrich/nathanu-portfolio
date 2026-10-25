@@ -16,7 +16,7 @@ export const DOT_STYLE = {
   selectorDragScale: 1.5,
   selectorDragDuration: 340,
   selectorMoveDuration: 470,
-  addColorSpaceDuration: 400,
+  colorShiftDuration: 400,
   newColorPopDuration: 260,
   springBounce: 0.05,
   ringThickness: 2,
