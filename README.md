@@ -35,25 +35,13 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## Project image performance
+## Project images
 
-Keep original screenshots at `public/images/<project>-<number>.png`. `npm run optimize:images`
-generates 384px, 640px, and original-width WebP variants plus the dimensions manifest at
-`src/app/lib/project-images.json`. It also runs automatically before development and production
-builds. Commit the generated images and manifest with screenshot changes. Generated filenames
-include content hashes so they can be cached immutably without serving stale replacements.
+Keep original screenshots in `public/images/<project>-<number>.png`. Running
+`npm run dev` or `npm run build` generates responsive WebP images and their dimensions
+manifest; these build outputs are ignored by Git. Cards reserve screenshot space and
+fade visible images in together once decoded.
 
-Project cards reserve each screenshot's aspect ratio and show a skeleton in that same space.
-Once all visible screenshots in a card are decoded, they fade in together over 240ms
-(immediately for reduced-motion users). Mobile only waits for its one visible screenshot.
-The first card loads eagerly; remaining cards load lazily. Desktop-only screenshots use media
-sources so mobile browsers don't download hidden images. Conversion happens before deployment,
-avoiding image transformation work on a visitor's first request.
-
-To check loading behavior, start a production build with `npm run build` and
-`npm run start -- --port 3001`, then run `npm run check:project-loading` in another terminal.
-This requires a Playwright Chromium installation (`npx playwright install chromium`), or set
-`PLAYWRIGHT_CHANNEL=chrome` to use installed Chrome. `PLAYWRIGHT_EXECUTABLE_PATH` can select
-another existing Chromium executable. `TEST_BASE_URL` overrides the server address.
-The check disables caching, throttles the connection, holds image responses to inspect
-skeletons, and verifies stable card geometry and mobile image requests at three viewport sizes.
+To verify cold loading, run a production server on port 3001, then
+`npm run check:project-loading` (requires `npx playwright install chromium`).
+Use `TEST_BASE_URL` for another server or `PLAYWRIGHT_CHANNEL=chrome` for installed Chrome.

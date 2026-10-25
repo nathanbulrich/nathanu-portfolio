@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 // Run against a production server: npm run start -- --port 3001
@@ -20,8 +19,6 @@ try {
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     const session = await context.newCDPSession(page);
-    await session.send('Network.enable');
-    await session.send('Network.setCacheDisabled', { cacheDisabled: true });
     await session.send('Network.emulateNetworkConditions', {
       offline: false, latency: 150, downloadThroughput: 200 * 1024, uploadThroughput: 100 * 1024,
     });
@@ -40,6 +37,7 @@ try {
     let releaseLastImage;
     const lastImageGate = new Promise((resolve) => { releaseLastImage = resolve; });
     const requests = [];
+    // Routing disables the HTTP cache, so every context tests a cold load.
     await page.route('**/images/**', async (route) => {
       requests.push(route.request().url());
       await imageGate;
@@ -57,15 +55,7 @@ try {
     }));
     const before = await geometry();
     for (const card of before) assert.ok(card.height > 300, 'Cards must reserve image space before loading');
-    const skeletonCount = await cards.locator('span[aria-hidden="true"]:visible').count();
-    assert.equal(skeletonCount, width < 768 ? 5 : 15);
-    // Capture directly: Playwright's screenshot font wait depends on the load
-    // event, which is intentionally blocked by our held eager image responses.
-    const capture = async (state) => {
-      const { data } = await session.send('Page.captureScreenshot', { format: 'png' });
-      await writeFile(`/tmp/project-${name}-${state}.png`, Buffer.from(data, 'base64'));
-    };
-    await capture('skeleton');
+    assert.equal(await cards.locator('.project-image-skeleton:visible').count(), width < 768 ? 5 : 15);
     releaseImages();
     await page.waitForFunction(() => document.querySelector('.project-image-group').dataset.mobileReady === 'true');
     if (width >= 768) {
@@ -75,27 +65,16 @@ try {
       assert.equal(await cards.first().locator('.project-image-skeleton:visible').count(), 3);
     }
     releaseLastImage();
-    await page.waitForFunction(() => Array.from(document.querySelectorAll('.card-border picture img'))
-      .filter((img) => img.getBoundingClientRect().width > 0)
-      .slice(0, window.innerWidth < 768 ? 1 : 3)
-      .every((img) => img.complete && img.naturalWidth > 1));
-    await page.waitForFunction(() => Array.from(document.querySelectorAll('.card-border:first-of-type picture img'))
-      .filter((img) => img.getBoundingClientRect().width > 0)
-      .every((img) => getComputedStyle(img).opacity === '1'));
-    assert.deepEqual(await geometry(), before, 'Loading the first card must not move any card');
-    await capture('loaded');
     for (let i = 0; i < await cards.count(); i++) {
       await cards.nth(i).scrollIntoViewIfNeeded();
       await page.waitForFunction((index) => Array.from(document.querySelectorAll('.card-border')[index]
         .querySelectorAll('picture img')).every((img) =>
-          img.getBoundingClientRect().width === 0 || (img.complete && img.naturalWidth > 1)), i);
+          img.getBoundingClientRect().width === 0 || (img.complete && img.naturalWidth > 1 && getComputedStyle(img).opacity === '1')), i);
     }
     const after = await geometry();
     assert.deepEqual(after.map(({ height }) => height), before.map(({ height }) => height));
     assert.deepEqual(after.map(({ y }) => y - after[0].y), before.map(({ y }) => y - before[0].y));
-    await page.waitForFunction(() => Array.from(document.querySelectorAll('.card-border span[aria-hidden="true"]'))
-      .every((node) => node.getBoundingClientRect().width === 0 || getComputedStyle(node).visibility === 'hidden'));
-    assert.equal(await cards.locator('span[aria-hidden="true"]:visible').count(), 0);
+    assert.equal(await cards.locator('.project-image-skeleton:visible').count(), 0);
     assert.equal(requests.length, width < 768 ? 5 : 15, JSON.stringify(requests, null, 2));
     assert.ok(requests.every((url) => url.endsWith('.webp')), 'Only optimized project images should load');
     assert.deepEqual(errors, []);

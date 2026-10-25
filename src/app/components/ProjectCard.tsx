@@ -18,7 +18,7 @@ interface ProjectCardProps {
 // The other two screenshots only appear on desktop. A picture source prevents
 // downloading them on mobile, where CSS hiding alone still fetches an img src.
 const EMPTY_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
-const IMAGE_SIZES = '(min-width: 1428px) 300px, (min-width: 1024px) min(300px, calc((100vw - 438px) / 3)), (min-width: 768px) min(300px, calc((100vw - 210px) / 3)), (min-width: 400px) 352px, calc(100vw - 48px)';
+const IMAGE_SIZES = '(min-width: 1024px) min(300px, calc((100vw - 438px) / 3)), (min-width: 768px) min(300px, calc((100vw - 210px) / 3)), (min-width: 400px) 352px, calc(100vw - 48px)';
 
 function TiltImage({ src, alt, desktopOnly, priority, onReady }: {
   src: string;
