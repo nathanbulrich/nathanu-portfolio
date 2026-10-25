@@ -333,7 +333,7 @@ export default function DotRow({ className = "" }: DotRowProps) {
                 onChange={(event) => {
                   selectHue(Number(event.target.value), false);
                 }}
-                className="theme-color-gradient absolute inset-0 h-full w-full cursor-ew-resize rounded-full"
+                className="theme-color-gradient absolute inset-0 h-full w-full cursor-default rounded-full"
                 style={{
                   left: selectorInset,
                   right: selectorInset,
