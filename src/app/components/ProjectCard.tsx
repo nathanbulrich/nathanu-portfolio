@@ -62,7 +62,7 @@ function TiltImage({ src, alt, desktopOnly, priority, onReady }: {
       >
         <span
           aria-hidden="true"
-          className="project-image-skeleton absolute inset-0 bg-[var(--theme-border)]"
+          className="project-image-skeleton absolute inset-0"
           style={{ clipPath: 'url(#squircle)' }}
         />
         <picture>

@@ -126,12 +126,19 @@ a:hover {
   }
 }
 
+/* Keep decoded images loaded while showing placeholders during color review. */
+.project-image-tuning[data-show-skeletons="true"] .project-image-group {
+  --project-image-opacity: 0;
+  --project-skeleton-visibility: visible;
+}
+
 .project-image-reveal {
   opacity: var(--project-image-opacity, 0);
   transition: opacity 240ms ease-out;
 }
 
 .project-image-skeleton {
+  background-color: var(--project-skeleton-color, #ececf0);
   opacity: calc(1 - var(--project-image-opacity, 0));
   visibility: var(--project-skeleton-visibility, visible);
   transition: opacity 240ms ease-out, visibility 0s linear 240ms;
