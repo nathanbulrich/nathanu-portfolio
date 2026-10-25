@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "capture-thumbnails": "node scripts/capture-thumbnails.mjs"
+    "capture-thumbnails": "node scripts/capture-thumbnails.mjs",
+    "optimize:images": "node scripts/optimize-project-images.mjs",
+    "prebuild": "npm run optimize:images",
+    "predev": "npm run optimize:images",
+    "check:project-loading": "node scripts/check-project-loading.mjs"
   },
   "dependencies": {
     "motion": "^14.6.0",
