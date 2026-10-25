@@ -42,20 +42,20 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const recipe = useDialKit("Custom color theme", {
     useCustomTheme: true,
     background: {
-      saturation: [75, 0, 100, 1],
-      lightness: [97, 0, 100, 0.5],
+      saturation: [100, 0, 100, 1],
+      lightness: [96.5, 0, 100, 0.5],
     },
     text: {
-      saturation: [60, 0, 100, 1],
-      lightness: [28, 0, 100, 0.5],
+      saturation: [79, 0, 100, 1],
+      lightness: [50.5, 0, 100, 0.5],
     },
     secondaryText: {
-      saturation: [40, 0, 100, 1],
-      lightness: [38, 0, 100, 0.5],
+      saturation: [100, 0, 100, 1],
+      lightness: [54.5, 0, 100, 0.5],
     },
     borders: {
       saturation: [55, 0, 100, 1],
-      lightness: [40, 0, 100, 1],
+      lightness: [47, 0, 100, 1],
       opacity: [20, 0, 100, 1],
     },
     selection: {
