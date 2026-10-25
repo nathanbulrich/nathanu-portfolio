@@ -157,3 +157,13 @@ a:hover {
   outline: 2px solid var(--theme-text);
   outline-offset: 5px;
 }
+
+.type-segment-hover {
+  opacity: 0;
+  transition: opacity var(--segment-duration);
+}
+@media (prefers-reduced-motion: reduce) {
+  .type-segment-hover {
+    transition: none;
+  }
+}

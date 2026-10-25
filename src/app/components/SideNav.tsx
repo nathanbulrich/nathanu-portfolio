@@ -31,9 +31,10 @@ function CosmosLabel() {
 }
 
 export default function SideNav() {
+  const leadingPadding = 3;
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
-  const { typeStyle } = useTypeStyle();
+  const { displayedTypeStyle: typeStyle } = useTypeStyle();
 
 
   const links = [
@@ -79,7 +80,7 @@ export default function SideNav() {
         </button>
 
         <div className="mt-auto pb-8 flex flex-col gap-3">
-          <p className="text-[16px]">
+          <p className="text-[16px]" style={{ paddingInlineStart: leadingPadding }}>
             {typeStyle === "mono" ? (
               <a href="https://usgraphics.com/products/berkeley-mono" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-70 transition-opacity duration-[30ms]">Berkeley Mono</a>
             ) : typeStyle === "serif" ? (

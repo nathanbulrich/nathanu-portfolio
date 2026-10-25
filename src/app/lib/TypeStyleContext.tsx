@@ -1,16 +1,20 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
+
+import { transitionText } from "./text-transition";
 
 type TypeStyle = "mono" | "serif" | "sans";
 
 interface TypeStyleContextValue {
   typeStyle: TypeStyle;
+  displayedTypeStyle: TypeStyle;
   setTypeStyle: (style: TypeStyle) => void;
 }
 
 const TypeStyleContext = createContext<TypeStyleContextValue>({
   typeStyle: "serif",
+  displayedTypeStyle: "serif",
   setTypeStyle: () => {},
 });
 
@@ -21,7 +25,40 @@ const fontMap: Record<TypeStyle, string> = {
 };
 
 export function TypeStyleProvider({ children }: { children: ReactNode }) {
-  const [typeStyle, setTypeStyle] = useState<TypeStyle>("serif");
+  const [typeStyle, updateTypeStyle] = useState<TypeStyle>("serif");
+  const [displayedTypeStyle, setDisplayedTypeStyle] = useState<TypeStyle>("serif");
+  const root = useRef<HTMLDivElement>(null);
+  const cancel = useRef<(() => void) | null>(null);
+  const request = useRef(0);
+  const settings = {
+    "enabled": true,
+    "fadeInBlur": 5,
+    "fadeInDuration": 300,
+    "fadeOutBlur": 5,
+    "fadeOutDuration": 300,
+    "hiddenDelay": 200
+};
+
+  const animateFont = async (style: TypeStyle) => {
+    const id = ++request.current;
+    // Load the destination face before measuring, avoiding a second reflow
+    // when a fallback font is replaced by the downloaded font.
+    await document.fonts.ready;
+    await document.fonts.load(`16px ${fontMap[style]}`).catch(() => {});
+    if (id !== request.current) return;
+    cancel.current?.();
+    if (!root.current) return;
+    cancel.current = transitionText(root.current, () => {
+      document.body.style.fontFamily = fontMap[style];
+      setDisplayedTypeStyle(style);
+    }, settings.fadeOutDuration, settings.hiddenDelay, settings.fadeInDuration, settings.enabled, settings.fadeOutBlur, settings.fadeInBlur);
+  };
+  const setTypeStyle = (style: TypeStyle) => {
+    if (style === typeStyle) return;
+    updateTypeStyle(style);
+    animateFont(style);
+  };
+  useEffect(() => () => { request.current++; cancel.current?.(); }, []);
 
   useEffect(() => {
     // Load Inter from Google Fonts if not already loaded
@@ -34,12 +71,12 @@ export function TypeStyleProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    document.body.style.fontFamily = fontMap[typeStyle];
-  }, [typeStyle]);
+    document.body.style.fontFamily = fontMap.serif;
+  }, []);
 
   return (
-    <TypeStyleContext.Provider value={{ typeStyle, setTypeStyle }}>
-      {children}
+    <TypeStyleContext.Provider value={{ typeStyle, displayedTypeStyle, setTypeStyle }}>
+      <div ref={root} style={{ display: "contents" }}>{children}</div>
     </TypeStyleContext.Provider>
   );
 }
