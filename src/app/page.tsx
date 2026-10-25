@@ -74,6 +74,7 @@ export default function Home() {
               images={project.images}
               description={project.description}
               link={project.link}
+              priority={index === 0}
             />
           ))}
         </section>

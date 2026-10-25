@@ -1,19 +1,37 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useTilt } from '../lib/useTilt';
+import { useCallback, useState } from 'react';
+import projectImages from '../lib/project-images.json';
 
 interface ProjectCardProps {
   title: string;
   images: string[];
   description: string;
+  priority?: boolean;
   link?: {
     text: string;
     href: string;
   };
 }
 
-function TiltImage({ src, alt }: { src: string; alt: string }) {
+// The other two screenshots only appear on desktop. A picture source prevents
+// downloading them on mobile, where CSS hiding alone still fetches an img src.
+const EMPTY_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+const IMAGE_SIZES = '(min-width: 1428px) 300px, (min-width: 1024px) min(300px, calc((100vw - 438px) / 3)), (min-width: 768px) min(300px, calc((100vw - 210px) / 3)), (min-width: 400px) 352px, calc(100vw - 48px)';
+
+function TiltImage({ src, alt, desktopOnly, priority }: {
+  src: string;
+  alt: string;
+  desktopOnly: boolean;
+  priority: boolean;
+}) {
+  const image = projectImages[src as keyof typeof projectImages];
+  const [loaded, setLoaded] = useState(false);
+  // Small or cached images can finish before hydration attaches onLoad.
+  const imageRef = useCallback((node: HTMLImageElement | null) => {
+    if (node?.complete && node.naturalWidth > 1) setLoaded(true);
+  }, []);
   const { ref, handlers, style, glareBackground, isHovering } = useTilt({
     maxTilt: 10,
     perspective: 800,
@@ -30,18 +48,44 @@ function TiltImage({ src, alt }: { src: string; alt: string }) {
       style={{ cursor: 'default' }}
     >
       <div
+        className="relative"
         style={{
+          aspectRatio: `${image.width} / ${image.height}`,
           transform: style.transform,
           transition: style.transition,
           transformStyle: 'preserve-3d',
         }}
       >
-        <img
-          src={src}
-          alt={alt}
-          className="h-auto w-full block"
-          style={{ clipPath: "url(#squircle)" }}
-        />
+        {!loaded && (
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 bg-[var(--theme-border)]"
+            style={{ clipPath: 'url(#squircle)' }}
+          />
+        )}
+        <picture>
+          <source
+            media={desktopOnly ? '(min-width: 768px)' : undefined}
+            srcSet={image.srcSet}
+            sizes={IMAGE_SIZES}
+            type="image/webp"
+          />
+          <img
+            ref={imageRef}
+            src={desktopOnly ? EMPTY_IMAGE : image.src}
+            alt={alt}
+            width={image.width}
+            height={image.height}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority && !desktopOnly ? 'high' : 'auto'}
+            decoding="async"
+            onLoad={(event) => {
+              if (!event.currentTarget.currentSrc.startsWith('data:')) setLoaded(true);
+            }}
+            className="relative h-auto w-full block"
+            style={{ clipPath: 'url(#squircle)' }}
+          />
+        </picture>
         {glareBackground !== 'none' && (
           <div
             className="absolute inset-0 pointer-events-none"
@@ -58,7 +102,7 @@ function TiltImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-export default function ProjectCard({ title, images, description, link }: ProjectCardProps) {
+export default function ProjectCard({ title, images, description, link, priority = false }: ProjectCardProps) {
   return (
     <div className="card-border bg-transparent md:rounded-lg md:px-8 pt-6 pb-4 md:pt-[80px] md:pb-[48px] mx-0 md:mx-12 lg:mx-12 mb-6">
       {/* Mobile: image + title grouped for alignment */}
@@ -75,6 +119,8 @@ export default function ProjectCard({ title, images, description, link }: Projec
               <TiltImage
                 src={src}
                 alt={`${title} screenshot ${index + 1}`}
+                desktopOnly={index > 0}
+                priority={priority}
               />
             </div>
           ))}

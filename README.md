@@ -34,3 +34,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Project image performance
+
+Keep original screenshots at `public/images/<project>-<number>.png`. `npm run optimize:images`
+generates 384px, 640px, and original-width WebP variants plus the dimensions manifest at
+`src/app/lib/project-images.json`. It also runs automatically before development and production
+builds. Commit the generated images and manifest with screenshot changes. Generated filenames
+include content hashes so they can be cached immutably without serving stale replacements.
+
+Project cards reserve each screenshot's aspect ratio and show a skeleton in that same space.
+The first card loads eagerly; remaining cards load lazily. Desktop-only screenshots use media
+sources so mobile browsers don't download hidden images. Conversion happens before deployment,
+avoiding image transformation work on a visitor's first request.
+
+To check loading behavior, start a production build with `npm run build` and
+`npm run start -- --port 3001`, then run `npm run check:project-loading` in another terminal.
+This requires a Playwright Chromium installation (`npx playwright install chromium`), or set
+`PLAYWRIGHT_CHANNEL=chrome` to use installed Chrome. `PLAYWRIGHT_EXECUTABLE_PATH` can select
+another existing Chromium executable. `TEST_BASE_URL` overrides the server address.
+The check disables caching, throttles the connection, holds image responses to inspect
+skeletons, and verifies stable card geometry and mobile image requests at three viewport sizes.

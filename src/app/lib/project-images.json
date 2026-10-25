@@ -1,0 +1,110 @@
+{
+  "/images/cosmos-1.png": {
+    "width": 1206,
+    "height": 2622,
+    "src": "/images/optimized/cosmos-1-1206-3a7644d4573a.webp",
+    "srcSet": "/images/optimized/cosmos-1-384-2129fda82af9.webp 384w, /images/optimized/cosmos-1-640-79e2565239e8.webp 640w, /images/optimized/cosmos-1-1206-3a7644d4573a.webp 1206w"
+  },
+  "/images/cosmos-2.png": {
+    "width": 1206,
+    "height": 2622,
+    "src": "/images/optimized/cosmos-2-1206-3fce4702b70e.webp",
+    "srcSet": "/images/optimized/cosmos-2-384-c06c2609ad45.webp 384w, /images/optimized/cosmos-2-640-9e467931f3af.webp 640w, /images/optimized/cosmos-2-1206-3fce4702b70e.webp 1206w"
+  },
+  "/images/cosmos-3.png": {
+    "width": 1206,
+    "height": 2622,
+    "src": "/images/optimized/cosmos-3-1206-d5621ac9d16f.webp",
+    "srcSet": "/images/optimized/cosmos-3-384-e3ced1d354fa.webp 384w, /images/optimized/cosmos-3-640-3947cc546847.webp 640w, /images/optimized/cosmos-3-1206-d5621ac9d16f.webp 1206w"
+  },
+  "/images/joon-1.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/joon-1-786-9e59ad45150d.webp",
+    "srcSet": "/images/optimized/joon-1-384-a9d123324c37.webp 384w, /images/optimized/joon-1-640-e83639ee693e.webp 640w, /images/optimized/joon-1-786-9e59ad45150d.webp 786w"
+  },
+  "/images/joon-2.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/joon-2-786-ab4aff748435.webp",
+    "srcSet": "/images/optimized/joon-2-384-2263259ac685.webp 384w, /images/optimized/joon-2-640-9fecd4845faf.webp 640w, /images/optimized/joon-2-786-ab4aff748435.webp 786w"
+  },
+  "/images/joon-3.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/joon-3-786-6718774372f0.webp",
+    "srcSet": "/images/optimized/joon-3-384-a1fd341fffce.webp 384w, /images/optimized/joon-3-640-be9f8c4ddccc.webp 640w, /images/optimized/joon-3-786-6718774372f0.webp 786w"
+  },
+  "/images/rambler-1.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/rambler-1-786-5c88b0edf6e7.webp",
+    "srcSet": "/images/optimized/rambler-1-384-7b3e7bf80be0.webp 384w, /images/optimized/rambler-1-640-db1e597c6f3f.webp 640w, /images/optimized/rambler-1-786-5c88b0edf6e7.webp 786w"
+  },
+  "/images/rambler-2.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/rambler-2-786-97632208f0f9.webp",
+    "srcSet": "/images/optimized/rambler-2-384-41abd0276e8c.webp 384w, /images/optimized/rambler-2-640-9b72456d9f25.webp 640w, /images/optimized/rambler-2-786-97632208f0f9.webp 786w"
+  },
+  "/images/rambler-3.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/rambler-3-786-822c53cd042c.webp",
+    "srcSet": "/images/optimized/rambler-3-384-ec0b94fc84fd.webp 384w, /images/optimized/rambler-3-640-56110923559d.webp 640w, /images/optimized/rambler-3-786-822c53cd042c.webp 786w"
+  },
+  "/images/resy-1.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/resy-1-786-273d0e8faa08.webp",
+    "srcSet": "/images/optimized/resy-1-384-3641693df2d9.webp 384w, /images/optimized/resy-1-640-53fdccc43498.webp 640w, /images/optimized/resy-1-786-273d0e8faa08.webp 786w"
+  },
+  "/images/resy-2.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/resy-2-786-d4652ff23747.webp",
+    "srcSet": "/images/optimized/resy-2-384-c01aa3a241a4.webp 384w, /images/optimized/resy-2-640-3a442c6999d4.webp 640w, /images/optimized/resy-2-786-d4652ff23747.webp 786w"
+  },
+  "/images/resy-3.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/resy-3-786-c3f6b5dd4612.webp",
+    "srcSet": "/images/optimized/resy-3-384-904708a94320.webp 384w, /images/optimized/resy-3-640-6ee197a2fc37.webp 640w, /images/optimized/resy-3-786-c3f6b5dd4612.webp 786w"
+  },
+  "/images/saturn-1.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/saturn-1-786-c112a31230b1.webp",
+    "srcSet": "/images/optimized/saturn-1-384-9057cb40406d.webp 384w, /images/optimized/saturn-1-640-fc3eef967952.webp 640w, /images/optimized/saturn-1-786-c112a31230b1.webp 786w"
+  },
+  "/images/saturn-2.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/saturn-2-786-7f4b856c9ce6.webp",
+    "srcSet": "/images/optimized/saturn-2-384-2b34fafa46eb.webp 384w, /images/optimized/saturn-2-640-89adbe6e2f46.webp 640w, /images/optimized/saturn-2-786-7f4b856c9ce6.webp 786w"
+  },
+  "/images/saturn-3.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/saturn-3-786-82c6230df861.webp",
+    "srcSet": "/images/optimized/saturn-3-384-2c49339f194d.webp 384w, /images/optimized/saturn-3-640-0f7115ad3a7e.webp 640w, /images/optimized/saturn-3-786-82c6230df861.webp 786w"
+  },
+  "/images/solitaire-1.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/solitaire-1-786-81ba7b3464d9.webp",
+    "srcSet": "/images/optimized/solitaire-1-384-441306361a80.webp 384w, /images/optimized/solitaire-1-640-3f200adcc255.webp 640w, /images/optimized/solitaire-1-786-81ba7b3464d9.webp 786w"
+  },
+  "/images/solitaire-2.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/solitaire-2-786-5799d10d5412.webp",
+    "srcSet": "/images/optimized/solitaire-2-384-3abb5f8b6818.webp 384w, /images/optimized/solitaire-2-640-9fa4fc8eaee4.webp 640w, /images/optimized/solitaire-2-786-5799d10d5412.webp 786w"
+  },
+  "/images/solitaire-3.png": {
+    "width": 786,
+    "height": 1704,
+    "src": "/images/optimized/solitaire-3-786-c1de90d854bc.webp",
+    "srcSet": "/images/optimized/solitaire-3-384-b3139b5a2211.webp 384w, /images/optimized/solitaire-3-640-2f8b3b089961.webp 640w, /images/optimized/solitaire-3-786-c1de90d854bc.webp 786w"
+  }
+}
