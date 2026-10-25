@@ -9,10 +9,9 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import { useDialKit } from "dialkit";
+import { THEME_RECIPE } from "./theme-settings";
 import {
   THEME_PALETTES,
-  DEFAULT_THEME_RECIPE,
   DOT_COLORS,
   paletteFromHue,
   paletteFromPreset,
@@ -39,31 +38,6 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const recipe = useDialKit("Custom color theme", {
-    useCustomTheme: true,
-    background: {
-      saturation: [100, 0, 100, 1],
-      lightness: [96.5, 0, 100, 0.5],
-    },
-    text: {
-      saturation: [79, 0, 100, 1],
-      lightness: [50.5, 0, 100, 0.5],
-    },
-    secondaryText: {
-      saturation: [100, 0, 100, 1],
-      lightness: [54.5, 0, 100, 0.5],
-    },
-    borders: {
-      saturation: [55, 0, 100, 1],
-      lightness: [47, 0, 100, 1],
-      opacity: [20, 0, 100, 1],
-    },
-    selection: {
-      saturation: [80, 0, 100, 1],
-      lightness: [82, 0, 100, 1],
-    },
-  }, { id: "custom-color-theme", persist: true });
-  const activeRecipe = recipe.useCustomTheme ? recipe : DEFAULT_THEME_RECIPE;
   const [activeTheme, setActiveTheme] = useState<ThemeName | null>(null);
   const [customThemes, setCustomThemes] = useState<CustomTheme[]>([]);
   const [preview, setPreview] = useState<number | null>(null);
@@ -74,11 +48,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     ? activeTheme as BuiltInThemeName
     : "neutral";
   const palette = preview !== null
-    ? paletteFromHue(preview, activeRecipe)
+    ? paletteFromHue(preview, THEME_RECIPE)
     : customTheme
-      ? paletteFromHue(customTheme.hue, activeRecipe)
-      : recipe.useCustomTheme && presetName !== "neutral"
-        ? paletteFromPreset(presetName, recipe)
+      ? paletteFromHue(customTheme.hue, THEME_RECIPE)
+      : presetName !== "neutral"
+        ? paletteFromPreset(presetName, THEME_RECIPE)
         : palettes[activeTheme ?? "neutral"] ?? THEME_PALETTES.neutral;
   const dots = [...DOT_COLORS, ...customThemes.map(({ name, hue }) => ({ name, hex: paletteFromHue(hue).dot }))];
 

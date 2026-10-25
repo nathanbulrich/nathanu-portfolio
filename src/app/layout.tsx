@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
-import { DotStyleProvider } from "./lib/DotStyleContext";
 import SideNav from "./components/SideNav";
 
 export const metadata: Metadata = {
@@ -31,12 +30,10 @@ export default function RootLayout({
       <body className="antialiased">
         <ThemeProvider>
           <TypeStyleProvider>
-            <DotStyleProvider>
-              <SideNav />
-              <div className="lg:ml-[228px]">
-                {children}
-              </div>
-            </DotStyleProvider>
+            <SideNav />
+            <div className="lg:ml-[228px]">
+              {children}
+            </div>
           </TypeStyleProvider>
         </ThemeProvider>
       </body>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { animate, AnimatePresence, motion, useReducedMotion, type AnimationPlaybackControls } from "motion/react";
 import { DOT_COLORS, SPECTRUM_GRADIENT, paletteFromHue } from "../lib/theme-definitions";
 import { useTheme } from "../lib/ThemeContext";
-import { useDotStyle } from "../lib/DotStyleContext";
+import { DOT_STYLE } from "../lib/theme-settings";
 
 interface DotRowProps {
   className?: string;
@@ -14,10 +14,10 @@ type SavePhase = "idle" | "closing" | "spacing" | "revealing";
 
 export default function DotRow({ className = "" }: DotRowProps) {
   const { activeTheme, setTheme, dots, previewHue, addColor } = useTheme();
-  const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap } = useDotStyle();
-  const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = useDotStyle();
-  const { selectorDragScale, selectorDragDuration, selectorMoveDuration } = useDotStyle();
-  const { addColorSpaceDuration, newColorPopDuration } = useDotStyle();
+  const { ringThickness, ringSpacing, ringDuration, morphDuration, defaultDotSize, dotSpacing, selectionBarHeight, springBounce, selectorDotSize, selectorStrokeWidth, selectorDelay, checkButtonGap } = DOT_STYLE;
+  const { plusIconSize, plusIconStrokeWidth, checkIconSize, checkIconStrokeWidth } = DOT_STYLE;
+  const { selectorDragScale, selectorDragDuration, selectorMoveDuration } = DOT_STYLE;
+  const { addColorSpaceDuration, newColorPopDuration } = DOT_STYLE;
   // For an even count, use the right-hand middle dot.
   const originIndex = Math.floor(dots.length / 2);
   const originLeft = originIndex * (defaultDotSize + dotSpacing);
