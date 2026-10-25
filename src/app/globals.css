@@ -126,13 +126,6 @@ a:hover {
   }
 }
 
-/* Keep decoded images loaded while showing placeholders during color review. */
-.project-image-tuning[data-replay-phase="reset"] .project-image-group,
-.project-image-tuning[data-show-skeletons="true"][data-replay-phase="idle"] .project-image-group {
-  --project-image-opacity: 0;
-  --project-skeleton-visibility: visible;
-}
-
 .project-image-reveal {
   opacity: var(--project-image-opacity, 0);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.07))
@@ -141,7 +134,7 @@ a:hover {
 }
 
 .project-image-skeleton {
-  background-color: var(--project-skeleton-color, #f0f0f0);
+  background-color: #f0f0f0;
   opacity: calc(1 - var(--project-image-opacity, 0));
   visibility: var(--project-skeleton-visibility, visible);
   transition: opacity 240ms ease-out, visibility 0s linear 240ms;

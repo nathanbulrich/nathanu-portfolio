@@ -1,7 +1,6 @@
 import DeviceFrameShape from "./components/DeviceFrameShape";
 import HeroCard from "./components/HeroCard";
 import ProjectCard from "./components/ProjectCard";
-import ProjectImageTuning from "./components/ProjectImageTuning";
 
 const projects = [
   {
@@ -79,9 +78,7 @@ export default function Home() {
             Recent work
           </h2>
 
-          {process.env.NODE_ENV === "development" ? (
-            <ProjectImageTuning>{projectCards}</ProjectImageTuning>
-          ) : projectCards}
+          {projectCards}
         </section>
       </div>
     </main>
