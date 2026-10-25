@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "dialkit/styles.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
 import SideNav from "./components/SideNav";
+import { ProjectImageDialRoot } from "./components/ProjectImageTuning";
 
 export const metadata: Metadata = {
   title: "Nathan Ulrich - NYC Software Designer",
@@ -34,6 +36,7 @@ export default function RootLayout({
             <div className="lg:ml-[228px]">
               {children}
             </div>
+            <ProjectImageDialRoot />
           </TypeStyleProvider>
         </ThemeProvider>
       </body>

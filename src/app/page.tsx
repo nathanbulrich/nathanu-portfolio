@@ -1,6 +1,7 @@
 import DeviceFrameShape from "./components/DeviceFrameShape";
 import HeroCard from "./components/HeroCard";
 import ProjectCard from "./components/ProjectCard";
+import ProjectImageTuning from "./components/ProjectImageTuning";
 
 const projects = [
   {
@@ -67,16 +68,18 @@ export default function Home() {
             Recent work
           </h2>
 
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={index}
-              title={project.title}
-              images={project.images}
-              description={project.description}
-              link={project.link}
-              priority={index === 0}
-            />
-          ))}
+          <ProjectImageTuning>
+            {projects.map((project, index) => (
+              <ProjectCard
+                key={index}
+                title={project.title}
+                images={project.images}
+                description={project.description}
+                link={project.link}
+                priority={index === 0}
+              />
+            ))}
+          </ProjectImageTuning>
         </section>
       </div>
     </main>
