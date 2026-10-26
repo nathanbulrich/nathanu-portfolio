@@ -206,22 +206,23 @@ export default function DotRow({ className = "" }: DotRowProps) {
                     scale: { duration: reduceMotion ? 0 : newColorPopDuration / 1000, delay: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] },
                     opacity: { duration: reduceMotion ? 0 : newColorPopDuration / 1000, delay: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] },
                   }}
-                  whileHover={!isSelected && !editing && !saving ? { scale: 1.25 } : undefined}
                   onAnimationComplete={isNewColor ? finishReveal : undefined}
-                  className="absolute left-0 top-0 flex items-center justify-center rounded-full cursor-pointer border-0 p-0"
+                  className="group absolute left-0 top-0 flex items-center justify-center rounded-full cursor-pointer border-0 p-0"
                   style={{
                     ...dotDimensions,
                     color: "var(--theme-text-secondary)",
                     outlineColor: color,
                   }}
                 >
-                  <motion.span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 rounded-full"
-                    style={{ backgroundColor: color }}
-                    animate={{ scale: 1, opacity: editing ? 0 : 1 }}
-                    transition={{ duration: reduceMotion ? 0 : morphDuration / 2500 }}
-                  />
+                  <span className={`pointer-events-none absolute inset-0 rounded-full transition-transform duration-150 ease-out motion-reduce:transition-none ${!isSelected && !editing && !saving ? "group-hover:scale-125" : ""}`}>
+                    <motion.span
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-full"
+                      style={{ backgroundColor: color }}
+                      animate={{ scale: 1, opacity: editing ? 0 : 1 }}
+                      transition={{ duration: reduceMotion ? 0 : morphDuration / 2500 }}
+                    />
+                  </span>
                 </motion.button>
               );
             })}
