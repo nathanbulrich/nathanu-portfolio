@@ -3,6 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "./lib/ThemeContext";
 import { TypeStyleProvider } from "./lib/TypeStyleContext";
 import SideNav from "./components/SideNav";
+import DialKitRoot from "./components/DialKitRoot";
+import "dialkit/styles.css";
 
 export const metadata: Metadata = {
   title: "Nathan Ulrich - NYC Software Designer",
@@ -34,6 +36,7 @@ export default function RootLayout({
             <div className="lg:ml-[228px]">
               {children}
             </div>
+            <DialKitRoot />
           </TypeStyleProvider>
         </ThemeProvider>
       </body>

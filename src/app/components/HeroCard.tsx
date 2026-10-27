@@ -1,4 +1,5 @@
 import DotRow from "./DotRow";
+import CosmosCycleLink from "./CosmosCycleLink";
 
 export default function HeroCard() {
   return (
@@ -7,13 +8,7 @@ export default function HeroCard() {
         <p className="leading-relaxed">
           Hi, I&apos;m Nathan Ulrich. I&apos;m a technical software designer in NYC who can build end-to-end.
           I lead design at{" "}
-          <a
-            href="https://www.cosmos.so/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Cosmos
-          </a>, the best place to dream.
+          <CosmosCycleLink />, the best place to dream.
         </p>
         <p className="leading-relaxed">
           I believe in the benefits of a social internet and want to help build it.
