@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useDialKit } from "dialkit";
 import { useReducedMotion } from "motion/react";
 import { DOT_COLORS } from "../lib/theme-definitions";
@@ -19,12 +19,16 @@ export default function CosmosCycleLink() {
     "Blend time (ms)": blendTime,
     "Loop pause (ms)": loopPause,
     "Return time (ms)": returnTime,
-  } = useDialKit("Cosmos link colors", {
+    "Underline distance (px)": underlineDistance,
+    "Underline weight (px)": underlineWeight,
+  } = useDialKit("Cosmos link", {
     "Start delay (ms)": [0, 0, 800, 10],
     "Color hold (ms)": [80, 20, 500, 5],
     "Blend time (ms)": [40, 0, 250, 5],
     "Loop pause (ms)": [80, 0, 800, 10],
     "Return time (ms)": [180, 0, 800, 10],
+    "Underline distance (px)": [2, 0, 12, 0.5],
+    "Underline weight (px)": [1.5, 0.5, 5, 0.5],
   }, { id: "cosmos-link-colors" });
   const reduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState(false);
@@ -49,6 +53,7 @@ export default function CosmosCycleLink() {
 
   return (
     <a
+      className="cosmos-cycle-link"
       href="https://www.cosmos.so/"
       target="_blank"
       rel="noopener noreferrer"
@@ -58,9 +63,11 @@ export default function CosmosCycleLink() {
         setColorIndex(null);
       }}
       style={{
+        "--cosmos-underline-distance": `${underlineDistance}px`,
+        "--cosmos-underline-weight": `${underlineWeight}px`,
         color: reduceMotion || colorIndex === null ? "var(--theme-text)" : HOVER_COLORS[colorIndex],
         transition: reduceMotion ? "none" : `color ${hovered ? blendTime : returnTime}ms linear`,
-      }}
+      } as CSSProperties}
     >
       Cosmos
     </a>

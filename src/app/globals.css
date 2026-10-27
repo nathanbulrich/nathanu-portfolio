@@ -100,6 +100,32 @@ a:hover {
   text-decoration: underline;
 }
 
+.cosmos-cycle-link {
+  position: relative;
+  display: inline-block;
+}
+
+.cosmos-cycle-link:hover {
+  text-decoration: none;
+}
+
+.cosmos-cycle-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(0.25em - var(--cosmos-underline-distance));
+  height: var(--cosmos-underline-weight);
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cosmos-cycle-link:hover::after,
+.cosmos-cycle-link:focus-visible::after {
+  opacity: 1;
+}
+
 /* Card border — hidden on mobile, visible on md+ */
 .card-border {
   border: none;
