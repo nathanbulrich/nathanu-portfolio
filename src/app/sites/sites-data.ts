@@ -26,6 +26,7 @@ export const sites: Site[] = [
   { name: "Khalil Cader", url: "khalilcader.com", note: "Beautiful corner radii" },
   { name: "Rauno Freiberg", url: "rauno.me", note: "Delightful interaction details" },
   { name: "Devouring Details", url: "devouringdetails.com", note: "The craft of interaction design" },
+  { name: "Fieldwork Software Co.", url: "fieldwork.software", note: "Improving AI lab design capabilities", waitMs: 5000 },
 ];
 
 export function slugForUrl(url: string): string {
