@@ -165,8 +165,9 @@ export default function DotRow({ className = "" }: DotRowProps) {
         }}
       >
         <div className="relative" style={{ width: trackWidth, height: defaultDotSize }}>
+          {/* Remount when a selection appears so the ring starts on the tapped dot instead of sliding in from the first one. */}
           <motion.span
-            key={newestColor}
+            key={`${newestColor}-${selectedIndex >= 0}`}
             data-selection-ring="true"
             aria-hidden="true"
             initial={newColorSelected ? { scale: 0.5, opacity: 0 } : false}
